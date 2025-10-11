@@ -1,0 +1,67 @@
+.my-help-requests {
+  width: 100%;
+  height: fit-content;
+  border-radius: 16px;
+  &__tabs {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  &__tab {
+    user-select: none;
+    background: none;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 24px 24px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-width: 140px;
+    width: 30%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--gray-50);
+    &--active {
+      border-bottom: 1px solid;
+    }
+    &[data-color="secondary1"] {
+      &.my-help-requests__tab--active {
+        background-color: var(--secondary1-50);
+        border-bottom: 1px solid var(--secondary1-500);
+      }
+    }
+    &[data-color="secondary2"] {
+      &.my-help-requests__tab--active {
+        background-color: var(--secondary2-50);
+        border-bottom: 1px solid var(--secondary2-500);
+      }
+    }
+    &[data-color="error"] {
+      &.my-help-requests__tab--active {
+        background-color: var(--error-50);
+        border-bottom: 1px solid var(--error-400);
+      }
+    }
+    &:hover:not(&--active) {
+      background-color: var(--main-bg);
+    }
+  }
+  &__content {
+    padding: 16px;
+  }
+}

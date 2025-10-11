@@ -1,0 +1,87 @@
+.user-business {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  direction: rtl;
+  gap: 16px;
+  padding-bottom: 4px;
+  &__avatar-box {
+    position: relative;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__tabs {
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+  }
+  &__edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: var(--primary-700);
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #0002;
+  }
+  &__fields-body {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    &-dual-input {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+    &-checkbox {
+      height: fit-content;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    &-button {
+      width: 100%;
+      height: fit-content;
+    }
+  }
+  &__helper-text {
+    width: 100%;
+    font-size: 12px;
+    color: var(--gray-400);
+    text-align: left;
+  }
+}
+
+@media (width >= 1280px) {
+  .user-business {
+    &__fields-body {
+      &-dual-input {
+        flex-direction: row;
+      }
+      &-button {
+        width: 200px;
+        align-self: flex-end;
+      }
+    }
+  }
+}

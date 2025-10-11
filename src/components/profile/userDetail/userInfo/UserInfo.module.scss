@@ -1,0 +1,104 @@
+.user-info {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  &__avatar-box {
+    position: relative;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__tabs {
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  &__tab {
+    flex: 1;
+    border: 1px solid #cfe3ff;
+    color: #9cb9dd;
+    background: #f6fbff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  &__tab--active {
+    background: #eef6ff;
+    border-color: #1a85ff;
+    color: #0b66d0;
+    box-shadow: 0 0 0 2px #1a85ff30 inset;
+    font-weight: 700;
+  }
+
+  &__edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: var(--primary-700);
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #0002;
+  }
+
+  &__type-switch {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__fields-body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__fields-radio-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
+  &__fields-dual-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  &__actions {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: auto;
+    gap: 16px;
+  }
+}
+
+@media (width >= 1280px) {
+  .user-info {
+    &__fields-dual-input {
+      flex-direction: row;
+    }
+  }
+}

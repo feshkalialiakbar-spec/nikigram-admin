@@ -1,0 +1,22 @@
+.wrapper {
+    direction: ltr;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+  }
+  
+  .slice {
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0; /* پیش‌فرض مخفی */
+    transition: opacity 1.3s ease-in-out;
+  }
+  
+  .slice:hover {
+    opacity: 1; /* روی هاور دیده میشه */
+    transition: opacity 0s linear;
+  }
+  

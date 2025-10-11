@@ -1,0 +1,33 @@
+.wallet-slug {
+  direction: rtl;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e6eefc;
+  border-radius: 12px;
+}
+
+.details li {
+  padding: 14px 16px;
+  border-top: 1px solid #f0f4ff;
+}
+
+.details li:first-child {
+  border-top: none;
+}
+
+
+
+

@@ -1,0 +1,114 @@
+.niki-yar-create-services {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__row {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  &__dropdown-box {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__dropdown {
+    width: 100%;
+  }
+  &__description {
+    margin-block: 8px 16px;
+  }
+
+  &__levels {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 8px 24px;
+    &-item-wrapper {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px 16px ;
+    }
+    &-item {
+      width: 100%;
+      max-width: 270px;
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &-percent {
+        width: 100px;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+  &__addresses {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    &-header {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      &-button {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    &-list {
+      width: 100%;
+      height: fit-content;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+  }
+
+  &__error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background-color: var(--error-50);
+    border: 1px solid var(--error-200);
+    border-radius: 8px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (width >= 1280px) {
+  .niki-yar-create-services {
+    &__dropdown-box {
+      flex-direction: row;
+    }
+  }
+}

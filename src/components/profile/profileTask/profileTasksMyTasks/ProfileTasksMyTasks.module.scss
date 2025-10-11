@@ -1,0 +1,145 @@
+.profile-tasks-my-tasks {
+  &__content {
+    p {
+      color: var(--gray-600);
+      font-size: 14px;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    color: var(--gray-600);
+    font-size: 14px;
+  }
+
+  &__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    color: var(--error-600);
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid var(--error-200);
+    border-radius: 8px;
+    background-color: var(--error-50);
+  }
+
+  &__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    color: var(--gray-500);
+    font-size: 16px;
+    text-align: center;
+    background-color: var(--gray-50);
+    border-radius: 8px;
+    border: 1px dashed var(--gray-300);
+  }
+
+  &__table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  &__pagination {
+    margin-top: 16px;
+  }
+
+  &__filters {
+    width: 100%;
+    padding: 4px;
+  }
+
+  &__filter-group {
+    width: 100%;
+    display: flex;
+  }
+}
+
+.task-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+
+  &.status--completed {
+    background-color: var(--success-50);
+    color: var(--success-700);
+    border: 1px solid var(--success-200);
+  }
+
+  &.status--in-progress {
+    background-color: var(--warning-50);
+    color: var(--warning-700);
+    border: 1px solid var(--warning-200);
+  }
+
+  &.status--pending {
+    background-color: var(--info-50);
+    color: var(--info-700);
+    border: 1px solid var(--info-200);
+  }
+
+  &.status--cancelled {
+    background-color: var(--error-50);
+    color: var(--error-700);
+    border: 1px solid var(--error-200);
+  }
+
+  &.status--default {
+    background-color: var(--gray-100);
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+  }
+}
+
+@media (width >= 1280px) {
+  .profile-tasks-my-tasks {
+    &__content {
+      padding: 0;
+    }
+
+    &__table-container {
+      overflow-x: visible;
+    }
+
+    &__filters {
+      padding: 20px;
+    }
+
+    &__filter-group {
+      flex-direction: row;
+      gap: 16px;
+      align-items: center;
+    }
+  }
+
+  .task-status {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
+
+// کلاس‌های بک‌گراند برای سطرها در موبایل
+.row-bg--pending {
+  background-color: var(--secondary2-50);
+}
+
+.row-bg--in-progress {
+  background-color: var(--primary-50);
+}
+
+.row-bg--completed {
+  background-color: var(--secondary1-50);
+}
+
+.row-bg--cancelled {
+  background-color: var(--error-50);
+}

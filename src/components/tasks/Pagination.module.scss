@@ -1,0 +1,68 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  direction: ltr; // Keep pagination LTR for better UX
+}
+
+.navButton,
+.pageButton {
+  border: 1px solid #e0e0e0;
+  background: white;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navButton {
+  font-size: 16px;
+  
+  &:hover:not(.disabled) {
+    background: #f8f9fa;
+    border-color: #007bff;
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8f9fa;
+  }
+}
+
+.pageButton {
+  &:hover:not(.active) {
+    background: #f8f9fa;
+    border-color: #007bff;
+  }
+  
+  &.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 4px;
+  }
+  
+  .navButton,
+  .pageButton {
+    min-width: 36px;
+    height: 36px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,51 @@
+.niki-yar-lists {
+    padding: 24px;
+    min-height: 400px;
+}
+
+.niki-yar-lists__header {
+    margin-bottom: 24px;
+    
+    h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--primary-950);
+        margin: 0;
+        font-family: "moraba", sans-serif;
+    }
+}
+
+.niki-yar-lists__services {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.niki-yar-lists__service-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background-color: #f9fafb;
+        // border-color: var(--primary-200);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.niki-yar-lists__service-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

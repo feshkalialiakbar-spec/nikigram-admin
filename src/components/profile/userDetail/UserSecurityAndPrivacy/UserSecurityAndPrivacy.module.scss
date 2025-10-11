@@ -1,0 +1,48 @@
+.user-security-and-privacy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field,
+  &__field-with-hints {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__send-code {
+    width: 100%;
+    align-self: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  &__actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 24px;
+  }
+
+  .input {
+    width: 100%;
+  }
+}

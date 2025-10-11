@@ -1,0 +1,14 @@
+.personal-info__fields-dual-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (width >= 1280px) {
+  .personal-info__fields-dual-input {
+    flex-direction: row;
+  }
+}
+
+

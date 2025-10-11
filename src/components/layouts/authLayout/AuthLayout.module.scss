@@ -1,0 +1,175 @@
+.auth-layout {
+  width: 100vw;
+  min-height: 100vh;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__right-panel {
+    width: 100%;
+    height: 100%;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+
+    &-logo {
+      width: fit-content;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 40px;
+    }
+
+    &-image {
+      width: fit-content;
+      height: fit-content;
+    }
+
+    &-content {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+  }
+
+  &__left-panel {
+    display: none;
+  }
+
+  &__logo-title {
+    margin-top: 16px;
+  }
+
+  &__title {
+    margin-bottom: 16px;
+  }
+
+  &__title--subtitle {
+    line-height: 1.6;
+  }
+
+  // استایل‌های مشترک برای محتوای فرم‌ها
+  &__form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__form-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__form-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 16px;
+  }
+
+  &__form-center {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  &__form-stretch {
+    flex: 1;
+  }
+
+  &__code-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  &__code-input {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    outline: none;
+
+    &:focus {
+      border-color: var(--primary-700);
+    }
+  }
+
+  &__button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__text-center {
+    text-align: center;
+  }
+}
+
+@media (width >= 1280px) {
+  .auth-layout {
+    height: 100%;
+
+    &__right-panel {
+      width: 50%;
+      justify-content: space-between;
+      padding: 100px 80px;
+
+      &-logo {
+        padding: 0;
+        margin-bottom: 80px;
+      }
+
+      &-image {
+        display: none;
+      }
+
+      &-content {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+
+    &__left-panel {
+      background-color: var(--primary-950);
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 80px;
+
+      &-image {
+        width: fit-content;
+        height: fit-content;
+      }
+    }
+  }
+}

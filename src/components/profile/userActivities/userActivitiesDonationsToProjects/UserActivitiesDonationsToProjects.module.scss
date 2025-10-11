@@ -1,0 +1,135 @@
+.user-activities-donations-to-projects {
+  width: 100%;
+  height: fit-content;
+  background-color: var(--main-white);
+  box-shadow: 0 0 30px 2px var(--main-white);
+  border-radius: 16px;
+  &__tabs {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scroll-behavior: smooth;
+    &::-webkit-scrollbar {
+      display: none; /* WebKit */
+    }
+  }
+  &__tab {
+    user-select: none;
+    background: none;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 24px 24px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-width: 140px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--gray-50);
+    &--active {
+      border-bottom: 1px solid;
+    }
+    // استایل‌های مخصوص هر رنگ
+    &[data-color="primary"] {
+      &.user-activities-donations-to-projects__tab--active {
+        background-color: var(--primary-50);
+        border-bottom: 1px solid var(--primary-700);
+      }
+    }
+    &[data-color="secondary1"] {
+      &.user-activities-donations-to-projects__tab--active {
+        background-color: var(--secondary1-50);
+        border-bottom: 1px solid var(--secondary1-700);
+      }
+    }
+    &[data-color="error"] {
+      &.user-activities-donations-to-projects__tab--active {
+        background-color: var(--error-50);
+        border-bottom: 1px solid var(--error-700);
+      }
+    }
+    &[data-color="gray"] {
+        &.user-activities-donations-to-projects__tab--active {
+        background-color: var(--gray-50);
+        border-bottom: 1px solid var(--gray-700);
+      }
+    }
+    &:hover:not(&--active) {
+      background-color: var(--main-bg);
+    }
+  }
+  &__empty {
+    width: 100%;
+    height: fit-content;
+    padding: 48px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    &-img-wrapper {
+      width: 156px;
+      height: 156px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+  }
+  &__list {
+    width: 100%;
+    height: fit-content;
+    padding-block: 24px;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px 0;
+    &-item {
+      &-info {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+        &-wrapper {
+          width: 100%;
+          height: 180px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+      }
+      &-btn-wrapper {
+        width: 100%;
+        height: fit-content;
+        padding: 0 8px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: -4px;
+      }
+    }
+  }
+}
+
+@media (width >= 1280px) {
+  .user-activities-donations-to-projects {
+    &__list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+}

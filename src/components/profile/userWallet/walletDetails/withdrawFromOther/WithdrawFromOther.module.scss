@@ -1,0 +1,141 @@
+.withdraw-from-other {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &__drawer-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
+  &__drawer-modal-title {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: "moraba";
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-950);
+  }
+
+  &__drawer-modal-body {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    overflow-y: auto;
+  }
+
+  &__section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  &__section-title {
+    margin-bottom: 8px;
+  }
+
+  &__quick-amounts {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__quick-amount-button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--primary-300);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-white);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--primary-50);
+      border-color: var(--primary-500);
+    }
+  }
+
+  &__balance {
+    user-select: none;
+    padding: 12px 16px;
+    background-color: var(--gray-50);
+    border-radius: 8px;
+    text-align: center;
+    &-badge{
+      width: fit-content;
+      height: fit-content;
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  &__switch-section {
+    
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;  
+    user-select: none;
+  }
+
+  &__radio-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__drawer-modal-footer {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  &__withdraw-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  &__balance-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+}
+
+.success-icon {
+  margin-bottom: 16px;
+}
+
+.success-modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0;
+}

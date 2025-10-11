@@ -1,0 +1,499 @@
+$header-offset: 108px;
+$rail-width-closed: 56px;
+$rail-width-open: 209px;
+$breakpoint-desktop: 900px;
+
+.overlay {
+  position: fixed;
+  top: $header-offset;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1200;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
+.rail {
+  position: fixed;
+  top: $header-offset;
+  right: 0;
+  width: $rail-width-closed;
+  height: calc(100vh - #{$header-offset});
+   border-left: 1px solid var(--gray-100);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1202;
+  padding: 12px 8px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: none;
+
+  // Desktop mode (>900px): No shadow, part of layout
+  @media (min-width: $breakpoint-desktop) {
+    box-shadow: none;
+  }
+
+  // Mobile/Tablet mode (<900px): Show with shadow and rounded corners
+  @media (max-width: #{$breakpoint-desktop - 1px}) {
+    border-radius: 22px 0 0 22px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.05);
+
+    &.railOpen {
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &.railOpen {
+    width: $rail-width-open;
+
+    border-radius: 24px;
+  }
+}
+
+.columns {
+  color: #829BB7;
+  display: flex;
+  align-items: stretch;
+}
+
+.columns.withDock {
+  .menuItems {
+    background-color: #FCFDFF;
+    border-left: 1px #D1E1F2 solid;
+    margin: 2px;
+  }
+
+  .parentItem {
+    width: 56px;
+    justify-content: center;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .menuCol {
+    width: 56px;
+  }
+}
+
+.menuCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon {
+  color: inherit;
+}
+
+.childrenPopup {
+  position: fixed;
+  z-index: 1400;
+  pointer-events: auto;
+  animation: tooltipFadeIn 0.2s ease-out;
+  max-height: calc(100vh - 100px);
+  overflow: visible;
+
+  // Ensure it's always visible and on top
+  @media (max-height: 600px) {
+    top: 80px !important;
+    max-height: calc(100vh - 100px);
+  }
+}
+
+.childrenPopupContent {
+  border: none;
+  border-radius: 12px; 
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.childrenPopupHeader { 
+  font-size: 13px;
+  font-weight: 700;
+  color: #007BFF;
+  border-bottom: none;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+.childrenPopupList{
+  padding-right: 10px;
+}
+.childrenPopupSearch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  background: var(--gray-50);
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    // background: var(--main-white);
+    border-color: var(--primary-300);
+  }
+}
+
+.childrenSearchIcon {
+  color: var(--gray-500);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+
+  .childrenPopupSearch:focus-within & {
+    color: var(--primary-600);
+  }
+}
+
+.childrenSearchInput {
+  width: 100%;
+  border: none;
+  outline: none;
+  color: var(--gray-700);
+  font-size: 12px;
+  font-weight: 500;
+
+  &::placeholder {
+    color: var(--gray-400);
+    font-weight: 400;
+  }
+}
+
+.childrenPopupItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 0;
+  border: none;
+  text-decoration: none;
+  color: var(--gray-700);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    color: #0b66c3;
+    border-right: 2px solid #0b66c3;
+  }
+
+  &.active {
+    color: #0b66c3;
+    border-right: 2px solid #0b66c3;
+  }
+
+  span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.childrenPopupArrow {
+  position: absolute;
+  right: -6px;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: 1px;
+    top: -7px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid var(--gray-200);
+    z-index: -1;
+  }
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--gray-100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all 0.3s ease;
+  z-index: 10;
+
+  &:hover {
+    background: var(--error-100);
+    color: var(--error-600);
+    transform: scale(1.1);
+  }
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 8px 16px 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  background: var(--main-white);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--primary-300);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    background: var(--gray-50);
+  }
+
+  // Add top margin when close button is visible (mobile/tablet)
+  @media (max-width: #{$breakpoint-desktop - 1px}) {
+    margin-top: 50px;
+  }
+}
+
+.searchIcon {
+  color: var(--gray-500);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+
+  .searchBox:focus-within & {
+    color: var(--primary-600);
+  }
+}
+
+.searchInput {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--gray-700);
+  font-size: 13px;
+  font-weight: 500;
+
+  &::placeholder {
+    color: var(--gray-400);
+    font-weight: 400;
+  }
+}
+
+.menuItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.menuItemWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.parentItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px 12px;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+
+  &:hover {
+    color: #0b66c3;
+    border-right: 2px solid #0b66c3;
+  }
+
+  &.active {
+    color: #0b66c3;
+    border-right: 2px solid #0b66c3;
+  }
+}
+
+.itemLabel {
+  flex: 1;
+  text-align: right;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.childrenWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  border-right: 2px solid var(--primary-200);
+}
+
+// Children dock (panel at left side of icons when a parent with children is selected)
+.childrenDock {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.childrenDock .childrenPopupContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// Child item - unified styling with parent
+.childItem {
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  color: var(--gray-700);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  gap: 10px;
+  padding: 10px 12px;
+
+  &:hover {
+    color: #0b66c3;
+    border-right: 2px solid #0b66c3;
+  }
+
+  &.active {
+    color: #0b66c3;
+    border-right: 2px solid #0b66c3;
+  }
+}
+
+// Tablet/Mobile responsive (below desktop breakpoint)
+@media (max-width: #{$breakpoint-desktop - 1px}) {
+  .rail {
+    &.railOpen {
+      width: $rail-width-open; // Keep consistent width
+    }
+  }
+}
+
+// Small screens
+@media (max-width: 768px) {
+  .rail {
+    &.railOpen {
+      width: calc(100vw - 40px);
+    }
+  }
+
+  .searchBox {
+    margin: 50px 4px 12px 4px;
+  }
+
+
+  .parentItem {
+    padding: 8px;
+    font-size: 13px;
+
+    .railOpen & {
+      padding: 10px 12px;
+    }
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .rail {
+    &.railOpen {
+      width: calc(100vw - 20px);
+    }
+  }
+
+  .searchBox {
+    margin: 50px 4px 8px 4px;
+    padding: 8px 10px;
+  }
+
+
+  .parentItem {
+    padding: 8px;
+    font-size: 12px;
+
+    .railOpen & {
+      padding: 10px 12px;
+    }
+  }
+
+  .childItem {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .closeButton {
+    top: 12px;
+    left: 12px;
+    width: 28px;
+    height: 28px;
+  }
+
+
+  .tooltipArrow {
+    border-left-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+
+    &::before {
+      border-left-width: 5px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+    }
+  }
+
+}

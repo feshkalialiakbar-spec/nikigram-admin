@@ -1,0 +1,33 @@
+.dashboard {
+  min-height: 100vh;
+  background: var(--main-bg);
+  direction: rtl;
+}
+
+.mainContent {
+  padding: 80px 20px 20px 20px;
+  background: var(--main-bg);
+  overflow-x: auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: calc(100vh - 80px);
+}
+
+
+// Mobile responsive
+@media (max-width: 1024px) {
+  .mainContent {
+    padding: 75px 15px 15px 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 70px 15px 15px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 65px 10px 10px 10px;
+  }
+}

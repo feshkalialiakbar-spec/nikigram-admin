@@ -1,0 +1,43 @@
+.user-addresses {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__add-address {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+
+  &__list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  &__item-top-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__item-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__item-address {
+    min-width: 300px;
+  }
+}
+
+@media (width >= 1024px) {
+  .user-addresses {
+    &__list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
