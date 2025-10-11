@@ -26,6 +26,7 @@
   color: #333;
   border-bottom: 2px solid #e0e0e0;
   white-space: nowrap;
+  font-size: 14px;
 }
 
 .table td {
@@ -54,14 +55,55 @@
 .taskName {
   font-weight: 500;
   color: #333;
-  max-width: 200px;
+  max-width: 250px;
   word-wrap: break-word;
 }
 
 .process {
   color: #666;
-  max-width: 150px;
+  max-width: 180px;
   word-wrap: break-word;
+}
+
+.performerPersonnel {
+  text-align: center;
+  width: 120px;
+}
+
+.avatarGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  justify-items: center;
+  align-items: center;
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
 }
 
 .date {
@@ -109,6 +151,7 @@
 .statusPending {
   background-color: #fff3cd;
   color: #856404;
+  border: 1px solid #ffeaa7;
 }
 
 .statusStopped {
@@ -134,15 +177,16 @@
   background: transparent;
   color: #007bff;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   transition: all 0.2s ease;
+  text-decoration: none;
   
   &:hover {
     background: rgba(0, 123, 255, 0.1);

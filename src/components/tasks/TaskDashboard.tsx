@@ -14,7 +14,9 @@ const TaskDashboard: React.FC = () => {
     search: '',
     process: '',
     date: '',
+    performerPersonnel: '',
     status: '',
+    operations: '',
   })
   const [data, setData] = useState<Task[]>([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -31,9 +33,13 @@ const TaskDashboard: React.FC = () => {
       const matchesProcess =
         !filters.process || task.process === filters.process
       const matchesDate = !filters.date || task.date === filters.date
+      const matchesPerformerPersonnel = 
+        !filters.performerPersonnel || 
+        task.performerPersonnel.some(person => person.id === filters.performerPersonnel)
       const matchesStatus = !filters.status || task.status === filters.status
+      const matchesOperations = !filters.operations || task.operation.type === filters.operations
 
-      return matchesSearch && matchesProcess && matchesDate && matchesStatus
+      return matchesSearch && matchesProcess && matchesDate && matchesPerformerPersonnel && matchesStatus && matchesOperations
     })
   }, [filters, data])
 

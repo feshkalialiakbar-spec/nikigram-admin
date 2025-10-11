@@ -46,6 +46,12 @@ const mapApiTaskToTask = (apiTask: any): Task => {
     date,
     status: normalizedStatus,
     operation: { type: 'perform', label: 'انجام عملیات' },
+    performerPersonnel: [
+      { id: '1', name: 'احمد محمدی' },
+      { id: '2', name: 'علی رضایی' },
+      { id: '3', name: 'حسن کریمی' },
+      { id: '4', name: 'محمد احمدی' },
+    ],
   }
 }
 

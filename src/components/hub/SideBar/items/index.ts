@@ -35,36 +35,36 @@ export const quickActions: TaskMenuItem[] = [
   {
     icon: TaskSquare,
     label: 'میز کار من',
-    href: '/lists',
+    href: '/dashboard',
     children: [
       {
         label: 'کارهای من',
-        href: '/tasks/pending',
+        href: '/dashboard/my-tasks',
         icon: Clock,
       },
       {
         label: 'در انتظار انجام من',
-        href: '/tasks/in-progress',
+        href: '/dashboard/tasks-waiting-for-me',
         icon: Activity,
       },
       {
         label: 'در حال انجام  ',
-        href: '/tasks/done',
+        href: '/dashboard/tasks-in-progress',
         icon: TickCircle,
       },
       {
         label: 'انجام شده',
-        href: '/tasks/stopped',
+        href: '/dashboard/tasks-completed',
         icon: CloseCircle,
       },
       {
         label: 'متوقف شده',
-        href: '/tasks/shared-pending',
+        href: '/dashboard/tasks-stopped',
         icon: Profile2User,
       },
       {
         label: 'اختصاص نیافته',
-        href: '/tasks/unassigned',
+        href: '/dashboard/tasks-unassigned',
         icon: ProfileRemove,
       },
     ],
@@ -72,16 +72,16 @@ export const quickActions: TaskMenuItem[] = [
   {
     icon: Chart,
     label: 'مدیریت تسک ها',
-    href: '/team',
+    href: '/task-management',
     children: [
       {
         label: 'کاربران سیستم',
-        href: '/tasks/pending',
+        href: '/task-management/system-users',
         icon: Clock,
       },
       {
         label: 'پرسنل سیستم',
-        href: '/tasks/in-progress',
+        href: '/task-management/system-personnel',
         icon: Activity,
       },
     ],
@@ -89,52 +89,52 @@ export const quickActions: TaskMenuItem[] = [
   {
     icon: People,
     label: 'مدیریت کاربران',
-    href: '/organization',
+    href: '/user-management',
   },
-  { icon: Building4, label: 'پروژه ها', href: '/favorites' },
-  { icon: Courthouse, label: 'مناقصه ها', href: '/messages' },
-  { icon: HeartSlash, label: 'خیریه ها', href: '/calendar' },
-  { icon: DocumentText, label: 'اخبار', href: '/filters' },
-  { icon: Message, label: 'نظرات', href: '/help' },
+  { icon: Building4, label: 'پروژه ها', href: '/projects' },
+  { icon: Courthouse, label: 'مناقصه ها', href: '/tenders' },
+  { icon: HeartSlash, label: 'خیریه ها', href: '/charities' },
+  { icon: DocumentText, label: 'اخبار', href: '/news' },
+  { icon: Message, label: 'نظرات', href: '/comments' },
   {
     icon: NoteAdd,
     label: 'تعاریف',
-    href: '/tasks',
+    href: '/definitions',
     children: [
       {
         label: 'صندوق',
-        href: '/tasks/pending',
+        href: '/definitions/funds',
         icon: Task,
       },
       {
         label: 'پارامترهای سیستم',
-        href: '/tasks/in-progress',
+        href: '/definitions/system-parameters',
         icon: Additem,
       },
 
       {
         label: 'دسته‌بندی پروژه‌ها',
-        href: '/tasks/pending',
+        href: '/definitions/project-categories',
         icon: Task,
       },
       {
         label: 'سطوح باشگاه',
-        href: '/tasks/pending',
+        href: '/definitions/club-levels',
         icon: Task,
       },
       {
         label: 'دسته‌بندی خدمات',
-        href: '/tasks/in-progress',
+        href: '/definitions/service-categories',
         icon: Additem,
       },
       {
         label: 'دسته‌بندی محصولات',
-        href: '/tasks/pending',
+        href: '/definitions/product-categories',
         icon: Task,
       },
       {
         label: 'دسته‌بندی اخبار',
-        href: '/tasks/in-progress',
+        href: '/definitions/news-categories',
         icon: Additem,
       },
     ],
@@ -142,52 +142,52 @@ export const quickActions: TaskMenuItem[] = [
   {
     icon: Book,
     label: 'تمپلیت پروژه',
-    href: '/reduce',
+    href: '/project-templates',
   },
-  { icon: MessageQuestion, label: 'سوالات متداول', href: '/users' },
+  { icon: MessageQuestion, label: 'سوالات متداول', href: '/faq' },
   {
     icon: Wallet2,
     label: 'پشتیبانی و تیکت',
-    href: '/filters',
+    href: '/support-tickets',
   },
   {
     icon: SecurityUser,
     label: 'مالی و صندوق ها',
-    href: '/help',
+    href: '/financial-management',
     children: [
       {
         label: 'موجودی صندوق‌ها',
-        href: '/tasks/pending',
+        href: '/fund-balances',
         icon: Task,
       },
       {
         label: 'تراکنش‌های صندوق‌',
-        href: '/tasks/in-progress',
+        href: '/fund-transactions',
         icon: Additem,
       },
       {
         label: 'کیف‌پول‌های کاربران',
-        href: '/tasks/done',
+        href: '/user-wallets',
         icon: AddCircle,
       },
       {
         label: 'تراکنش‌های کاربران ',
-        href: '/tasks/pending',
+        href: '/user-transactions',
         icon: Task,
       },
       {
         label: 'پرداختی‌ها',
-        href: '/tasks/in-progress',
+        href: '/payments',
         icon: Additem,
       },
       {
         label: 'درآمد',
-        href: '/tasks/done',
+        href: '/income',
         icon: AddCircle,
       },
       {
         label: 'هزینه',
-        href: '/tasks/done',
+        href: '/expenses',
         icon: AddCircle,
       },
     ],
@@ -195,21 +195,21 @@ export const quickActions: TaskMenuItem[] = [
   {
     icon: Category,
     label: 'سطح دسترسی',
-    href: '/tasks',
+    href: '/access-levels',
     children: [
       {
         label: 'تعریف وظایف',
-        href: '/tasks/pending',
+        href: '/define-tasks',
         icon: Task,
       },
       {
         label: 'تعریف گروه',
-        href: '/tasks/in-progress',
+        href: '/define-groups',
         icon: Additem,
       },
       {
         label: 'تعریف ادمین',
-        href: '/tasks/done',
+        href: '/define-admins',
         icon: AddCircle,
       },
     ],

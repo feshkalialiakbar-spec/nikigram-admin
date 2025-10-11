@@ -60,6 +60,18 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
         </div>
 
         <select
+          value={filters.performerPersonnel}
+          onChange={(e) => handleInputChange('performerPersonnel', e.target.value)}
+          className={styles.select}
+        >
+          <option value="">پرسنل انجام دهنده</option>
+          <option value="ahmad">احمد محمدی</option>
+          <option value="ali">علی رضایی</option>
+          <option value="hassan">حسن کریمی</option>
+          <option value="mohammad">محمد احمدی</option>
+        </select>
+
+        <select
           value={filters.status}
           onChange={(e) => handleInputChange('status', e.target.value)}
           className={styles.select}
@@ -69,6 +81,17 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
           <option value="stopped">متوقف شده</option>
           <option value="rejected">رد شده</option>
           <option value="completed">انجام شده</option>
+        </select>
+
+        <select
+          value={filters.operations}
+          onChange={(e) => handleInputChange('operations', e.target.value)}
+          className={styles.select}
+        >
+          <option value="">عملیات</option>
+          <option value="perform">انجام عملیات</option>
+          <option value="view">مشاهده</option>
+          <option value="restart">شروع مجدد</option>
         </select>
       </div>
     </div>

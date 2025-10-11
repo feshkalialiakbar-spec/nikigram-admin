@@ -24,6 +24,7 @@ $breakpoint-desktop: 900px;
   top: $header-offset;
   right: 0;
   width: $rail-width-closed;
+  background-color: #ffffff;
   height: calc(100vh - #{$header-offset});
    border-left: 1px solid var(--gray-100);
   border-radius: 24px;

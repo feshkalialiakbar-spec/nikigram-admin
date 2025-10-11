@@ -26,7 +26,11 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <WithNavbarLayout>{children}</WithNavbarLayout>
+        <WithNavbarLayout>
+          <div className="mainStyles">
+            {children}
+          </div>
+        </WithNavbarLayout>
       </body>
     </html>
   )

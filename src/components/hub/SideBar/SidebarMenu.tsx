@@ -355,7 +355,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
           className={`${styles.columns} ${isOpen && selectedParent && selectedParent.children?.length
             ? styles.withDock
             : ''
-            }`}
+            }`} 
         >
           <div className={styles.menuCol}>
             <div className={styles.menuItems}>

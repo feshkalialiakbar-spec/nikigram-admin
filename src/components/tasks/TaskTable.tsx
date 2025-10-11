@@ -1,6 +1,7 @@
 import React from 'react';
 import { Task } from '@/types/task';
-import { Refresh2, Eye, ExportSquare } from 'iconsax-react';
+import { ArrowLeft2 } from 'iconsax-react';
+import { convertToPersianDate } from '@/utils/dateUtils';
 import styles from './TaskTable.module.scss';
 
 interface TaskTableProps {
@@ -40,16 +41,7 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onOperationClick }) => {
   };
 
   const getOperationIcon = (operation: string) => {
-    switch (operation) {
-      case 'perform':
-        return <ExportSquare size={14} />;
-      case 'restart':
-        return <Refresh2 size={14} />;
-      case 'view':
-        return <Eye size={14} />;
-      default:
-        return <ExportSquare size={14} />;
-    }
+    return <ArrowLeft2 size={12} />;
   };
 
   return (
@@ -57,35 +49,51 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onOperationClick }) => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>نام وظیفه</th>
-            <th>فرآیند</th>
-            <th>تاریخ</th>
-            <th>وضعیت</th>
             <th>عملیات</th>
+            <th>وضعیت</th>
+            <th>پرسنل انجام دهنده</th>
+            <th>تاریخ</th>
+            <th>فرآیند</th>
+            <th>نام وظیفه</th>
           </tr>
         </thead>
         <tbody>
           {tasks.map((task, index) => (
             <tr key={task.id} className={index === 3 ? styles.highlightedRow : ''}>
-              <td className={styles.taskName}>{task.taskName}</td>
-              <td className={styles.process}>{task.process}</td>
-              <td className={styles.date}>{task.date}</td>
-              <td className={styles.status}>
-                <span className={`${styles.statusBadge} ${getStatusClass(task.status)}`}>
-                  {getStatusText(task.status)}
-                </span>
-              </td>
               <td className={styles.operations}>
                 <button
                   className={styles.operationButton}
                   onClick={() => onOperationClick(task.id, task.operation.type)}
                 >
+                  {task.operation.label}
                   <span className={styles.operationIcon}>
                     {getOperationIcon(task.operation.type)}
                   </span>
-                  {task.operation.label}
                 </button>
               </td>
+              <td className={styles.status}>
+                <span className={`${styles.statusBadge} ${getStatusClass(task.status)}`}>
+                  {getStatusText(task.status)}
+                </span>
+              </td>
+              <td className={styles.performerPersonnel}>
+                <div className={styles.avatarGrid}>
+                  {task.performerPersonnel.slice(0, 4).map((person, idx) => (
+                    <div key={person.id} className={styles.avatar}>
+                      {person.avatar ? (
+                        <img src={person.avatar} alt={person.name} />
+                      ) : (
+                        <div className={styles.avatarPlaceholder}>
+                          {person.name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </td>
+              <td className={styles.date}>{convertToPersianDate(task.date)}</td>
+              <td className={styles.process}>{task.process}</td>
+              <td className={styles.taskName}>{task.taskName}</td>
             </tr>
           ))}
         </tbody>
