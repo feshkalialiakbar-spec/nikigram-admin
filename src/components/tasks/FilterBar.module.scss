@@ -1,42 +1,12 @@
-// Animation keyframes
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Apply animations
 .filterBar {
-  background: #ffffff;
-  padding: 16px;
+  background: #F8F9FA;
+  padding: 20px;
   border-radius: 8px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
+  box-shadow: none;
   direction: rtl;
-  border: 1px solid #e5e7eb;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
   position: relative;
-  animation: fadeIn 0.3s ease-out;
-  
-  &:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
 }
 
 .filterContainer {
@@ -71,82 +41,55 @@
 
 .input {
   padding: 10px 35px 10px 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
   font-size: 14px;
   background: #ffffff;
   min-width: 180px;
   direction: rtl;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #374151;
+  transition: all 0.2s ease;
+  color: #343A40;
   
   &::placeholder {
-    color: #9ca3af;
+    color: #6B7280;
     font-size: 14px;
   }
   
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 1px #3b82f6;
-  }
-  
-  &:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    border-color: #007BFF;
+    box-shadow: 0 0 0 1px #007BFF;
   }
   
   &:hover:not(:focus) {
-    border-color: #9ca3af;
-  }
-  
-  &:disabled {
-    background-color: #f9fafb;
-    color: #9ca3af;
-    cursor: not-allowed;
-  }
-  
-  &:read-only {
-    background-color: #f9fafb;
-    cursor: default;
+    border-color: #9CA3AF;
   }
 }
 
 .select {
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
   font-size: 14px;
   background: #ffffff;
   min-width: 180px;
   direction: rtl;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #374151;
+  transition: all 0.2s ease;
+  color: #343A40;
   
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 1px #3b82f6;
-  }
-  
-  &:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    border-color: #007BFF;
+    box-shadow: 0 0 0 1px #007BFF;
   }
   
   &:hover:not(:focus) {
-    border-color: #9ca3af;
-  }
-  
-  &:disabled {
-    background-color: #f9fafb;
-    color: #9ca3af;
-    cursor: not-allowed;
+    border-color: #9CA3AF;
   }
   
   option {
-    color: #374151;
+    color: #343A40;
     background: #ffffff;
   }
 }

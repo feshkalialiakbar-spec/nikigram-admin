@@ -1,15 +1,10 @@
 .tableContainer {
-  background: var(--main-white);
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   direction: rtl;
-  border: 1px solid var(--gray-200);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
+  border: none;
 }
 
 .emptyState {
@@ -31,38 +26,37 @@
 }
 
 .table th {
-  background: #f8f9fa;
+  background: #E9ECEF;
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #e0e0e0;
+  color: #343A40;
+  border-bottom: 2px solid #DEE2E6;
   white-space: nowrap;
   font-size: 14px;
 }
 
 .table td {
   padding: 16px 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #F8F9FA;
   text-align: right;
   vertical-align: middle;
+  color: #343A40;
 }
 
 .table tbody tr {
   transition: background-color 0.2s ease;
+  background-color: #ffffff;
   
   &:hover {
     background-color: #f8f9fa;
   }
   
-  &:nth-child(even) {
-    background-color: #fafafa;
+  &.highlightedRow {
+    background-color: #FFF3F5;
   }
 }
 
-.highlightedRow {
-  background-color: #fff5f5 !important;
-}
 
 .taskName {
   font-weight: 500;
@@ -187,7 +181,7 @@
 
 .operationButton {
   background: transparent;
-  color: #007bff;
+  color: #007BFF;
   border: none;
   padding: 4px 8px;
   border-radius: 4px;
@@ -203,10 +197,6 @@
   &:hover {
     background: rgba(0, 123, 255, 0.1);
     color: #0056b3;
-  }
-  
-  &:active {
-    transform: translateY(1px);
   }
 }
 

@@ -9,17 +9,17 @@
 
 .navButton,
 .pageButton {
-  border: 1px solid #e0e0e0;
-  background: white;
-  color: #333;
+  border: none;
+  background: #007BFF;
+  color: white;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
-  min-width: 40px;
-  height: 40px;
+  min-width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,14 +42,13 @@
 
 .pageButton {
   &:hover:not(.active) {
-    background: #f8f9fa;
-    border-color: #007bff;
+    background: #E9ECEF;
+    color: #343A40;
   }
   
   &.active {
-    background: #007bff;
+    background: #007BFF;
     color: white;
-    border-color: #007bff;
   }
 }
 
