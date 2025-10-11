@@ -1,22 +1,31 @@
-import { FilterOptions } from '@/types/task'
-import { FaSearch, FaCalendarAlt } from 'react-icons/fa'
-import styles from './FilterBar.module.scss'
+import React from 'react';
+import { FaSearch, FaCalendarAlt } from 'react-icons/fa';
+import { FilterBarProps } from './types';
+import { 
+  PROCESS_OPTIONS, 
+  PERSONNEL_OPTIONS, 
+  STATUS_OPTIONS, 
+  OPERATION_OPTIONS 
+} from './utils';
+import styles from './FilterBar.module.scss';
 
-interface FilterBarProps {
-  filters: FilterOptions
-  onFilterChange: (filters: FilterOptions) => void
-}
-
-const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
-  const handleInputChange = (field: keyof FilterOptions, value: string) => {
+const FilterBar: React.FC<FilterBarProps> = ({ 
+  filters, 
+  onFilterChange, 
+  className 
+}) => {
+  const handleInputChange = React.useCallback((
+    field: keyof typeof filters, 
+    value: string
+  ) => {
     onFilterChange({
       ...filters,
       [field]: value,
-    })
-  }
+    });
+  }, [filters, onFilterChange]);
 
   return (
-    <div className={styles.filterBar}>
+    <div className={`${styles.filterBar} ${className || ''}`}>
       <div className={styles.filterContainer}>
         <div className={styles.searchInput}>
           <input
@@ -25,28 +34,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
             value={filters.search}
             onChange={(e) => handleInputChange('search', e.target.value)}
             className={styles.input}
+            aria-label="جستجو در وظایف"
           />
-          <FaSearch className={styles.searchIcon} />
+          <FaSearch className={styles.searchIcon} aria-hidden="true" />
         </div>
 
         <select
           value={filters.process}
           onChange={(e) => handleInputChange('process', e.target.value)}
           className={styles.select}
+          aria-label="انتخاب فرآیند"
         >
           <option value="">انتخاب فرآیند</option>
-          <option value="cooperation">درخواست همکاری</option>
-          <option value="help">درخواست کمک</option>
-          <option value="template">تمپلیت پروژه</option>
-          <option value="critical">بحرانی شدن پروژه</option>
-          <option value="tender">مناقصه</option>
-          <option value="comments">نظرات</option>
-          <option value="support">پشتیبانی</option>
-          <option value="sales">مدیریت فروش</option>
-          <option value="profile">پروفایل</option>
-          <option value="financial">مالی</option>
-          <option value="niki-yar">نیکی یار</option>
-          <option value="pos">درخواست پوز</option>
+          {PROCESS_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
 
         <div className={styles.dateInput}>
@@ -55,47 +59,55 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
             value={filters.date}
             onChange={(e) => handleInputChange('date', e.target.value)}
             className={styles.input}
+            aria-label="انتخاب تاریخ"
           />
-          <FaCalendarAlt className={styles.calendarIcon} />
+          <FaCalendarAlt className={styles.calendarIcon} aria-hidden="true" />
         </div>
 
         <select
           value={filters.performerPersonnel}
           onChange={(e) => handleInputChange('performerPersonnel', e.target.value)}
           className={styles.select}
+          aria-label="انتخاب پرسنل انجام دهنده"
         >
           <option value="">پرسنل انجام دهنده</option>
-          <option value="ahmad">احمد محمدی</option>
-          <option value="ali">علی رضایی</option>
-          <option value="hassan">حسن کریمی</option>
-          <option value="mohammad">محمد احمدی</option>
+          {PERSONNEL_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
 
         <select
           value={filters.status}
           onChange={(e) => handleInputChange('status', e.target.value)}
           className={styles.select}
+          aria-label="انتخاب وضعیت"
         >
           <option value="">وضعیت</option>
-          <option value="pending">در انتظار انجام</option>
-          <option value="stopped">متوقف شده</option>
-          <option value="rejected">رد شده</option>
-          <option value="completed">انجام شده</option>
+          {STATUS_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
 
         <select
           value={filters.operations}
           onChange={(e) => handleInputChange('operations', e.target.value)}
           className={styles.select}
+          aria-label="انتخاب عملیات"
         >
           <option value="">عملیات</option>
-          <option value="perform">انجام عملیات</option>
-          <option value="view">مشاهده</option>
-          <option value="restart">شروع مجدد</option>
+          {OPERATION_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FilterBar
+export default FilterBar;

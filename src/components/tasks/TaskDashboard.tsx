@@ -1,99 +1,82 @@
-'use client'
-import { useState, useMemo, useEffect } from 'react'
-import { Task, FilterOptions, PaginationInfo } from '@/types/task'
-import FilterBar from './FilterBar'
-import TaskTable from './TaskTable'
-import Pagination from './Pagination' 
-import styles from './TaskDashboard.module.scss'
-import { getTasks } from '@/services/task'
+'use client';
 
-// Mock data removed; data will be fetched from API and normalized in service
+import React from 'react';
+import { TaskDashboardProps } from './types';
+import { useTasks, useTaskFilters, useTaskPagination } from './hooks';
+import { DEFAULT_FILTERS } from './utils';
+import { TaskTableSkeleton } from '@/components/ui';
+import FilterBar from './FilterBar';
+import TaskTable from './TaskTable';
+import Pagination from './Pagination';
+import styles from './TaskDashboard.module.scss';
 
-const TaskDashboard: React.FC = () => {
-  const [filters, setFilters] = useState<FilterOptions>({
-    search: '',
-    process: '',
-    date: '',
-    performerPersonnel: '',
-    status: '',
-    operations: '',
-  })
-  const [data, setData] = useState<Task[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 15
+const TaskDashboard: React.FC<TaskDashboardProps> = ({ className }) => {
+  const { tasks, loading, error, refetch } = useTasks();
+  const { filters, filteredTasks, updateFilters } = useTaskFilters(tasks, DEFAULT_FILTERS);
+  const { currentPage, totalPages, paginatedTasks, goToPage } = useTaskPagination(filteredTasks);
 
-  // Filter tasks based on current filters
-  const filteredTasks = useMemo(() => {
-    return data.filter((task) => {
-      const matchesSearch =
-        !filters.search ||
-        task.taskName.toLowerCase().includes(filters.search.toLowerCase()) ||
-        task.process.toLowerCase().includes(filters.search.toLowerCase())
+  const handleFilterChange = React.useCallback((newFilters: typeof filters) => {
+    updateFilters(newFilters);
+    goToPage(1); // Reset to first page when filters change
+  }, [updateFilters, goToPage]);
 
-      const matchesProcess =
-        !filters.process || task.process === filters.process
-      const matchesDate = !filters.date || task.date === filters.date
-      const matchesPerformerPersonnel = 
-        !filters.performerPersonnel || 
-        task.performerPersonnel.some(person => person.id === filters.performerPersonnel)
-      const matchesStatus = !filters.status || task.status === filters.status
-      const matchesOperations = !filters.operations || task.operation.type === filters.operations
+  const handlePageChange = React.useCallback((page: number) => {
+    goToPage(page);
+  }, [goToPage]);
 
-      return matchesSearch && matchesProcess && matchesDate && matchesPerformerPersonnel && matchesStatus && matchesOperations
-    })
-  }, [filters, data])
-
-  // Paginate filtered tasks
-  const paginatedTasks = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    return filteredTasks.slice(startIndex, endIndex)
-  }, [filteredTasks, currentPage, itemsPerPage])
-
-  const pagination: PaginationInfo = {
-    currentPage,
-    totalPages: Math.ceil(filteredTasks.length / itemsPerPage),
-    totalItems: filteredTasks.length,
-    itemsPerPage,
-  }
-
-  const handleFilterChange = (newFilters: FilterOptions) => {
-    setFilters(newFilters)
-    setCurrentPage(1) // Reset to first page when filters change
-  }
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
-  const handleOperationClick = (taskId: string, operation: string) => {
-    console.log(`Operation ${operation} clicked for task ${taskId}`)
+  const handleOperationClick = React.useCallback((taskId: string, operation: string) => {
+    console.log(`Operation ${operation} clicked for task ${taskId}`);
     // Here you would typically navigate to a detail page or open a modal
+  }, []);
+
+  const paginationInfo = React.useMemo(() => ({
+    currentPage,
+    totalPages,
+    totalItems: filteredTasks.length,
+    itemsPerPage: 15,
+  }), [currentPage, totalPages, filteredTasks.length]);
+
+  if (loading) {
+    return (
+      <div className={`${styles.dashboard} ${className || ''}`}>
+        <TaskTableSkeleton rows={8} />
+      </div>
+    );
   }
 
-
-  useEffect(() => {
-    getTasks().then((data: Task[]) => {
-      setData(data)
-    })
-  }, [])
+  if (error) {
+    return (
+      <div className={`${styles.dashboard} ${className || ''}`}>
+        <div className={styles.error}>
+          خطا در بارگذاری داده‌ها: {error}
+          <button onClick={refetch} className={styles.retryButton}>
+            تلاش مجدد
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.dashboard}>
-
-
+    <div className={`${styles.dashboard} ${className || ''}`}>
       <div className={styles.mainContent}>
-        <FilterBar filters={filters} onFilterChange={handleFilterChange} />
+        <FilterBar 
+          filters={filters} 
+          onFilterChange={handleFilterChange} 
+        />
 
         <TaskTable
           tasks={paginatedTasks}
           onOperationClick={handleOperationClick}
         />
 
-        <Pagination pagination={pagination} onPageChange={handlePageChange} />
+        <Pagination 
+          pagination={paginationInfo} 
+          onPageChange={handlePageChange} 
+        />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TaskDashboard
+export default TaskDashboard;

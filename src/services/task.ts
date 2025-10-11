@@ -1,4 +1,4 @@
-import { Task } from '@/types/task'
+import { Task } from '@/components/tasks/types'
 
 // Normalize backend task object to UI Task type
 const mapApiTaskToTask = (apiTask: any): Task => {
@@ -56,19 +56,29 @@ const mapApiTaskToTask = (apiTask: any): Task => {
 }
 
 export const getTasks = async (): Promise<Task[]> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=10&offset=0`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=10&offset=0`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
-  )
-  const result = await response.json()
-  const apiTasks: any[] = result?.tasks || []
-  return apiTasks.map(mapApiTaskToTask)
+
+    const result = await response.json()
+    const apiTasks: any[] = result?.tasks || []
+    return apiTasks.map(mapApiTaskToTask)
+  } catch (error) {
+    console.error('Error fetching tasks:', error)
+    throw error instanceof Error ? error : new Error('Failed to fetch tasks')
+  }
 }
 
 export const getTask = async (id: number) => {

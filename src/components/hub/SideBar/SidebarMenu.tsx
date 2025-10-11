@@ -4,10 +4,12 @@ import { useRouter, usePathname } from 'next/navigation'
 import { CloseSquare, SearchNormal, ArrowLeft, ArrowLeft2 } from 'iconsax-react'
 import styles from './SidebarMenu.module.scss'
 import { quickActions, TaskMenuItem } from './items'
+import { SidebarSkeleton } from '@/components/ui'
 interface SidebarMenuProps {
   isOpen: boolean
   onClose: () => void
   onOpen?: () => void
+  loading?: boolean
 }
 
 
@@ -15,6 +17,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   isOpen,
   onClose,
   onOpen,
+  loading = false,
 }) => {
   const router = useRouter()
   const pathname = usePathname()
@@ -325,7 +328,11 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
   return (
     <>
-      <div className={`${styles.rail} ${isOpen ? styles.railOpen : ''}`} style={{ scrollbarWidth: 'none' }}>
+      {loading ? (
+        <SidebarSkeleton />
+      ) : (
+        <>
+          <div className={`${styles.rail} ${isOpen ? styles.railOpen : ''}`} style={{ scrollbarWidth: 'none' }}>
         {isOpen && !isDesktop && (
           <button className={styles.closeButton} onClick={onClose}>
             <CloseSquare
@@ -426,11 +433,11 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
           ) : null}
         </div>
       </div>
-      {isOpen && !isDesktop && (
-        <div className={styles.overlay} onClick={onClose} />
+          {isOpen && !isDesktop && (
+            <div className={styles.overlay} onClick={onClose} />
+          )}
+        </>
       )}
-
-
     </>
   )
 }

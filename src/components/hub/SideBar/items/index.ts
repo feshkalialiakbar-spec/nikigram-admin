@@ -157,37 +157,37 @@ export const quickActions: TaskMenuItem[] = [
     children: [
       {
         label: 'موجودی صندوق‌ها',
-        href: '/fund-balances',
+        href: '/financial-management/fund-balances',
         icon: Task,
       },
       {
         label: 'تراکنش‌های صندوق‌',
-        href: '/fund-transactions',
+        href: '/financial-management/fund-transactions',
         icon: Additem,
       },
       {
         label: 'کیف‌پول‌های کاربران',
-        href: '/user-wallets',
+        href: '/financial-management/user-wallets',
         icon: AddCircle,
       },
       {
         label: 'تراکنش‌های کاربران ',
-        href: '/user-transactions',
+        href: '/financial-management/user-transactions',
         icon: Task,
       },
       {
         label: 'پرداختی‌ها',
-        href: '/payments',
+        href: '/financial-management/payments',
         icon: Additem,
       },
       {
         label: 'درآمد',
-        href: '/income',
+        href: '/financial-management/income',
         icon: AddCircle,
       },
       {
         label: 'هزینه',
-        href: '/expenses',
+        href: '/financial-management/expenses',
         icon: AddCircle,
       },
     ],
@@ -199,17 +199,17 @@ export const quickActions: TaskMenuItem[] = [
     children: [
       {
         label: 'تعریف وظایف',
-        href: '/define-tasks',
+        href: '/access-levels/define-tasks',
         icon: Task,
       },
       {
         label: 'تعریف گروه',
-        href: '/define-groups',
+        href: '/access-levels/define-groups',
         icon: Additem,
       },
       {
         label: 'تعریف ادمین',
-        href: '/define-admins',
+        href: '/access-levels/define-admins',
         icon: AddCircle,
       },
     ],

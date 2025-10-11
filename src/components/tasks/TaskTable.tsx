@@ -1,51 +1,31 @@
 import React from 'react';
-import { Task } from '@/types/task';
 import { ArrowLeft2 } from 'iconsax-react';
 import { convertToPersianDate } from '@/utils/dateUtils';
+import { TaskTableProps } from './types';
+import { getStatusClass, getStatusText } from './utils';
 import styles from './TaskTable.module.scss';
 
-interface TaskTableProps {
-  tasks: Task[];
-  onOperationClick: (taskId: string, operation: string) => void;
-}
-
-const TaskTable: React.FC<TaskTableProps> = ({ tasks, onOperationClick }) => {
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return styles.statusPending;
-      case 'stopped':
-        return styles.statusStopped;
-      case 'rejected':
-        return styles.statusRejected;
-      case 'completed':
-        return styles.statusCompleted;
-      default:
-        return styles.statusPending;
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'در انتظار انجام';
-      case 'stopped':
-        return 'متوقف شده';
-      case 'rejected':
-        return 'رد شده';
-      case 'completed':
-        return 'انجام شده';
-      default:
-        return 'در انتظار انجام';
-    }
-  };
-
-  const getOperationIcon = (operation: string) => {
+const TaskTable: React.FC<TaskTableProps> = ({ 
+  tasks, 
+  onOperationClick, 
+  className 
+}) => {
+  const getOperationIcon = React.useCallback((operation: string) => {
     return <ArrowLeft2 size={12} />;
-  };
+  }, []);
+
+  if (tasks.length === 0) {
+    return (
+      <div className={`${styles.tableContainer} ${className || ''}`}>
+        <div className={styles.emptyState}>
+          هیچ وظیفه‌ای یافت نشد
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.tableContainer}>
+    <div className={`${styles.tableContainer} ${className || ''}`}>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -59,11 +39,16 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onOperationClick }) => {
         </thead>
         <tbody>
           {tasks.map((task, index) => (
-            <tr key={task.id} className={index === 3 ? styles.highlightedRow : ''}>
+            <tr 
+              key={task.id} 
+              className={index === 3 ? styles.highlightedRow : ''}
+            >
               <td className={styles.operations}>
                 <button
                   className={styles.operationButton}
                   onClick={() => onOperationClick(task.id, task.operation.type)}
+                  type="button"
+                  aria-label={`انجام عملیات ${task.operation.label} برای وظیفه ${task.taskName}`}
                 >
                   {task.operation.label}
                   <span className={styles.operationIcon}>
@@ -72,16 +57,24 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onOperationClick }) => {
                 </button>
               </td>
               <td className={styles.status}>
-                <span className={`${styles.statusBadge} ${getStatusClass(task.status)}`}>
+                <span 
+                  className={`${styles.statusBadge} ${getStatusClass(task.status)}`}
+                  role="status"
+                  aria-label={`وضعیت: ${getStatusText(task.status)}`}
+                >
                   {getStatusText(task.status)}
                 </span>
               </td>
               <td className={styles.performerPersonnel}>
                 <div className={styles.avatarGrid}>
-                  {task.performerPersonnel.slice(0, 4).map((person, idx) => (
+                  {task.performerPersonnel.slice(0, 4).map((person) => (
                     <div key={person.id} className={styles.avatar}>
                       {person.avatar ? (
-                        <img src={person.avatar} alt={person.name} />
+                        <img 
+                          src={person.avatar} 
+                          alt={person.name}
+                          loading="lazy"
+                        />
                       ) : (
                         <div className={styles.avatarPlaceholder}>
                           {person.name.charAt(0)}
@@ -91,7 +84,9 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, onOperationClick }) => {
                   ))}
                 </div>
               </td>
-              <td className={styles.date}>{convertToPersianDate(task.date)}</td>
+              <td className={styles.date}>
+                {convertToPersianDate(task.date)}
+              </td>
               <td className={styles.process}>{task.process}</td>
               <td className={styles.taskName}>{task.taskName}</td>
             </tr>

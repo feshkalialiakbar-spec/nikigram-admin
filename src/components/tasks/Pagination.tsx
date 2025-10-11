@@ -1,34 +1,33 @@
 import React from 'react';
-import { PaginationInfo } from '@/types/task';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { PaginationProps } from './types';
 import styles from './Pagination.module.scss';
 
-interface PaginationProps {
-  pagination: PaginationInfo;
-  onPageChange: (page: number) => void;
-}
-
-const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({ 
+  pagination, 
+  onPageChange, 
+  className 
+}) => {
   const { currentPage, totalPages } = pagination;
 
-  const handlePrevious = () => {
+  const handlePrevious = React.useCallback(() => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
     }
-  };
+  }, [currentPage, onPageChange]);
 
-  const handleNext = () => {
+  const handleNext = React.useCallback(() => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
     }
-  };
+  }, [currentPage, totalPages, onPageChange]);
 
-  const handlePageClick = (page: number) => {
+  const handlePageClick = React.useCallback((page: number) => {
     onPageChange(page);
-  };
+  }, [onPageChange]);
 
-  const renderPageNumbers = () => {
-    const pages = [];
+  const renderPageNumbers = React.useMemo(() => {
+    const pages: React.ReactNode[] = [];
     const maxVisiblePages = 3;
     
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
@@ -44,6 +43,9 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange }) => 
           key={i}
           className={`${styles.pageButton} ${i === currentPage ? styles.active : ''}`}
           onClick={() => handlePageClick(i)}
+          type="button"
+          aria-label={`برو به صفحه ${i}`}
+          aria-current={i === currentPage ? 'page' : undefined}
         >
           {i}
         </button>
@@ -51,28 +53,39 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange }) => 
     }
 
     return pages;
-  };
+  }, [currentPage, totalPages, handlePageClick]);
+
+  if (totalPages <= 1) {
+    return null;
+  }
 
   return (
-    <div className={styles.pagination}>
+    <nav 
+      className={`${styles.pagination} ${className || ''}`}
+      aria-label="صفحه‌بندی"
+    >
       <button
         className={`${styles.navButton} ${currentPage === 1 ? styles.disabled : ''}`}
         onClick={handlePrevious}
         disabled={currentPage === 1}
+        type="button"
+        aria-label="صفحه قبلی"
       >
-        <FaChevronLeft />
+        <FaChevronLeft aria-hidden="true" />
       </button>
       
-      {renderPageNumbers()}
+      {renderPageNumbers}
       
       <button
         className={`${styles.navButton} ${currentPage === totalPages ? styles.disabled : ''}`}
         onClick={handleNext}
         disabled={currentPage === totalPages}
+        type="button"
+        aria-label="صفحه بعدی"
       >
-        <FaChevronRight />
+        <FaChevronRight aria-hidden="true" />
       </button>
-    </div>
+    </nav>
   );
 };
 
