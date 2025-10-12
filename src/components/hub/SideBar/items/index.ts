@@ -61,6 +61,10 @@ export const quickActions: TaskMenuItem[] = [
         label: 'متوقف شده',
         href: '/dashboard/tasks-stopped',
         icon: Profile2User,
+      }, {
+        label: 'در انتظار انجام مشترک',
+        href: '/dashboard/to-do-list',
+        icon: Profile2User,
       },
       {
         label: 'اختصاص نیافته',

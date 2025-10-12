@@ -1,6 +1,5 @@
 import { Task } from '@/components/tasks/types';
 
-// API response type from backend
 interface ApiTask {
   task_id?: number;
   task_title?: string;
@@ -86,7 +85,7 @@ export const fetchMyTasks = async (): Promise<Task[]> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return []
     }
 
     const result = await response.json();
@@ -114,7 +113,7 @@ export const fetchUnassignedTasks = async (): Promise<Task[]> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return []
     }
 
     const result = await response.json();
@@ -142,7 +141,7 @@ export const fetchStoppedTasks = async (): Promise<Task[]> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return []
     }
 
     const result = await response.json();
@@ -225,6 +224,41 @@ export const fetchCancelledTasks = async (): Promise<Task[]> => {
 };
 
 /**
+ * Fetch tasks waiting for me (pending tasks assigned to current user - status 37)
+ */
+export const fetchWaitingForMeTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(37);
+};
+
+/**
+ * Fetch shared to-do tasks (pending tasks for collaboration)
+ */
+export const fetchToDoListTasks = async (): Promise<Task[]> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared_pending/?limit=10&offset=0`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return []
+    }
+
+    const result = await response.json();
+    const apiTasks: ApiTask[] = result?.tasks || [];
+    return apiTasks.map(mapApiTaskToTask);
+  } catch (error) {
+    console.error('Error fetching to-do list tasks:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch to-do list tasks');
+  }
+};
+
+/**
  * Fetch a single task by ID
  */
 export const fetchTaskById = async (id: string | number): Promise<Task> => {
@@ -240,7 +274,7 @@ export const fetchTaskById = async (id: string | number): Promise<Task> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return {} as Task
     }
 
     const apiTask = await response.json();
@@ -268,7 +302,7 @@ export const createTask = async (taskData: Partial<Task>): Promise<Task> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return {} as Task
     }
 
     const apiTask = await response.json();
@@ -296,7 +330,7 @@ export const updateTask = async (id: string | number, taskData: Partial<Task>): 
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return {} as Task
     }
 
     const apiTask = await response.json();
@@ -323,7 +357,7 @@ export const deleteTask = async (id: string | number): Promise<void> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return
     }
   } catch (error) {
     console.error('Error deleting task:', error);

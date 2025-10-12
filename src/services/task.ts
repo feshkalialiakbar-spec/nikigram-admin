@@ -16,5 +16,7 @@ export {
   fetchNeedsCorrectionTasks,
   fetchRejectedTasks,
   fetchCancelledTasks,
+  fetchWaitingForMeTasks,
+  fetchToDoListTasks,
   fetchTasksByStatus,
 } from './taskServices';
