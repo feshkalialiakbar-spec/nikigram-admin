@@ -1,5 +1,5 @@
 import React from 'react';
-import {   ArrangeHorizontal, ArrowRotateRight, Eye } from 'iconsax-react';
+import { ArrangeHorizontal, ArrowRotateRight, Eye } from 'iconsax-react';
 import { convertToPersianDate } from '@/utils/dateUtils';
 import { TaskTableProps } from './types';
 import { getStatusClass, getStatusText } from './utils';

@@ -183,7 +183,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     return () => {
       window.removeEventListener('resize', checkDesktop)
     }
-  }, [defaultShortcuts])
+  }, [])
 
   // Save shortcuts to cookies when changed
   useEffect(() => {

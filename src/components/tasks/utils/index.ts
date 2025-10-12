@@ -31,7 +31,7 @@ export const getStatusText = (status: TaskStatus): string => {
 };
 
 // Process options for filter dropdown
-export const PROCESS_OPTIONS = [
+export const PROCESS_OPTIONS: { label: string; value: string }[] = [
   { value: 'cooperation', label: 'درخواست همکاری' },
   { value: 'help', label: 'درخواست کمک' },
   { value: 'template', label: 'تمپلیت پروژه' },
@@ -44,7 +44,7 @@ export const PROCESS_OPTIONS = [
   { value: 'financial', label: 'مالی' },
   { value: 'niki-yar', label: 'نیکی یار' },
   { value: 'pos', label: 'درخواست پوز' },
-] as const;
+];
 
 // Personnel options for filter dropdown
 export const PERSONNEL_OPTIONS = [
@@ -52,10 +52,10 @@ export const PERSONNEL_OPTIONS = [
   { value: 'ali', label: 'علی رضایی' },
   { value: 'hassan', label: 'حسن کریمی' },
   { value: 'mohammad', label: 'محمد احمدی' },
-] as const;
+];
 
 // Status options for filter dropdown
-export const STATUS_OPTIONS = [
+export const STATUS_OPTIONS: { label: string; value: string }[] = [
   { value: 'pending', label: 'در انتظار' },
   { value: 'in_progress', label: 'در حال انجام' },
   { value: 'completed', label: 'تکمیل شده' },
@@ -63,14 +63,14 @@ export const STATUS_OPTIONS = [
   { value: 'needs_correction', label: 'نیاز به اصلاح' },
   { value: 'rejected', label: 'رد شده' },
   { value: 'cancelled', label: 'لغو شده' },
-] as const;
+];
 
 // Operation options for filter dropdown
 export const OPERATION_OPTIONS = [
   { value: 'perform', label: 'انجام عملیات' },
   { value: 'view', label: 'مشاهده' },
   { value: 'restart', label: 'شروع مجدد' },
-] as const;
+];
 
 // Default filter values
 export const DEFAULT_FILTERS = {

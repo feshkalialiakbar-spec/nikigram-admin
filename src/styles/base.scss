@@ -113,6 +113,7 @@
 
 html,
 body {
+  background-color: #F0F4FA;
   overflow-x: hidden;
   height: 100%;
   min-height: 100vh;
@@ -189,7 +190,7 @@ label {
   }
 }
 
-@media (width>1111px) { 
+@media (width>1111px) {
   .mainStyles {
     margin-right: 220px;
   }

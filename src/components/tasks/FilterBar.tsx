@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchNormal1, Calendar } from 'iconsax-react';
+import { SearchNormal1 } from 'iconsax-react';
 import { FilterBarProps } from './types';
 import { 
   PROCESS_OPTIONS, 
@@ -84,12 +84,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
               textInput: 'main-black',
               listTextColor: 'main-black',
               listBgColor: 'main-white'
-            }}
-            rightContent={{
-              Icon: Calendar,
-              iconSize: 16,
-              iconColor: 'var(--gray-500)',
-              variant: 'Linear'
             }}
           />
         </div>

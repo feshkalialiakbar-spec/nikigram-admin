@@ -81,7 +81,7 @@ const SkeletonDemo: React.FC = () => {
           <Skeleton width="80%" height="20px" />
           <Skeleton width="60%" height="20px" />
           <Skeleton width={50} height={50} variant="circular" />
-          <Skeleton width="200px" height="40px" borderRadius="20px" />
+          <Skeleton width="200px" height="40px" borderRadius={20} />
         </div>
       </div>
     </div>
