@@ -46,6 +46,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
               <td className={styles.operations}>
                 <button
                   className={styles.operationButton}
+                  data-operation={task.operation.type}
                   onClick={() => onOperationClick(task.id, task.operation.type)}
                   type="button"
                   aria-label={`انجام عملیات ${task.operation.label} برای وظیفه ${task.taskName}`}

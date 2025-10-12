@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import '../styles/main.scss'
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout'
+import { QueryProvider } from '@/components/providers/QueryProvider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,11 +27,13 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <WithNavbarLayout>
-          <div className="mainStyles">
-            {children}
-          </div>
-        </WithNavbarLayout>
+        <QueryProvider>
+          <WithNavbarLayout>
+            <div className="mainStyles">
+              {children}
+            </div>
+          </WithNavbarLayout>
+        </QueryProvider>
       </body>
     </html>
   )

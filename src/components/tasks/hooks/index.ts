@@ -1,38 +1,28 @@
 // Custom hooks for task management
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Task, FilterOptions, UseTasksReturn, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
-import { getTasks } from '@/services/task';
+import { useState, useMemo, useCallback } from 'react';
+import { Task, FilterOptions, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
+import { useMyTasks } from '@/hooks/useTaskServices';
 import { useSkeletonLoading } from './useSkeletonLoading';
 
-// Hook for fetching tasks
-export const useTasks = (): UseTasksReturn => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const showSkeleton = useSkeletonLoading({ isLoading: loading });
-
-  const fetchTasks = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getTasks();
-      setTasks(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+// Hook for fetching tasks using React Query
+export const useTasksQuery = (filters: FilterOptions = {
+  search: '',
+  process: '',
+  date: '',
+  performerPersonnel: '',
+  status: '',
+  operations: '',
+}) => {
+  const { data: tasks = [], isLoading, error, refetch } = useMyTasks();
+  const showSkeleton = useSkeletonLoading({ isLoading });
 
   return {
     tasks,
     loading: showSkeleton,
-    error,
-    refetch: fetchTasks,
+    error: error?.message || null,
+    refetch: async () => {
+      await refetch();
+    },
   };
 };
 

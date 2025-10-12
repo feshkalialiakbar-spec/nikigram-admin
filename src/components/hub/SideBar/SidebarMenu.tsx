@@ -5,6 +5,7 @@ import { CloseSquare, SearchNormal, ArrowLeft, ArrowLeft2 } from 'iconsax-react'
 import styles from './SidebarMenu.module.scss'
 import { quickActions, TaskMenuItem } from './items'
 import { SidebarSkeleton } from '@/components/ui'
+import Link from 'next/link'
 interface SidebarMenuProps {
   isOpen: boolean
   onClose: () => void
@@ -333,106 +334,106 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       ) : (
         <>
           <div className={`${styles.rail} ${isOpen ? styles.railOpen : ''}`} style={{ scrollbarWidth: 'none' }}>
-        {isOpen && !isDesktop && (
-          <button className={styles.closeButton} onClick={onClose}>
-            <CloseSquare
-              size={18}
-              variant="Outline"
-              color="currentColor"
-              className={styles.icon}
-            />
-          </button>
-        )}
-        {isOpen && selectedParent && selectedParent.children?.length && (
-          <div className={styles.searchBox}>
-            <SearchNormal
-              size={16}
-              variant="Outline"
-              color="var(--gray-500)"
-              className={styles.searchIcon}
-            />
-            <input
-              type="text"
-              placeholder="جستجو..."
-              className={styles.searchInput}
-            />
-          </div>
-        )}
-        <div
-          className={`${styles.columns} ${isOpen && selectedParent && selectedParent.children?.length
-            ? styles.withDock
-            : ''
-            }`} 
-        >
-          <div className={styles.menuCol}>
-            <div className={styles.menuItems}>
-              {quickActions.map((action, idx) => (
-                <div key={idx} className={styles.menuItemWrapper}>
-                  {(() => {
-                    const isParentActive =
-                      activeItem === action.href ||
-                      (!!action.children && action.children.some((c) => c.href === activeItem)) ||
-                      (selectedParent && selectedParent.label === action.label)
-                    return (
-                      <button
-                        ref={(el) => {
-                          railIconRefs.current[idx] = el
-                        }}
-                        className={`${styles.parentItem} ${isParentActive ? styles.active : ''}`}
-                        aria-expanded={expandedParents.has(action.label)}
-                        onClick={() =>
-                          isOpen ? handleRailClickWhenOpen(action) : onOpen && onOpen()
-                        }
-                        title={action.label}
-                      >
-                        <action.icon
-                          size={isOpen ? 20 : 24}
-                          variant="Bulk"
-                          color="currentColor"
-                          className={styles.icon}
-                        />
-                        {isOpen && !(selectedParent && selectedParent.children?.length) && (
-                          <span className={styles.itemLabel}>{action.label}</span>
-                        )}
-                      </button>
-                    )
-                  })()}
-                </div>
-              ))}
-            </div>
-          </div>
-          {isOpen && selectedParent && selectedParent.children?.length ? (
-            <div className={styles.childrenDock}>
-              <div className={styles.childrenPopupContent}>
-                <div className={styles.childrenPopupHeader}>
-                  <ArrowLeft2
-                    size={16}
-                    variant="Bold"
-                    color="currentColor"
-                    className={styles.icon}
-                  />
-                  {selectedParent.label}</div>
-                <div className={styles.childrenPopupList}>
-                  {selectedParent.children.map((child, idx) => (
-                    <a
-                      key={`dock-${idx}`}
-                      className={`${styles.childrenPopupItem} ${activeItem === child.href ? styles.active : ''
-                        }`}
-                      href={child.href}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        handleItemClick(child.href, child.label)
-                      }}
-                    >
-                      <span>{child.label}</span>
-                    </a>
+            {isOpen && !isDesktop && (
+              <button className={styles.closeButton} onClick={onClose}>
+                <CloseSquare
+                  size={18}
+                  variant="Outline"
+                  color="currentColor"
+                  className={styles.icon}
+                />
+              </button>
+            )}
+            {isOpen && selectedParent && selectedParent.children?.length && (
+              <div className={styles.searchBox}>
+                <SearchNormal
+                  size={16}
+                  variant="Outline"
+                  color="var(--gray-500)"
+                  className={styles.searchIcon}
+                />
+                <input
+                  type="text"
+                  placeholder="جستجو..."
+                  className={styles.searchInput}
+                />
+              </div>
+            )}
+            <div
+              className={`${styles.columns} ${isOpen && selectedParent && selectedParent.children?.length
+                ? styles.withDock
+                : ''
+                }`}
+            >
+              <div className={styles.menuCol}>
+                <div className={styles.menuItems}>
+                  {quickActions.map((action, idx) => (
+                    <div key={idx} className={styles.menuItemWrapper}>
+                      {(() => {
+                        const isParentActive =
+                          activeItem === action.href ||
+                          (!!action.children && action.children.some((c) => c.href === activeItem)) ||
+                          (selectedParent && selectedParent.label === action.label)
+                        return (
+                          <button
+                            ref={(el) => {
+                              railIconRefs.current[idx] = el
+                            }}
+                            className={`${styles.parentItem} ${isParentActive ? styles.active : ''}`}
+                            aria-expanded={expandedParents.has(action.label)}
+                            onClick={() =>
+                              isOpen ? handleRailClickWhenOpen(action) : onOpen && onOpen()
+                            }
+                            title={action.label}
+                          >
+                            <action.icon
+                              size={isOpen ? 20 : 24}
+                              variant="Bulk"
+                              color="currentColor"
+                              className={styles.icon}
+                            />
+                            {isOpen && !(selectedParent && selectedParent.children?.length) && (
+                              <span className={styles.itemLabel}>{action.label}</span>
+                            )}
+                          </button>
+                        )
+                      })()}
+                    </div>
                   ))}
                 </div>
               </div>
+              {isOpen && selectedParent && selectedParent.children?.length ? (
+                <div className={styles.childrenDock}>
+                  <div className={styles.childrenPopupContent}>
+                    <Link href={selectedParent.href} className={styles.childrenPopupHeader}>
+                      <ArrowLeft2
+                        size={16}
+                        variant="Bold"
+                        color="currentColor"
+                        className={styles.icon}
+                      />
+                      {selectedParent.label}</Link>
+                    <div className={styles.childrenPopupList}>
+                      {selectedParent.children.map((child, idx) => (
+                        <Link
+                          key={`dock-${idx}`}
+                          className={`${styles.childrenPopupItem} ${activeItem === child.href ? styles.active : ''
+                            }`}
+                          href={child.href}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleItemClick(child.href, child.label)
+                          }}
+                        >
+                          <span>{child.label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
-          ) : null}
-        </div>
-      </div>
+          </div>
           {isOpen && !isDesktop && (
             <div className={styles.overlay} onClick={onClose} />
           )}

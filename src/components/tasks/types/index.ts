@@ -15,7 +15,7 @@ export interface PerformerPerson {
   avatar?: string;
 }
 
-export type TaskStatus = 'pending' | 'stopped' | 'rejected' | 'completed';
+export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'approved' | 'needs_correction' | 'rejected' | 'cancelled';
 
 export interface TaskOperation {
   type: 'perform' | 'restart' | 'view';
@@ -101,3 +101,4 @@ export interface UseTaskPaginationReturn {
   nextPage: () => void;
   previousPage: () => void;
 }
+

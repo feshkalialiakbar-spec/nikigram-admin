@@ -5,9 +5,12 @@ import { TaskStatus } from '../types';
 export const getStatusClass = (status: TaskStatus): string => {
   const statusClassMap: Record<TaskStatus, string> = {
     pending: 'statusPending',
-    stopped: 'statusStopped',
-    rejected: 'statusRejected',
+    in_progress: 'statusInProgress',
     completed: 'statusCompleted',
+    approved: 'statusApproved',
+    needs_correction: 'statusNeedsCorrection',
+    rejected: 'statusRejected',
+    cancelled: 'statusCancelled',
   };
   
   return statusClassMap[status] || 'statusPending';
@@ -15,13 +18,16 @@ export const getStatusClass = (status: TaskStatus): string => {
 
 export const getStatusText = (status: TaskStatus): string => {
   const statusTextMap: Record<TaskStatus, string> = {
-    pending: 'در انتظار انجام',
-    stopped: 'متوقف شده',
+    pending: 'در انتظار',
+    in_progress: 'در حال انجام',
+    completed: 'تکمیل شده',
+    approved: 'تایید شده',
+    needs_correction: 'نیاز به اصلاح',
     rejected: 'رد شده',
-    completed: 'انجام شده',
+    cancelled: 'لغو شده',
   };
   
-  return statusTextMap[status] || 'در انتظار انجام';
+  return statusTextMap[status] || 'در انتظار';
 };
 
 // Process options for filter dropdown
@@ -50,10 +56,13 @@ export const PERSONNEL_OPTIONS = [
 
 // Status options for filter dropdown
 export const STATUS_OPTIONS = [
-  { value: 'pending', label: 'در انتظار انجام' },
-  { value: 'stopped', label: 'متوقف شده' },
+  { value: 'pending', label: 'در انتظار' },
+  { value: 'in_progress', label: 'در حال انجام' },
+  { value: 'completed', label: 'تکمیل شده' },
+  { value: 'approved', label: 'تایید شده' },
+  { value: 'needs_correction', label: 'نیاز به اصلاح' },
   { value: 'rejected', label: 'رد شده' },
-  { value: 'completed', label: 'انجام شده' },
+  { value: 'cancelled', label: 'لغو شده' },
 ] as const;
 
 // Operation options for filter dropdown
@@ -72,3 +81,4 @@ export const DEFAULT_FILTERS = {
   status: '',
   operations: '',
 } as const;
+

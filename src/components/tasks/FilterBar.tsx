@@ -43,9 +43,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
           value={filters.process}
           onChange={(e) => handleInputChange('process', e.target.value)}
           className={styles.select}
-          aria-label="انتخاب فرآیند"
+          aria-label="انتخاب عنوان"
         >
-          <option value="">انتخاب فرآیند</option>
+          <option value="">انتخاب عنوان</option>
           {PROCESS_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

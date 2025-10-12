@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { TaskDashboardProps } from './types';
-import { useTasks, useTaskFilters, useTaskPagination } from './hooks';
+import { useTasksQuery, useTaskFilters, useTaskPagination } from './hooks';
 import { DEFAULT_FILTERS } from './utils';
+import { useRealTimeTasks } from '@/hooks/useRealTimeTasks';
 import { TaskTableSkeleton } from '@/components/ui';
 import FilterBar from './FilterBar';
 import TaskTable from './TaskTable';
@@ -11,9 +12,15 @@ import Pagination from './Pagination';
 import styles from './TaskDashboard.module.scss';
 
 const TaskDashboard: React.FC<TaskDashboardProps> = ({ className }) => {
-  const { tasks, loading, error, refetch } = useTasks();
+  const { tasks, loading, error, refetch } = useTasksQuery();
   const { filters, filteredTasks, updateFilters } = useTaskFilters(tasks, DEFAULT_FILTERS);
   const { currentPage, totalPages, paginatedTasks, goToPage } = useTaskPagination(filteredTasks);
+  
+  // Enable real-time updates
+  useRealTimeTasks({
+    enabled: true,
+    interval: 30000, // 30 seconds
+  });
 
   const handleFilterChange = React.useCallback((newFilters: typeof filters) => {
     updateFilters(newFilters);

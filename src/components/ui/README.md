@@ -211,3 +211,4 @@ You can customize animations by overriding CSS:
 ## Examples
 
 See `SkeletonDemo` component for interactive examples of all skeleton components.
+

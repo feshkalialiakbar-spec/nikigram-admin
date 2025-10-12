@@ -1,43 +1,34 @@
-import React from 'react';
 import styles from './Skeleton.module.scss';
-
 interface SkeletonProps {
-  width?: string | number;
-  height?: string | number;
-  borderRadius?: string | number;
+  width?: number | string;
+  height?: number | string;
+  borderRadius?: number;
+  variant?: 'rectangular' | 'circular';
   className?: string;
-  variant?: 'text' | 'rectangular' | 'circular';
-  animation?: 'pulse' | 'wave' | 'none';
 }
-
 const Skeleton: React.FC<SkeletonProps> = ({
-  width = '100%',
-  height = '1rem',
-  borderRadius = '4px',
-  className = '',
+  width,
+  height,
+  borderRadius,
   variant = 'rectangular',
-  animation = 'pulse',
+  className = '',
 }) => {
-  const skeletonStyle: React.CSSProperties = {
+  const style: React.CSSProperties = {
     width: typeof width === 'number' ? `${width}px` : width,
     height: typeof height === 'number' ? `${height}px` : height,
-    borderRadius: variant === 'circular' ? '50%' : borderRadius,
+    borderRadius: variant === 'circular'
+      ? '50%'
+      : borderRadius
+        ? `${borderRadius}px`
+        : undefined,
   };
-
-  const skeletonClasses = [
-    styles.skeleton,
-    styles[variant],
-    styles[animation],
-    className,
-  ].filter(Boolean).join(' ');
-
   return (
     <div
-      className={skeletonClasses}
-      style={skeletonStyle}
-      aria-hidden="true"
+      className={`${styles.skeleton} ${className}`}
+      style={style}
     />
   );
 };
 
 export default Skeleton;
+

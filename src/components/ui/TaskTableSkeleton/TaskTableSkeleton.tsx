@@ -1,5 +1,5 @@
 import React from 'react';
-import Skeleton from '../Skeleton/Skeleton';
+import { Skeleton } from '../Skeleton';
 import styles from './TaskTableSkeleton.module.scss';
 
 interface TaskTableSkeletonProps {

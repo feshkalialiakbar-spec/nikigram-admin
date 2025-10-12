@@ -9,9 +9,9 @@
 
 .navButton,
 .pageButton {
-  border: none;
-  background: #007BFF;
-  color: white;
+  border: 1px solid #E9ECEF;
+  background: #ffffff;
+  color: #007BFF;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -30,25 +30,27 @@
   
   &:hover:not(.disabled) {
     background: #f8f9fa;
-    border-color: #007bff;
+    color: #0056b3;
   }
   
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background: #f8f9fa;
+    color: #6c757d;
   }
 }
 
 .pageButton {
   &:hover:not(.active) {
-    background: #E9ECEF;
-    color: #343A40;
+    background: #f8f9fa;
+    color: #0056b3;
   }
   
   &.active {
     background: #007BFF;
     color: white;
+    border-color: #007BFF;
   }
 }
 
