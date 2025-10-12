@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { CloseSquare, SearchNormal, ArrowLeft2 } from 'iconsax-react'
 import styles from './SidebarMenu.module.scss'
@@ -28,18 +28,18 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   const [focusedIndex, setFocusedIndex] = useState<number>(0)
   const [expandedParents, setExpandedParents] = useState<Set<string>>(new Set())
   const [showShortcutToolbox, setShowShortcutToolbox] = useState<boolean>(false)
-  const [customShortcuts, setCustomShortcuts] = useState<any>({})
+  const [customShortcuts, setCustomShortcuts] = useState<Record<string, { key: string; description: string }>>({})
   const [isDesktop, setIsDesktop] = useState<boolean>(false)
   const [selectedParent, setSelectedParent] = useState<TaskMenuItem | null>(null)
 
-  const handleItemClick = (href: string, label: string) => {
+  const handleItemClick = useCallback((href: string, _label: string) => {
     setActiveItem(href)
     router.push(href)
     // Close children dock when navigating to a child item
     setSelectedParent(null)
-  }
+  }, [router])
 
-  const handleParentToggle = (label: string) => {
+  const handleParentToggle = useCallback((label: string) => {
     setExpandedParents((prev) => {
       const newSet = new Set(prev)
       if (newSet.has(label)) {
@@ -49,12 +49,12 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       }
       return newSet
     })
-  }
+  }, [])
 
-  const handleRailClickWhenOpen = (action: {
+  const handleRailClickWhenOpen = useCallback((action: {
     href: string
     label: string
-    children?: any[]
+    children?: TaskMenuItem['children']
   }) => {
     if (action.children && action.children.length > 0) {
       // If this parent is already selected, toggle its expansion
@@ -67,15 +67,14 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       } else {
         // Select this parent and expand it
         handleParentToggle(action.label)
-        // @ts-ignore - action shape aligns with TaskMenuItem
-        setSelectedParent(action as unknown as TaskMenuItem)
+         setSelectedParent(action as unknown as TaskMenuItem)
       }
     } else {
       // Navigate if no children
       handleItemClick(action.href, action.label)
       setSelectedParent(null)
     }
-  }
+  }, [selectedParent, expandedParents, handleParentToggle, handleItemClick])
 
 
   // Cookie management for shortcuts
@@ -174,7 +173,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     if (savedShortcuts) {
       try {
         setCustomShortcuts(JSON.parse(savedShortcuts))
-      } catch (e) {
+      } catch (_e) {
         setCustomShortcuts(defaultShortcuts)
       }
     } else {
@@ -184,7 +183,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     return () => {
       window.removeEventListener('resize', checkDesktop)
     }
-  }, [])
+  }, [defaultShortcuts])
 
   // Save shortcuts to cookies when changed
   useEffect(() => {
@@ -215,7 +214,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         clearTimeout(childrenPopupTimeoutRef.current)
       }
     }
-  }, [isOpen, onClose])
+  }, [isOpen, onClose, childrenPopupTimeoutRef])
 
   // Enhanced keyboard shortcuts with custom key support
   useEffect(() => {
@@ -298,9 +297,9 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     onClose,
     onOpen,
     focusedIndex,
-    router,
     customShortcuts,
     showShortcutToolbox,
+    handleRailClickWhenOpen,
   ])
 
   // Helper function to check if pressed keys match shortcut

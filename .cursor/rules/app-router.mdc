@@ -1,0 +1,6 @@
+# Next.js Page and Route Rules
+All new pages, layouts, and API routes must:
+- Use the App Router convention.
+- Be placed under the `app/` directory.
+- Be Server Components by default, unless client-side interactivity is required. Use "use client" only when necessary.
+- Use named exports for components, not default exports.

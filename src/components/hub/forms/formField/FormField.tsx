@@ -1,11 +1,11 @@
 import React from "react";
 import { TagUser } from "iconsax-react";
-import TextField, { IconProps } from "@/components/ui/forms/textField/TextField";
-import Dropdown from "@/components/ui/forms/dropdown/Dropdown";
+import TextField, { IconProps } from "@/components/hub/forms/textField/TextField";
+import Dropdown from "@/components/hub/forms/dropdown/Dropdown";
 import CustomCalender from "@/components/global/customCalender/CustomCalender";
-import RadioButton from "@/components/ui/forms/radioButton/RadioButton";
+import RadioButton from "@/components/hub/forms/radioButton/RadioButton";
 import Styles from "./FormField.module.scss";
-import { Colors, TextStyles } from "@/components/ui/text/Text";
+import { Colors, TextStyles } from "@/components/hub/forms/text/Text";
 
 interface FormFieldProps {
   type: "text" | "dropdown" | "calendar" | "radio";

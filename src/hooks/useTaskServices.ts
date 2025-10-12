@@ -28,7 +28,7 @@ interface UseApiListOptions<T> {
   gcTime?: number;
 }
 
-export const useApiList = <T = any>({
+export const useApiList = <T = unknown>({
   fetcher,
   queryKey,
   enabled = true,

@@ -25,7 +25,7 @@ export type {
 
 // Export hooks
 export {
-  useTasks,
+  useTasksQuery,
   useTaskFilters,
   useTaskPagination,
   useSkeletonLoading,

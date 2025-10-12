@@ -1,4 +1,5 @@
-import { Task } from '@/components/tasks/types'
+// Re-export Task type for convenience
+export type { Task } from '@/components/tasks/types';
 
 // Re-export from the new taskServices file
 export {

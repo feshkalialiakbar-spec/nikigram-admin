@@ -1,0 +1,7 @@
+# Next.js API Route Rules
+All new API routes must:
+- Be placed under the `app/api/` directory.
+- Use the `route.ts` file convention.
+- Always use Zod for request validation.
+- Return JSON with appropriate status codes.
+- Use `async` functions with explicit return types.

@@ -1,6 +1,16 @@
 import { Task } from '@/components/tasks/types';
 
-const mapApiTaskToTask = (apiTask: any): Task => {
+// API response type from backend
+interface ApiTask {
+  task_id?: number;
+  task_title?: string;
+  status_name?: string;
+  status_id?: number;
+  ref_type?: number;
+  created_at?: string;
+}
+
+const mapApiTaskToTask = (apiTask: ApiTask): Task => {
   const statusName: string = apiTask?.status_name || '';
   const statusId: number | undefined = apiTask?.status_id;
 
@@ -80,7 +90,7 @@ export const fetchMyTasks = async (): Promise<Task[]> => {
     }
 
     const result = await response.json();
-    const apiTasks: any[] = result?.tasks || [];
+    const apiTasks: ApiTask[] = result?.tasks || [];
     return apiTasks.map(mapApiTaskToTask);
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -108,7 +118,7 @@ export const fetchUnassignedTasks = async (): Promise<Task[]> => {
     }
 
     const result = await response.json();
-    const apiTasks: any[] = result?.tasks || [];
+    const apiTasks: ApiTask[] = result?.tasks || [];
     return apiTasks.map(mapApiTaskToTask);
   } catch (error) {
     console.error('Error fetching unassigned tasks:', error);
@@ -136,7 +146,7 @@ export const fetchStoppedTasks = async (): Promise<Task[]> => {
     }
 
     const result = await response.json();
-    const apiTasks: any[] = result?.tasks || [];
+    const apiTasks: ApiTask[] = result?.tasks || [];
     return apiTasks.map(mapApiTaskToTask);
   } catch (error) {
     console.error('Error fetching stopped tasks:', error);
@@ -164,7 +174,7 @@ export const fetchTasksByStatus = async (statusId: number): Promise<Task[]> => {
     }
 
     const result = await response.json();
-    const apiTasks: any[] = result?.tasks || [];
+    const apiTasks: ApiTask[] = result?.tasks || [];
     return apiTasks.map(mapApiTaskToTask);
   } catch (error) {
     console.error(`Error fetching tasks with status ${statusId}:`, error);

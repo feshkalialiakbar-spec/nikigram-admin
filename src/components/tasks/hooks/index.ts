@@ -5,14 +5,7 @@ import { useMyTasks } from '@/hooks/useTaskServices';
 import { useSkeletonLoading } from './useSkeletonLoading';
 
 // Hook for fetching tasks using React Query
-export const useTasksQuery = (filters: FilterOptions = {
-  search: '',
-  process: '',
-  date: '',
-  performerPersonnel: '',
-  status: '',
-  operations: '',
-}) => {
+export const useTasksQuery = (_filters?: FilterOptions) => {
   const { data: tasks = [], isLoading, error, refetch } = useMyTasks();
   const showSkeleton = useSkeletonLoading({ isLoading });
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import styles from "./Checkbox.module.scss";
-import Text, { Colors } from "../../text/Text";
+import Text, { Colors } from "../text/Text";
 type Variant = "toggle" | "square";
 type Props = {
   id: string;

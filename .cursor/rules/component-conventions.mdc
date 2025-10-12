@@ -1,0 +1,7 @@
+# Next.js Component Conventions
+All new components must:
+- Be written as functional components using TypeScript.
+- Prefer Server Components when possible.
+- Use Tailwind CSS for styling. Avoid using module CSS unless necessary for complex, unique styles.
+- Be placed in the `components/` directory.
+- Be written in `kebab-case` format (e.g., `user-profile.tsx`).

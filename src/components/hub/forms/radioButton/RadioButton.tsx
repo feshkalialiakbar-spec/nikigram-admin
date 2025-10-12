@@ -2,7 +2,7 @@
 
 import React from "react";
 import styles from "./RadioButton.module.scss";
-import Text, { Colors, TextStyles } from "../../text/Text";
+import Text, { Colors, TextStyles } from "../text/Text";
 
 export type ButtonMode = "ticked-circle" | "filled-circle" | "ticked-square";
 

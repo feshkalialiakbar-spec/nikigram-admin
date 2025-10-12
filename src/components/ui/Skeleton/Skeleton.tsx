@@ -1,11 +1,14 @@
+import React from 'react';
 import styles from './Skeleton.module.scss';
-interface SkeletonProps {
+
+export interface SkeletonProps {
   width?: number | string;
   height?: number | string;
   borderRadius?: number;
   variant?: 'rectangular' | 'circular';
   className?: string;
 }
+
 const Skeleton: React.FC<SkeletonProps> = ({
   width,
   height,

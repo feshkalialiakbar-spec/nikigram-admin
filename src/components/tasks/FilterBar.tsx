@@ -3,9 +3,7 @@ import { SearchNormal1, Calendar } from 'iconsax-react';
 import { FilterBarProps } from './types';
 import { 
   PROCESS_OPTIONS, 
-  PERSONNEL_OPTIONS, 
-  STATUS_OPTIONS, 
-  OPERATION_OPTIONS 
+  STATUS_OPTIONS
 } from './utils';
 import TextField from '@/components/hub/forms/textField/TextField';
 import Dropdown from '@/components/hub/forms/dropdown/Dropdown';

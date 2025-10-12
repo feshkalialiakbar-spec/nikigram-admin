@@ -1,8 +1,11 @@
+import React from 'react';
 import { Skeleton } from '../Skeleton';
 import styles from './SidebarSkeleton.module.scss';
+
 interface SidebarSkeletonProps {
   className?: string;
 }
+
 const SidebarSkeleton: React.FC<SidebarSkeletonProps> = ({ className }) => {
   return (
     <div className={`${styles.sidebarSkeleton} ${className || ''}`}>

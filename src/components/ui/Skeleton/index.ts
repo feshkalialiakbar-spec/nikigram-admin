@@ -1,4 +1,4 @@
 // Skeleton component exports
-export { default as Skeleton } from './Skeleton';
-export type { default as SkeletonProps } from './Skeleton';
-
+import Skeleton from './Skeleton';
+export { Skeleton };
+export type { SkeletonProps } from './Skeleton';
