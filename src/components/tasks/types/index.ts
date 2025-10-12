@@ -41,6 +41,10 @@ export interface PaginationInfo {
 // Component Props Types
 export interface TaskDashboardProps {
   className?: string;
+  tasks?: Task[];
+  loading?: boolean;
+  error?: string | null;
+  onRefetch?: () => void;
 }
 
 export interface TaskTableProps {

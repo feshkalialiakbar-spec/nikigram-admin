@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { CloseSquare, SearchNormal, ArrowLeft, ArrowLeft2 } from 'iconsax-react'
+import { CloseSquare, SearchNormal, ArrowLeft2 } from 'iconsax-react'
 import styles from './SidebarMenu.module.scss'
 import { quickActions, TaskMenuItem } from './items'
 import { SidebarSkeleton } from '@/components/ui'

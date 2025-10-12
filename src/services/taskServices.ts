@@ -1,10 +1,5 @@
 import { Task } from '@/components/tasks/types';
 
-/**
- * Task Services - API calls for task management
- */
-
-// Normalize backend task object to UI Task type
 const mapApiTaskToTask = (apiTask: any): Task => {
   const statusName: string = apiTask?.status_name || '';
   const statusId: number | undefined = apiTask?.status_id;
@@ -147,6 +142,76 @@ export const fetchStoppedTasks = async (): Promise<Task[]> => {
     console.error('Error fetching stopped tasks:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch stopped tasks');
   }
+};
+
+/**
+ * Fetch tasks by status ID
+ */
+export const fetchTasksByStatus = async (statusId: number): Promise<Task[]> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/list/?status=${statusId}&limit=100&offset=0`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const result = await response.json();
+    const apiTasks: any[] = result?.tasks || [];
+    return apiTasks.map(mapApiTaskToTask);
+  } catch (error) {
+    console.error(`Error fetching tasks with status ${statusId}:`, error);
+    throw error instanceof Error ? error : new Error(`Failed to fetch tasks with status ${statusId}`);
+  }
+};
+
+/**
+ * Fetch in-progress tasks (status 38)
+ */
+export const fetchInProgressTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(38);
+};
+
+/**
+ * Fetch completed tasks (status 39)
+ */
+export const fetchCompletedTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(39);
+};
+
+/**
+ * Fetch approved tasks (status 40)
+ */
+export const fetchApprovedTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(40);
+};
+
+/**
+ * Fetch needs correction tasks (status 41)
+ */
+export const fetchNeedsCorrectionTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(41);
+};
+
+/**
+ * Fetch rejected tasks (status 42)
+ */
+export const fetchRejectedTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(42);
+};
+
+/**
+ * Fetch cancelled tasks (status 43)
+ */
+export const fetchCancelledTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(43);
 };
 
 /**

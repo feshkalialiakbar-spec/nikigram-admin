@@ -1,11 +1,11 @@
 .filterBar {
-  background: #F8F9FA;
-  padding: 20px;
-  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 12px;
   margin-bottom: 0;
   box-shadow: none;
   direction: rtl;
-  border: none;
+  border: 1px solid #E5E7EB;
   position: relative;
 }
 
@@ -16,98 +16,23 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   animation: slideIn 0.4s ease-out;
-  
-  &:focus-within {
-    .input,
-    .select {
-      border-color: #3b82f6;
-    }
-  }
 }
 
-
-.searchInput,
-.dateInput {
-  position: relative;
-  display: flex;
-  align-items: center;
+.searchField,
+.dropdownField {
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
 }
 
-.dateInput {
-  .input {
-    padding-right: 35px;
-  }
+.searchField {
+  margin-left: auto;
+  max-width: 220px;
 }
 
-.input {
-  padding: 10px 35px 10px 10px;
-  border: 1px solid #D1D5DB;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #ffffff;
-  min-width: 180px;
-  direction: rtl;
-  transition: all 0.2s ease;
-  color: #343A40;
-  
-  &::placeholder {
-    color: #6B7280;
-    font-size: 14px;
-  }
-  
-  &:focus {
-    outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 0 1px #007BFF;
-  }
-  
-  &:hover:not(:focus) {
-    border-color: #9CA3AF;
-  }
-}
-
-.select {
-  padding: 10px 12px;
-  border: 1px solid #D1D5DB;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #ffffff;
-  min-width: 180px;
-  direction: rtl;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #343A40;
-  
-  &:focus {
-    outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 0 1px #007BFF;
-  }
-  
-  &:hover:not(:focus) {
-    border-color: #9CA3AF;
-  }
-  
-  option {
-    color: #343A40;
-    background: #ffffff;
-  }
-}
-
-.searchIcon,
-.calendarIcon {
-  position: absolute;
-  right: 10px;
-  font-size: 14px;
-  color: #6b7280;
-  pointer-events: none;
-  z-index: 1;
-  transition: color 0.2s ease;
-}
-
-.searchInput:focus-within .searchIcon,
-.dateInput:focus-within .calendarIcon {
-  color: #3b82f6;
+.dropdownField {
+  flex: 0 0 auto;
+  min-width: 160px;
 }
 
 // Loading state

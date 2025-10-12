@@ -1,7 +1,4 @@
-/**
- * @deprecated This file is deprecated. Please use taskServices.ts instead.
- * This file is kept for backward compatibility.
- */
+import { Task } from '@/components/tasks/types'
 
 // Re-export from the new taskServices file
 export {
@@ -12,4 +9,11 @@ export {
   deleteTask,
   fetchUnassignedTasks,
   fetchStoppedTasks,
+  fetchInProgressTasks,
+  fetchCompletedTasks,
+  fetchApprovedTasks,
+  fetchNeedsCorrectionTasks,
+  fetchRejectedTasks,
+  fetchCancelledTasks,
+  fetchTasksByStatus,
 } from './taskServices';

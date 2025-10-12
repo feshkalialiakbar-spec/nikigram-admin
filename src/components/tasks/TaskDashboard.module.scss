@@ -5,9 +5,12 @@
 }
 
 .mainContent {
-  padding: 20px;
+  padding: 0;
   background: transparent;
   overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  overflow: hidden;
 }
 
 .loading {
@@ -47,21 +50,27 @@
 }
 
 
+.paginationContainer {
+  padding: 16px 20px;
+  background: #ffffff;
+  border-top: 1px solid #E5E7EB;
+}
+
 // Mobile responsive
 @media (max-width: 1024px) {
   .mainContent {
-    padding: 75px 15px 15px 15px;
+    margin: 75px 15px 15px 15px;
   }
 }
 
 @media (max-width: 768px) {
   .mainContent {
-    padding: 70px 15px 15px 15px;
+    margin: 70px 15px 15px 15px;
   }
 }
 
 @media (max-width: 480px) {
   .mainContent {
-    padding: 65px 10px 10px 10px;
+    margin: 65px 10px 10px 10px;
   }
 }

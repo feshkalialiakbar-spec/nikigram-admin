@@ -1,0 +1,117 @@
+.ui-radio-button {
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  & .button-mode {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background-color: var(--main-white);
+    margin-top: 2px;
+    border-color: var(--gray-200);
+    &.ticked-circle {
+      border-radius: 50%;
+      .checked-btn {
+        width: 12px;
+        height: 6px;
+        rotate: -45deg;
+        margin-bottom: 2px;
+        border-left: 2px solid var(--main-white);
+        border-bottom: 2px solid var(--main-white);
+        border-radius: 1px;
+      }
+      &.active {
+        background-color: var(--primary-500);
+        border-color: var(--primary-500);
+      }
+    }
+    &.filled-circle {
+      border-radius: 50%;
+      .checked-btn {
+        background-color: var(--primary-500);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      &.active {
+        background-color: var(--main-white);
+        border-color: var(--primary-500);
+      }
+    }
+    &.ticked-square {
+      border-radius: 4px;
+      .checked-btn {
+        width: 12px;
+        height: 6px;
+        rotate: -45deg;
+        margin-bottom: 2px;
+        border-left: 2px solid var(--main-white);
+        border-bottom: 2px solid var(--main-white);
+        border-radius: 1px;
+      }
+      &.active {
+        background-color: var(--primary-500);
+        border-color: var(--primary-500);
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &__subtitle {
+    font-size: 12px;
+    color: var(--color-primary-500);
+  }
+
+  // States
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    .radio-button__custom {
+      border-color: var(--color-primary-200);
+    }
+  }
+
+  &.active {
+    .radio-button__custom {
+      border-color: var(--color-primary-950);
+    }
+  }
+
+  input[type="radio"] {
+    display: none;
+  }
+}
+@media (width >= 1280px) {
+  .ui-radio-button {
+    &.active {
+      & .button-mode {
+        &.filled-circle {
+          position: relative;
+          .checked-btn {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+          }
+        }
+      }
+    }
+  }
+}

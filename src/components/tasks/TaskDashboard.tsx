@@ -4,23 +4,29 @@ import React from 'react';
 import { TaskDashboardProps } from './types';
 import { useTasksQuery, useTaskFilters, useTaskPagination } from './hooks';
 import { DEFAULT_FILTERS } from './utils';
-import { useRealTimeTasks } from '@/hooks/useRealTimeTasks';
 import { TaskTableSkeleton } from '@/components/ui';
 import FilterBar from './FilterBar';
 import TaskTable from './TaskTable';
 import Pagination from './Pagination';
 import styles from './TaskDashboard.module.scss';
 
-const TaskDashboard: React.FC<TaskDashboardProps> = ({ className }) => {
-  const { tasks, loading, error, refetch } = useTasksQuery();
+const TaskDashboard: React.FC<TaskDashboardProps> = ({ 
+  className, 
+  tasks: externalTasks, 
+  loading: externalLoading, 
+  error: externalError, 
+  onRefetch 
+}) => {
+  const { tasks: internalTasks, loading: internalLoading, error: internalError, refetch: internalRefetch } = useTasksQuery();
+  
+  // Use external data if provided, otherwise use internal data
+  const tasks = externalTasks !== undefined ? externalTasks : internalTasks;
+  const loading = externalLoading !== undefined ? externalLoading : internalLoading;
+  const error = externalError !== undefined ? externalError : internalError;
+  const refetch = onRefetch || internalRefetch;
+  
   const { filters, filteredTasks, updateFilters } = useTaskFilters(tasks, DEFAULT_FILTERS);
   const { currentPage, totalPages, paginatedTasks, goToPage } = useTaskPagination(filteredTasks);
-  
-  // Enable real-time updates
-  useRealTimeTasks({
-    enabled: true,
-    interval: 30000, // 30 seconds
-  });
 
   const handleFilterChange = React.useCallback((newFilters: typeof filters) => {
     updateFilters(newFilters);
@@ -77,10 +83,12 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({ className }) => {
           onOperationClick={handleOperationClick}
         />
 
-        <Pagination 
-          pagination={paginationInfo} 
-          onPageChange={handlePageChange} 
-        />
+        <div className={styles.paginationContainer}>
+          <Pagination 
+            pagination={paginationInfo} 
+            onPageChange={handlePageChange} 
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { ArrowLeft2, ArrowRight2 } from 'iconsax-react';
 import { PaginationProps } from './types';
 import styles from './Pagination.module.scss';
 
@@ -71,7 +71,7 @@ const Pagination: React.FC<PaginationProps> = ({
         type="button"
         aria-label="صفحه قبلی"
       >
-        <FaChevronLeft aria-hidden="true" />
+        <ArrowLeft2 size={16} color="#6B7280" variant="Linear" />
       </button>
       
       {renderPageNumbers}
@@ -83,7 +83,7 @@ const Pagination: React.FC<PaginationProps> = ({
         type="button"
         aria-label="صفحه بعدی"
       >
-        <FaChevronRight aria-hidden="true" />
+        <ArrowRight2 size={16} color="#6B7280" variant="Linear" />
       </button>
     </nav>
   );

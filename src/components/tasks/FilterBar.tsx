@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch, FaCalendarAlt } from 'react-icons/fa';
+import { SearchNormal1, Calendar } from 'iconsax-react';
 import { FilterBarProps } from './types';
 import { 
   PROCESS_OPTIONS, 
@@ -7,6 +7,8 @@ import {
   STATUS_OPTIONS, 
   OPERATION_OPTIONS 
 } from './utils';
+import TextField from '@/components/hub/forms/textField/TextField';
+import Dropdown from '@/components/hub/forms/dropdown/Dropdown';
 import styles from './FilterBar.module.scss';
 
 const FilterBar: React.FC<FilterBarProps> = ({ 
@@ -27,84 +29,90 @@ const FilterBar: React.FC<FilterBarProps> = ({
   return (
     <div className={`${styles.filterBar} ${className || ''}`}>
       <div className={styles.filterContainer}>
-        <div className={styles.searchInput}>
-          <input
-            type="text"
+        {/* Search Input */}
+        <div className={styles.searchField}>
+          <TextField
             placeholder="جستجو"
             value={filters.search}
-            onChange={(e) => handleInputChange('search', e.target.value)}
-            className={styles.input}
-            aria-label="جستجو در وظایف"
+            onChangeAction={(value) => handleInputChange('search', value)}
+            rightContent={{
+              Icon: SearchNormal1,
+              iconSize: 16,
+              iconColor: 'var(--gray-500)',
+              variant: 'Linear'
+            }}
+            size="sm"
+            baseColor={{
+              borderAndLabel: 'gray-300',
+              inputBgColor: 'main-white',
+              textInput: 'main-black'
+            }}
           />
-          <FaSearch className={styles.searchIcon} aria-hidden="true" />
         </div>
 
-        <select
-          value={filters.process}
-          onChange={(e) => handleInputChange('process', e.target.value)}
-          className={styles.select}
-          aria-label="انتخاب عنوان"
-        >
-          <option value="">انتخاب عنوان</option>
-          {PROCESS_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        {/* Process Dropdown */}
+        <div className={styles.dropdownField}>
+          <Dropdown
+            placeholder="انتخاب فرآیند"
+            value={filters.process}
+            onChangeAction={(value) => handleInputChange('process', value)}
+            options={PROCESS_OPTIONS}
+            size="sm"
+            baseColor={{
+              borderAndLabel: 'gray-300',
+              inputBgColor: 'main-white',
+              textInput: 'main-black',
+              listTextColor: 'main-black',
+              listBgColor: 'main-white'
+            }}
+          />
+        </div>
 
-        <div className={styles.dateInput}>
-          <input
-            type="date"
+        {/* Date Dropdown */}
+        <div className={styles.dropdownField}>
+          <Dropdown
+            placeholder="تاریخ"
             value={filters.date}
-            onChange={(e) => handleInputChange('date', e.target.value)}
-            className={styles.input}
-            aria-label="انتخاب تاریخ"
+            onChangeAction={(value) => handleInputChange('date', value)}
+            options={[
+              { label: '۱۴۰۴/۰۵/۲۴', value: '1404/05/24' },
+              { label: '۱۴۰۴/۰۵/۲۳', value: '1404/05/23' },
+              { label: '۱۴۰۴/۰۵/۲۲', value: '1404/05/22' },
+            ]}
+            size="sm"
+            baseColor={{
+              borderAndLabel: 'gray-300',
+              inputBgColor: 'main-white',
+              textInput: 'main-black',
+              listTextColor: 'main-black',
+              listBgColor: 'main-white'
+            }}
+            rightContent={{
+              Icon: Calendar,
+              iconSize: 16,
+              iconColor: 'var(--gray-500)',
+              variant: 'Linear'
+            }}
           />
-          <FaCalendarAlt className={styles.calendarIcon} aria-hidden="true" />
         </div>
 
-        <select
-          value={filters.performerPersonnel}
-          onChange={(e) => handleInputChange('performerPersonnel', e.target.value)}
-          className={styles.select}
-          aria-label="انتخاب پرسنل انجام دهنده"
-        >
-          <option value="">پرسنل انجام دهنده</option>
-          {PERSONNEL_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={filters.status}
-          onChange={(e) => handleInputChange('status', e.target.value)}
-          className={styles.select}
-          aria-label="انتخاب وضعیت"
-        >
-          <option value="">وضعیت</option>
-          {STATUS_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={filters.operations}
-          onChange={(e) => handleInputChange('operations', e.target.value)}
-          className={styles.select}
-          aria-label="انتخاب عملیات"
-        >
-          <option value="">عملیات</option>
-          {OPERATION_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        {/* Status Dropdown */}
+        <div className={styles.dropdownField}>
+          <Dropdown
+            placeholder="وضعیت"
+            value={filters.status}
+            onChangeAction={(value) => handleInputChange('status', value)}
+            options={STATUS_OPTIONS}
+            size="sm"
+            baseColor={{
+              borderAndLabel: 'gray-300',
+              inputBgColor: 'main-white',
+              textInput: 'main-black',
+              listTextColor: 'main-black',
+              listBgColor: 'main-white'
+            }}
+          />
+        </div>
       </div>
     </div>
   );

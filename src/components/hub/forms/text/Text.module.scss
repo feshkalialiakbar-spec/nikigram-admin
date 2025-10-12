@@ -1,0 +1,535 @@
+@use "../../../../styles/mixins.scss" as *;
+
+.ui-text {
+  &.text-color {
+    &-primary {
+      &-950 {
+        color: var(--primary-950);
+      }
+
+      &-900 {
+        color: var(--primary-900);
+      }
+
+      &-800 {
+        color: var(--primary-800);
+      }
+
+      &-700 {
+        color: var(--primary-700);
+      }
+
+      &-600 {
+        color: var(--primary-600);
+      }
+
+      &-500 {
+        color: var(--primary-500);
+      }
+
+      &-400 {
+        color: var(--primary-400);
+      }
+
+      &-300 {
+        color: var(--primary-300);
+      }
+
+      &-200 {
+        color: var(--primary-200);
+      }
+
+      &-100 {
+        color: var(--primary-100);
+      }
+
+      &-50 {
+        color: var(--primary-50);
+      }
+    }
+
+    &-secondary1 {
+      &-950 {
+        color: var(--secondary1-950);
+      }
+
+      &-900 {
+        color: var(--secondary1-900);
+      }
+
+      &-800 {
+        color: var(--secondary1-800);
+      }
+
+      &-700 {
+        color: var(--secondary1-700);
+      }
+
+      &-600 {
+        color: var(--secondary1-600);
+      }
+
+      &-500 {
+        color: var(--secondary1-500);
+      }
+
+      &-400 {
+        color: var(--secondary1-400);
+      }
+
+      &-300 {
+        color: var(--secondary1-300);
+      }
+
+      &-200 {
+        color: var(--secondary1-200);
+      }
+
+      &-100 {
+        color: var(--secondary1-100);
+      }
+
+      &-50 {
+        color: var(--secondary1-50);
+      }
+    }
+
+    &-secondary2 {
+      &-950 {
+        color: var(--secondary2-950);
+      }
+
+      &-900 {
+        color: var(--secondary2-900);
+      }
+
+      &-800 {
+        color: var(--secondary2-800);
+      }
+
+      &-700 {
+        color: var(--secondary2-700);
+      }
+
+      &-600 {
+        color: var(--secondary2-600);
+      }
+
+      &-500 {
+        color: var(--secondary2-500);
+      }
+
+      &-400 {
+        color: var(--secondary2-400);
+      }
+
+      &-300 {
+        color: var(--secondary2-300);
+      }
+
+      &-200 {
+        color: var(--secondary2-200);
+      }
+
+      &-100 {
+        color: var(--secondary2-100);
+      }
+
+      &-50 {
+        color: var(--secondary2-50);
+      }
+    }
+
+    &-error {
+      &-950 {
+        color: var(--error-950);
+      }
+
+      &-900 {
+        color: var(--error-900);
+      }
+
+      &-800 {
+        color: var(--error-800);
+      }
+
+      &-700 {
+        color: var(--error-700);
+      }
+
+      &-600 {
+        color: var(--error-600);
+      }
+
+      &-500 {
+        color: var(--error-500);
+      }
+
+      &-400 {
+        color: var(--error-400);
+      }
+
+      &-300 {
+        color: var(--error-300);
+      }
+
+      &-200 {
+        color: var(--error-200);
+      }
+
+      &-100 {
+        color: var(--error-100);
+      }
+
+      &-50 {
+        color: var(--error-50);
+      }
+    }
+
+    &-gray {
+      &-950 {
+        color: var(--gray-950);
+      }
+
+      &-900 {
+        color: var(--gray-900);
+      }
+
+      &-800 {
+        color: var(--gray-800);
+      }
+
+      &-700 {
+        color: var(--gray-700);
+      }
+
+      &-600 {
+        color: var(--gray-600);
+      }
+
+      &-500 {
+        color: var(--gray-500);
+      }
+
+      &-400 {
+        color: var(--gray-400);
+      }
+
+      &-300 {
+        color: var(--gray-300);
+      }
+
+      &-200 {
+        color: var(--gray-200);
+      }
+
+      &-100 {
+        color: var(--gray-100);
+      }
+
+      &-50 {
+        color: var(--gray-50);
+      }
+    }
+
+    &-main {
+      &-black {
+        color: var(--main-black);
+      }
+
+      &-white {
+        color: var(--main-white);
+      }
+
+      &-bg {
+        color: var(--main-bg);
+      }
+    }
+
+    &-inherit {
+      color: inherit;
+    }
+
+    &-transparent {
+      color: transparent;
+    }
+  }
+
+  &.text-align {
+    &-right {
+      text-align: right;
+    }
+
+    &-left {
+      text-align: left;
+    }
+
+    &-center {
+      text-align: center;
+    }
+  }
+
+  &.wrapper {
+    &-nowrap {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  &.no-transition {
+    transition: none;
+    transition-duration: 0s;
+  }
+
+  &.bg {
+    &-white {
+      background-color: var(--secondary-100);
+      border-radius: 8px;
+    }
+  }
+
+  &.user-select {
+    &-not-selected {
+      user-select: none;
+    }
+  }
+
+  &.hover {
+    &-primary {
+      &-950 {
+        &:hover {
+          color: var(--gray-950);
+        }
+      }
+    }
+
+    &-inherit {
+      &:hover {
+        color: inherit;
+      }
+    }
+  }
+
+  &.font-family {
+    &-iran-sans {
+      font-family: "iran-sans", sans-serif;
+    }
+
+    &-moraba {
+      font-family: "moraba", sans-serif;
+    }
+  }
+
+  &.typo {
+    &-40 {
+      &S7 {
+        @include typo40S7;
+      }
+
+      &S5 {
+        @include typo40S5;
+      }
+
+      &S4 {
+        @include typo40S4;
+      }
+    }
+
+    &-36 {
+      &S7 {
+        @include typo36S7;
+      }
+
+      &S5 {
+        @include typo36S5;
+      }
+
+      &S4 {
+        @include typo36S4;
+      }
+    }
+
+    &-36 {
+      &S7 {
+        @include typo36S7;
+      }
+
+      &S5 {
+        @include typo36S5;
+      }
+
+      &S4 {
+        @include typo36S4;
+      }
+    }
+
+    &-32 {
+      &S7 {
+        @include typo32S7;
+      }
+
+      &S5 {
+        @include typo32S5;
+      }
+
+      &S4 {
+        @include typo32S4;
+      }
+    }
+
+    &-28 {
+      &S7 {
+        @include typo28S7;
+      }
+
+      &S5 {
+        @include typo28S5;
+      }
+
+      &S4 {
+        @include typo28S4;
+      }
+    }
+
+    &-24 {
+      &S7 {
+        @include typo24S7;
+      }
+
+      &S5 {
+        @include typo24S5;
+      }
+
+      &S4 {
+        @include typo24S4;
+      }
+    }
+
+    &-24 {
+      &S7 {
+        @include typo24S7;
+      }
+
+      &S5 {
+        @include typo24S5;
+      }
+
+      &S4 {
+        @include typo24S4;
+      }
+    }
+
+    &-22 {
+      &S7 {
+        @include typo22S7;
+      }
+
+      &S5 {
+        @include typo22S5;
+      }
+
+      &S4 {
+        @include typo22S4;
+      }
+    }
+
+    &-20 {
+      &S7 {
+        @include typo20S7;
+      }
+
+      &S5 {
+        @include typo20S5;
+      }
+
+      &S4 {
+        @include typo20S4;
+      }
+    }
+
+    &-18 {
+      &S7 {
+        @include typo18S7;
+      }
+
+      &S5 {
+        @include typo18S5;
+      }
+
+      &S4 {
+        @include typo18S4;
+      }
+    }
+
+    &-16 {
+      &S7 {
+        @include typo16S7;
+      }
+
+      &S5 {
+        @include typo16S5;
+      }
+
+      &S4 {
+        @include typo16S4;
+      }
+    }
+
+    &-14 {
+      &S7 {
+        @include typo14S7;
+      }
+
+      &S5 {
+        @include typo14S5;
+      }
+
+      &S4 {
+        @include typo14S4;
+      }
+    }
+
+    &-12 {
+      &S7 {
+        @include typo12S7;
+      }
+
+      &S5 {
+        @include typo12S5;
+      }
+
+      &S4 {
+        @include typo12S4;
+      }
+    }
+
+    &-10 {
+      &S7 {
+        @include typo10S7;
+      }
+
+      &S5 {
+        @include typo10S5;
+      }
+
+      &S4 {
+        @include typo10S4;
+      }
+    }
+
+    &-8 {
+      &S7 {
+        @include typo8S7;
+      }
+
+      &S5 {
+        @include typo8S5;
+      }
+
+      &S4 {
+        @include typo8S4;
+      }
+    }
+  }
+}

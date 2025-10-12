@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft2 } from 'iconsax-react';
+import {   ArrangeHorizontal, ArrowRotateRight, Eye } from 'iconsax-react';
 import { convertToPersianDate } from '@/utils/dateUtils';
 import { TaskTableProps } from './types';
 import { getStatusClass, getStatusText } from './utils';
@@ -11,7 +11,16 @@ const TaskTable: React.FC<TaskTableProps> = ({
   className 
 }) => {
   const getOperationIcon = React.useCallback((operation: string) => {
-    return <ArrowLeft2 size={12} />;
+    switch (operation) {
+      case 'perform':
+        return <ArrangeHorizontal size={12} color="#3B82F6" variant="Bulk" />;
+      case 'restart':
+        return <ArrowRotateRight size={12} color="#3B82F6" variant="Bulk" />;
+      case 'view':
+        return <Eye size={12} color="#3B82F6" variant="Bulk" />;
+      default:
+        return <ArrowRotateRight size={12} color="#3B82F6" variant="Bulk" />;
+    }
   }, []);
 
   if (tasks.length === 0) {
@@ -31,7 +40,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
           <tr>
             <th>عملیات</th>
             <th>وضعیت</th>
-            <th>پرسنل انجام دهنده</th>
             <th>تاریخ</th>
             <th>فرآیند</th>
             <th>نام وظیفه</th>
@@ -51,10 +59,10 @@ const TaskTable: React.FC<TaskTableProps> = ({
                   type="button"
                   aria-label={`انجام عملیات ${task.operation.label} برای وظیفه ${task.taskName}`}
                 >
-                  {task.operation.label}
                   <span className={styles.operationIcon}>
                     {getOperationIcon(task.operation.type)}
                   </span>
+                  {task.operation.label}
                 </button>
               </td>
               <td className={styles.status}>
@@ -65,25 +73,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
                 >
                   {getStatusText(task.status)}
                 </span>
-              </td>
-              <td className={styles.performerPersonnel}>
-                <div className={styles.avatarGrid}>
-                  {task.performerPersonnel.slice(0, 4).map((person) => (
-                    <div key={person.id} className={styles.avatar}>
-                      {person.avatar ? (
-                        <img 
-                          src={person.avatar} 
-                          alt={person.name}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className={styles.avatarPlaceholder}>
-                          {person.name.charAt(0)}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
               </td>
               <td className={styles.date}>
                 {convertToPersianDate(task.date)}

@@ -51,7 +51,12 @@ const MyTasks: React.FC<MyTasksProps> = ({ className }) => {
                 <h1 className={styles.title}>کارهای من</h1>
             </div>
             <div className={styles.content}>
-                <TaskDashboard />
+                <TaskDashboard 
+                    tasks={tasks}
+                    loading={isLoading}
+                    error={error ? (error as unknown as Error)?.message || null : null}
+                    onRefetch={refetch}
+                />
             </div>
         </div>
     );

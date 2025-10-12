@@ -2,16 +2,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   margin-top: 20px;
   direction: ltr; // Keep pagination LTR for better UX
+  background: #ffffff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .navButton,
 .pageButton {
-  border: 1px solid #E9ECEF;
-  background: #ffffff;
-  color: #007BFF;
+  border: none;
+  background: transparent;
+  color: #6B7280;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -26,31 +34,27 @@
 }
 
 .navButton {
-  font-size: 16px;
-  
   &:hover:not(.disabled) {
-    background: #f8f9fa;
-    color: #0056b3;
+    background: #F3F4F6;
+    color: #374151;
   }
   
   &.disabled {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
-    background: #f8f9fa;
-    color: #6c757d;
+    color: #9CA3AF;
   }
 }
 
 .pageButton {
   &:hover:not(.active) {
-    background: #f8f9fa;
-    color: #0056b3;
+    background: #F3F4F6;
+    color: #374151;
   }
   
   &.active {
-    background: #007BFF;
+    background: #3B82F6;
     color: white;
-    border-color: #007BFF;
   }
 }
 

@@ -1,0 +1,25 @@
+.form-field {
+  &__radio-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  &__radio-label {
+    font-family: var(--font-moraba);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-950);
+  }
+
+  &__radio-group {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__radio-error {
+    font-family: var(--font-moraba);
+    font-size: 12px;
+    color: var(--error-900);
+  }
+} 

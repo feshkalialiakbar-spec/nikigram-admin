@@ -1,0 +1,172 @@
+.text-field-container {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.text-field {
+  background-color: var(--main-white);
+  display: flex;
+  align-items: center;
+  color: var(--main-black);
+  border: 1px solid;
+  border-radius: 20px;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: no-drop;
+  }
+
+  &.floating {
+    .text-field__label {
+      /* keep top position constant; animate only via transform to avoid jump */
+      top: 6px;
+      right: 4px;
+      transform: translateY(-120%) scale(0.85);
+    }
+  }
+
+  &.right-icon .text-field__input {
+    padding-right: 2.5rem;
+  }
+
+  &.left-icon .text-field__input {
+    padding-left: 2.5rem;
+  }
+
+  &__input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    position: absolute;
+    right: 0.5rem;
+    top: -40%; /* base at top; center using padding on input wrapper */
+    transform: translateY(50%);
+    transition: all 0.3s ease-in-out;
+    background-color: var(--main-white);
+    padding: 0 4px;
+    pointer-events: none;
+    z-index: 1;
+    &.text-field__label--textarea {
+      top: 12px;
+    }
+  }
+
+  &__input,
+  &__input-textarea {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    color: inherit;
+    width: 100%;
+
+    &::placeholder {
+      color: var(--gray-400);
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+
+    &--right {
+      margin-left: auto;
+    }
+  }
+  &__text-left {
+    height: 22px;
+  }
+
+  &.size {
+    padding: 8px;
+    &-xsm {
+      height: 34px;
+      min-height: 32px;
+      &.floating {
+        .text-field__label {
+          right: -8px;
+          padding: 0px 8px;
+          transform: translateY(-140%) scale(0.85);
+        }
+      }
+      &.text-area.floating {
+        .text-field__label {
+          top: 28px !important;
+          right: 16px;
+        }
+      }
+      &.text-area {
+        .text-field__input-textarea {
+          /* disable base flex: 1 1 for xsm textarea */
+          flex: 0 0 auto !important;
+          height: 32px !important;
+        }
+        .text-field__label {
+          top: -4px !important;
+        }
+      }
+      /* correct floating override selector for xsm textarea */
+      &.text-area.floating {
+        .text-field__label {
+          top: 12px !important;
+          right: 4px;
+          scale: 1.1;
+        }
+      }
+    }
+    &-sm {
+      height: fit-content;
+      min-height: 40px;
+      &.floating {
+        .text-field__label {
+          right: 5px;
+          padding: 2px 8px;
+          transform: translateY(-150%) scale(0.85);
+        }
+      }
+    }
+    &-md {
+      height: 80px;
+      &.floating {
+        .text-field__label {
+          right: 8px;
+          padding: 2px 8px;
+          // background-color: red ;
+          transform: translateY(-220%) scale(0.85);
+        }
+        .text-field__input-textarea {
+          // background-color: red;
+          .text-field__label {
+            transform: translateY(-220%) scale(0.85);
+          }
+        }
+      }
+      &.text-area.floating {
+        .text-field__label {
+          top: 24px !important;
+        }
+      }
+    }
+  }
+
+  &__helper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 0 16px;
+  }
+}

@@ -1,0 +1,203 @@
+.ui-dropdown {
+  &-container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    border-radius: 20px;
+  }
+  &-button {
+    background-color: var(--main-white);
+    display: flex;
+    align-items: center;
+    color: var(--main-black);
+    border: 1px solid;
+    border-radius: 20px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &.open {
+      border-radius: 20px 20px 0 0;
+    }
+
+    &.floating {
+      .ui-dropdown-button__label {
+        transform: translateY(-50%) scale(0.85);
+        opacity: 1;
+        top: -6px;
+        right: 0.25rem;
+      }
+    }
+
+    &.right-icon .ui-dropdown-button__input {
+      // padding-right: 2.5rem;
+    }
+
+    &.left-icon .ui-dropdown-button__input {
+      padding-left: 2.5rem;
+    }
+
+    &__input-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__label {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.3s ease-in-out;
+      background-color: var(--main-white);
+      padding: 0 4px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+    }
+
+    &__input {
+      flex: 1;
+      border: none;
+      background: none;
+      outline: none;
+      color: inherit;
+      width: 100%;
+      cursor: pointer;
+      padding: 8px 12px;
+      text-align: right;
+      font-size: 12px;
+      width: 150px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      &::placeholder {
+        color: var(--gray-400);
+      }
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      &--right {
+        margin-left: auto;
+      }
+    }
+
+    &.size {
+      padding: 8px;
+      &-sm {
+        height: 40px;
+        &.floating {
+          .ui-dropdown-button__label {
+            transform: translateY(-50%) scale(0.85);
+            top: -6px;
+            right: -0px;
+            padding: 2px 8px;
+          }
+        }
+      }
+      &-md {
+        height: 80px;
+        &.floating {
+          .ui-dropdown-button__label {
+            transform: translateY(-50%) scale(0.85);
+            top: -30px;
+            right: 8px;
+            padding: 2px 8px;
+          }
+        }
+      }
+    }
+
+    &__helper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      padding: 0 16px;
+      position: absolute;
+    }
+    &__input {
+      padding: 8px 12px;
+      text-align: right;
+    }
+  }
+
+  &-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid;
+    border-block-start: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: dropdownFadeIn 0.3s ease forwards;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-100);
+
+    @keyframes dropdownFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* استایل‌های اسکرولبار برای مرورگرهای مختلف */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--gray-100);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--gray-300);
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--gray-400);
+      }
+    }
+
+    &__item {
+      padding: 8px 16px;
+      cursor: pointer;
+      text-align: right;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--gray-100);
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--gray-200);
+      }
+    }
+  }
+}

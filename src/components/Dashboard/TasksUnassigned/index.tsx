@@ -53,7 +53,12 @@ const TasksUnassigned: React.FC<TasksUnassignedProps> = ({ className }) => {
         <h1 className={styles.title}>اختصاص نیافته</h1>
       </div>
       <div className={styles.content}>
-        <TaskDashboard />
+        <TaskDashboard 
+          tasks={tasks}
+          loading={isLoading}
+          error={error ? (error as unknown as Error)?.message || null : null}
+          onRefetch={refetch}
+        />
       </div>
     </div>
   );
