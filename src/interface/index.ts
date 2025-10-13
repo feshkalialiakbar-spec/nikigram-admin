@@ -19,3 +19,4 @@ export interface TaskInterface {
     assignment_notes: string
   }
 }
+

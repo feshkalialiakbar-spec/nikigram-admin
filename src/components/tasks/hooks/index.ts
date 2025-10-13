@@ -1,9 +1,8 @@
- 
 import { useState, useMemo, useCallback } from 'react';
-import { Task, FilterOptions, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
+import { TaskInterface, FilterOptions, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
 import { useMyTasks } from '@/hooks/useTaskServices';
 import { useSkeletonLoading } from './useSkeletonLoading';
- 
+
 export const useTasksQuery = (_filters?: FilterOptions) => {
   const { data: tasks = [], isLoading, error, refetch } = useMyTasks();
   const showSkeleton = useSkeletonLoading({ isLoading });
@@ -20,7 +19,7 @@ export const useTasksQuery = (_filters?: FilterOptions) => {
 
 // Hook for task filtering
 export const useTaskFilters = (
-  tasks: Task[],
+  tasks: TaskInterface[],
   initialFilters: FilterOptions
 ): UseTaskFiltersReturn => {
   const [filters, setFilters] = useState<FilterOptions>(initialFilters);
@@ -29,21 +28,21 @@ export const useTaskFilters = (
     return tasks.filter((task) => {
       const matchesSearch =
         !filters.search ||
-        task.taskName.toLowerCase().includes(filters.search.toLowerCase()) ||
-        task.process.toLowerCase().includes(filters.search.toLowerCase());
+        task.task_title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        String(task.ref_type).toLowerCase().includes(filters.search.toLowerCase());
 
       const matchesProcess =
-        !filters.process || task.process === filters.process;
+        !filters.process || String(task.ref_type) === filters.process;
       
-      const matchesDate = !filters.date || task.date === filters.date;
+      const matchesDate = !filters.date || task.created_at.includes(filters.date);
       
-      const matchesPerformerPersonnel = 
-        !filters.performerPersonnel || 
-        task.performerPersonnel.some(person => person.id === filters.performerPersonnel);
+      // Skip performer personnel filter for now as it's not in TaskInterface
+      const matchesPerformerPersonnel = !filters.performerPersonnel;
       
-      const matchesStatus = !filters.status || task.status === filters.status;
+      const matchesStatus = !filters.status || String(task.status_id) === filters.status;
       
-      const matchesOperations = !filters.operations || task.operation.type === filters.operations;
+      // Skip operations filter as it's not in TaskInterface
+      const matchesOperations = !filters.operations;
 
       return matchesSearch && matchesProcess && matchesDate && 
              matchesPerformerPersonnel && matchesStatus && matchesOperations;
@@ -68,7 +67,7 @@ export const useTaskFilters = (
 
 // Hook for pagination
 export const useTaskPagination = (
-  tasks: Task[],
+  tasks: TaskInterface[],
   itemsPerPage: number = 15
 ): UseTaskPaginationReturn => {
   const [currentPage, setCurrentPage] = useState<number>(1);

@@ -6,8 +6,6 @@ export {
   useApiList,
   useMyTasks,
   useUnassignedTasks,
-  useStoppedTasks,
-  useTask,
   useCreateTask,
   useUpdateTask,
   useDeleteTask,

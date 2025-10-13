@@ -34,9 +34,6 @@ const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
   if (error) {
     return (
       <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>در انتظار انجام من</h1>
-        </div>
         <div className={styles.error}>
           <p>خطا در بارگذاری داده‌ها: {error.message}</p>
           <button onClick={() => refetch()} className={styles.retryButton}>
@@ -49,11 +46,8 @@ const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
 
   return (
     <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>در انتظار انجام من</h1>
-      </div>
       <div className={styles.content}>
-        <TaskDashboard 
+        <TaskDashboard
           tasks={tasks}
           loading={isLoading}
           error={error ? (error as unknown as Error)?.message || null : null}

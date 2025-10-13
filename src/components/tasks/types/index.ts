@@ -1,21 +1,13 @@
-// Task-related types and interfaces
-export interface Task {
-  id: string;
-  taskName: string;
-  process: string;
-  date: string;
-  status: TaskStatus;
-  operation: TaskOperation;
-  performerPersonnel: PerformerPerson[];
-}
+import { TaskInterface } from "@/interface";
+
+// Re-export TaskInterface for convenience
+export type { TaskInterface };
 
 export interface PerformerPerson {
   id: string;
   name: string;
   avatar?: string;
 }
-
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'approved' | 'needs_correction' | 'rejected' | 'cancelled';
 
 export interface TaskOperation {
   type: 'perform' | 'restart' | 'view';
@@ -41,14 +33,14 @@ export interface PaginationInfo {
 // Component Props Types
 export interface TaskDashboardProps {
   className?: string;
-  tasks?: Task[];
+  tasks?: TaskInterface[];
   loading?: boolean;
   error?: string | null;
   onRefetch?: () => void;
 }
 
 export interface TaskTableProps {
-  tasks: Task[];
+  tasks: TaskInterface[];
   onOperationClick: (taskId: string, operation: string) => void;
   className?: string;
 }
@@ -84,7 +76,7 @@ export interface ApiTasksResponse {
 
 // Hook Types
 export interface UseTasksReturn {
-  tasks: Task[];
+  tasks: TaskInterface[];
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
@@ -92,7 +84,7 @@ export interface UseTasksReturn {
 
 export interface UseTaskFiltersReturn {
   filters: FilterOptions;
-  filteredTasks: Task[];
+  filteredTasks: TaskInterface[];
   updateFilters: (newFilters: Partial<FilterOptions>) => void;
   resetFilters: () => void;
 }
@@ -100,7 +92,7 @@ export interface UseTaskFiltersReturn {
 export interface UseTaskPaginationReturn {
   currentPage: number;
   totalPages: number;
-  paginatedTasks: Task[];
+  paginatedTasks: TaskInterface[];
   goToPage: (page: number) => void;
   nextPage: () => void;
   previousPage: () => void;

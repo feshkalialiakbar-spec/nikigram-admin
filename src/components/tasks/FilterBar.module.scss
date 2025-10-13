@@ -13,26 +13,45 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  flex-wrap: nowrap;
+  justify-content: space-between;
   animation: slideIn 0.4s ease-out;
 }
 
 .searchField,
 .dropdownField {
-  flex: 1;
-  min-width: 200px;
-  max-width: 250px;
+  flex: 1 1 0;
 }
 
 .searchField {
-  margin-left: auto;
-  max-width: 220px;
+  margin-left: 0;
+}
+
+// Match pill-style search from design
+.searchField :global(input) {
+  height: 36px;
+  border-radius: 9999px;
+  background: #F9FBFF;
+  border: 1px solid #E5E7EB;
+  padding-right: 36px;
+  padding-left: 14px;
+  box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.02);
+}
+
+.searchField :global(input:focus) {
+  outline: none;
+  border-color: #BFDBFE;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+// tighten dropdowns to small rounded pills like design
+.dropdownField :global(select) {
+  height: 36px;
+  border-radius: 9999px;
 }
 
 .dropdownField {
-  flex: 0 0 auto;
-  min-width: 160px;
+  flex: 1 1 0;
 }
 
 // Loading state

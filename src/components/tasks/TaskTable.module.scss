@@ -5,6 +5,7 @@
   box-shadow: none;
   direction: rtl;
   border: none;
+  width: 100%;
   border-top: 1px solid #E5E7EB;
 }
 
@@ -27,12 +28,11 @@
 }
 
 .table th {
-  background: #E3F2FD;
+  background: #EBF1F8;
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
-  color: #1976D2;
-  border-bottom: 2px solid #BBDEFB;
+  color: #435A73; 
   white-space: nowrap;
   font-size: 14px;
 }
@@ -48,15 +48,15 @@
 .table tbody tr {
   transition: background-color 0.2s ease;
   background-color: #ffffff;
-  
+
   &:nth-child(even) {
     background-color: #F9FAFB;
   }
-  
+
   &:hover {
     background-color: #F3F4F6;
   }
-  
+
   &.highlightedRow {
     background-color: #FEF2F2;
   }
@@ -97,7 +97,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -129,8 +129,8 @@
 
 .statusBadge {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 16px;
+  padding: 4px 10px;
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
@@ -138,39 +138,45 @@
 }
 
 .statusPending {
-  background-color: #FEF3C7;
-  color: #92400E;
+  background-color: #FFF4D6;
+  color: #A16207;
+  border: 1px solid #FDE68A;
 }
 
 .statusInProgress {
-  background-color: #DBEAFE;
-  color: #1E40AF;
+  background-color: #E9F2FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
 }
 
 .statusCompleted {
-  background-color: #D1FAE5;
-  color: #065F46;
+  background-color: #E9FBF1;
+  color: #047857;
+  border: 1px solid #A7F3D0;
 }
 
 .statusApproved {
-  background-color: #E0E7FF;
-  color: #3730A3;
+  background-color: #EEF2FF;
+  color: #4338CA;
+  border: 1px solid #C7D2FE;
 }
 
 .statusNeedsCorrection {
-  background-color: #FEE2E2;
-  color: #991B1B;
+  background-color: #FEECEC;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
 }
 
 .statusRejected {
-  background-color: #FEE2E2;
-  color: #FFFFFF;
   background-color: #DC2626;
+  color: #FFFFFF;
+  border: 1px solid #B91C1C;
 }
 
 .statusCancelled {
   background-color: #F3F4F6;
   color: #6B7280;
+  border: 1px solid #E5E7EB;
 }
 
 .operations {
@@ -179,21 +185,21 @@
 
 .operationButton {
   background: transparent;
-  color: #3B82F6;
+  color: #007BFF;
   border: none;
-  padding: 4px 8px;
+  padding: 4px 6px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   transition: all 0.2s ease;
   text-decoration: none;
-  
+
   &:hover {
-    background: #EBF4FF;
+    background: #EEF5FF;
     color: #1D4ED8;
   }
 }
@@ -201,9 +207,7 @@
 .operationIcon {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
+  justify-content: center; 
 }
 
 @media (max-width: 768px) {
@@ -212,22 +216,22 @@
     border-radius: 8px;
     margin: 0 -10px;
   }
-  
+
   .table {
     min-width: 600px;
   }
-  
+
   .table th,
   .table td {
     padding: 12px 8px;
     font-size: 12px;
   }
-  
+
   .taskName,
   .process {
     max-width: 120px;
   }
-  
+
   .operationButton {
     padding: 6px 12px;
     font-size: 11px;
@@ -238,22 +242,22 @@
   .tableContainer {
     margin: 0 -15px;
   }
-  
+
   .table {
     min-width: 500px;
   }
-  
+
   .table th,
   .table td {
     padding: 8px 6px;
     font-size: 11px;
   }
-  
+
   .statusBadge {
     padding: 4px 8px;
     font-size: 10px;
   }
-  
+
   .operationButton {
     padding: 4px 8px;
     font-size: 10px;

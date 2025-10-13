@@ -1,15 +1,14 @@
 .topNav {
   position: fixed;
-  top: 0;
-  left: 3px;
-  right: 55px;
+  top: 0; 
+  width: 100%;
   height: 60px;
-  background: var(--gray-50);
+  background: white;
   border-bottom: 1px solid var(--gray-200);
   z-index: 1000;
   direction: rtl;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 46px;
+  border-bottom-right-radius: 46px;
   box-shadow: 0 6px 14px rgba(0,0,0,0.06);
 }
 .topNavContent {

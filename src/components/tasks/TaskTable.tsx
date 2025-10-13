@@ -1,19 +1,19 @@
 import React from 'react';
-import { ArrangeHorizontal, ArrowRotateRight, Eye } from 'iconsax-react';
+import { ArrowRotateRight, ExportSquare, Eye } from 'iconsax-react';
 import { convertToPersianDate } from '@/utils/dateUtils';
 import { TaskTableProps } from './types';
-import { getStatusClass, getStatusText } from './utils';
+import { getStatusText, getStatusClass } from './utils';
 import styles from './TaskTable.module.scss';
 
-const TaskTable: React.FC<TaskTableProps> = ({ 
-  tasks, 
-  onOperationClick, 
-  className 
+const TaskTable: React.FC<TaskTableProps> = ({
+  tasks,
+  onOperationClick,
+  className
 }) => {
   const getOperationIcon = React.useCallback((operation: string) => {
     switch (operation) {
       case 'perform':
-        return <ArrangeHorizontal size={12} color="#3B82F6" variant="Bulk" />;
+        return <ExportSquare size={24} color="#007BFF" variant="Bulk" />;
       case 'restart':
         return <ArrowRotateRight size={12} color="#3B82F6" variant="Bulk" />;
       case 'view':
@@ -38,47 +38,47 @@ const TaskTable: React.FC<TaskTableProps> = ({
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>عملیات</th>
-            <th>وضعیت</th>
-            <th>تاریخ</th>
-            <th>فرآیند</th>
             <th>نام وظیفه</th>
+            <th>فرآیند</th>
+            <th>تاریخ</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
           </tr>
         </thead>
         <tbody>
           {tasks.map((task, index) => (
-            <tr 
-              key={task.id} 
+            <tr
+              key={task.task_id}
               className={index === 3 ? styles.highlightedRow : ''}
             >
+              <td className={styles.taskName}>{task.task_title}</td>
+              <td className={styles.process}>{task.ref_id || task.ref_type}</td>
+              <td className={styles.date}>
+                {convertToPersianDate(task.created_at)}
+              </td>
+              <td className={styles.status}>
+                <span
+                  className={`${styles.statusBadge} ${styles[getStatusClass(task.status_id)]}`}
+                  role="status"
+                  aria-label={`وضعیت: ${getStatusText(task.status_id)}`}
+                >
+                  {getStatusText(task.status_id)}
+                </span>
+              </td>
               <td className={styles.operations}>
                 <button
                   className={styles.operationButton}
-                  data-operation={task.operation.type}
-                  onClick={() => onOperationClick(task.id, task.operation.type)}
+                  data-operation="perform"
+                  onClick={() => onOperationClick(String(task.task_id), 'perform')}
                   type="button"
-                  aria-label={`انجام عملیات ${task.operation.label} برای وظیفه ${task.taskName}`}
+                  aria-label={`انجام عملیات برای وظیفه ${task.task_title}`}
                 >
                   <span className={styles.operationIcon}>
-                    {getOperationIcon(task.operation.type)}
+                    {getOperationIcon('perform')}
                   </span>
-                  {task.operation.label}
+                  انجام عملیات
                 </button>
               </td>
-              <td className={styles.status}>
-                <span 
-                  className={`${styles.statusBadge} ${getStatusClass(task.status)}`}
-                  role="status"
-                  aria-label={`وضعیت: ${getStatusText(task.status)}`}
-                >
-                  {getStatusText(task.status)}
-                </span>
-              </td>
-              <td className={styles.date}>
-                {convertToPersianDate(task.date)}
-              </td>
-              <td className={styles.process}>{task.process}</td>
-              <td className={styles.taskName}>{task.taskName}</td>
             </tr>
           ))}
         </tbody>

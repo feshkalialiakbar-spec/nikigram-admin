@@ -1,33 +1,30 @@
-// Utility functions for task components
-import { TaskStatus } from '../types';
-
-// Status utilities
-export const getStatusClass = (status: TaskStatus): string => {
-  const statusClassMap: Record<TaskStatus, string> = {
-    pending: 'statusPending',
-    in_progress: 'statusInProgress',
-    completed: 'statusCompleted',
-    approved: 'statusApproved',
-    needs_correction: 'statusNeedsCorrection',
-    rejected: 'statusRejected',
-    cancelled: 'statusCancelled',
+export const getStatusText = (status: number): string => {
+  const statusTextMap: Record<number, string> = {
+    37: 'در انتظار انجام',
+    38: 'در حال انجام',
+    39: 'تکمیل شده',
+    40: 'تایید شده',
+    41: 'نیاز به اصلاح',
+    43: 'رد شده',
+    44: 'لغو شده',
+    45: 'متوقف شده',
   };
-  
-  return statusClassMap[status] || 'statusPending';
+  return statusTextMap[status] || 'در انتظار';
 };
 
-export const getStatusText = (status: TaskStatus): string => {
-  const statusTextMap: Record<TaskStatus, string> = {
-    pending: 'در انتظار',
-    in_progress: 'در حال انجام',
-    completed: 'تکمیل شده',
-    approved: 'تایید شده',
-    needs_correction: 'نیاز به اصلاح',
-    rejected: 'رد شده',
-    cancelled: 'لغو شده',
+// Get CSS class for status badge based on status_id
+export const getStatusClass = (statusId: number): string => {
+  const statusClassMap: Record<number, string> = {
+    37: 'statusPending',        // در انتظار انجام
+    38: 'statusInProgress',     // در حال انجام
+    39: 'statusCompleted',      // تکمیل شده
+    40: 'statusApproved',       // تایید شده
+    41: 'statusNeedsCorrection', // نیاز به اصلاح
+    43: 'statusRejected',       // رد شده
+    44: 'statusCancelled',      // لغو شده
+    45: 'statusCancelled',      // متوقف شده
   };
-  
-  return statusTextMap[status] || 'در انتظار';
+  return statusClassMap[statusId] || 'statusPending';
 };
 
 // Process options for filter dropdown
