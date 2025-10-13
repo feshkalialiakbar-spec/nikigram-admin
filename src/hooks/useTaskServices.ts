@@ -1,23 +1,26 @@
 import { useQuery, useMutation, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
-import { Task } from '@/components/tasks/types';
+import { TaskInterface } from '@/components/tasks/types';
 import {
   fetchMyTasks,
   fetchUnassignedTasks,
   createTask,
   updateTask,
   deleteTask,
+  PaginatedResponse,
+  PaginationParams,
 } from '@/services/taskServices';
 
 /**
  * Generic hook for fetching data with React Query
  */
 interface UseApiListOptions<T> {
-  fetcher: () => Promise<T>;
-  queryKey: string[];
+  fetcher: (params?: PaginationParams) => Promise<PaginatedResponse<T>>;
+  queryKey: (string | number | PaginationParams | undefined)[];
   enabled?: boolean;
   retry?: number;
   staleTime?: number;
   gcTime?: number;
+  paginationParams?: PaginationParams;
 }
 
 export const useApiList = <T = unknown>({
@@ -27,10 +30,11 @@ export const useApiList = <T = unknown>({
   retry = 3,
   staleTime,
   gcTime,
+  paginationParams,
 }: UseApiListOptions<T>) => {
   const query = useQuery({
     queryKey,
-    queryFn: fetcher,
+    queryFn: () => fetcher(paginationParams),
     enabled,
     retry,
     staleTime,
@@ -38,7 +42,10 @@ export const useApiList = <T = unknown>({
   });
 
   return {
-    data: query.data,
+    data: query.data?.tasks,
+    total: query.data?.total ?? 0,
+    limit: query.data?.limit ?? 15,
+    offset: query.data?.offset ?? 0,
     isLoading: query.isLoading,
     error: query.error as Error | null,
     refetch: query.refetch,
@@ -50,10 +57,13 @@ export const useApiList = <T = unknown>({
 /**
  * Hook to fetch my tasks
  */
-export const useMyTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'my-tasks'],
-    queryFn: fetchMyTasks,
+export const useMyTasks = (
+  paginationParams?: PaginationParams,
+  options?: Partial<UseQueryOptions<PaginatedResponse<TaskInterface>, Error>>
+) => {
+  return useQuery<PaginatedResponse<TaskInterface>, Error>({
+    queryKey: ['tasks', 'my-tasks', paginationParams],
+    queryFn: () => fetchMyTasks(paginationParams),
     ...options,
   });
 };
@@ -61,10 +71,13 @@ export const useMyTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) =>
 /**
  * Hook to fetch unassigned tasks
  */
-export const useUnassignedTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'unassigned'],
-    queryFn: fetchUnassignedTasks,
+export const useUnassignedTasks = (
+  paginationParams?: PaginationParams,
+  options?: Partial<UseQueryOptions<PaginatedResponse<TaskInterface>, Error>>
+) => {
+  return useQuery<PaginatedResponse<TaskInterface>, Error>({
+    queryKey: ['tasks', 'unassigned', paginationParams],
+    queryFn: () => fetchUnassignedTasks(paginationParams),
     ...options,
   });
 };
@@ -75,7 +88,7 @@ export const useCreateTask = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (taskData: Partial<Task>) => createTask(taskData),
+    mutationFn: (taskData: Partial<TaskInterface>) => createTask(taskData),
     onSuccess: () => {
       // Invalidate and refetch task queries
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -90,7 +103,7 @@ export const useUpdateTask = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string | number; data: Partial<Task> }) =>
+    mutationFn: ({ id, data }: { id: string | number; data: Partial<TaskInterface> }) =>
       updateTask(id, data),
     onSuccess: (_, variables) => {
       // Invalidate and refetch task queries

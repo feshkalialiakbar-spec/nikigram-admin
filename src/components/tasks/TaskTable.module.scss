@@ -1,12 +1,15 @@
 .tableContainer {
   background: #ffffff;
   border-radius: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
   box-shadow: none;
   direction: rtl;
   border: none;
   width: 100%;
   border-top: 1px solid #E5E7EB;
+  flex: 1;
+  max-height: calc(100vh - 300px);
 }
 
 .emptyState {

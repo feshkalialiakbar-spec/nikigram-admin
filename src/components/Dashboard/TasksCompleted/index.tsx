@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
 import { fetchCompletedTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
@@ -11,12 +11,25 @@ interface TasksCompletedProps {
 }
 
 const TasksCompleted: React.FC<TasksCompletedProps> = ({ className }) => {
-  const { data: tasks, isLoading, error, refetch } = useApiList({
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+
+  const paginationParams = {
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  };
+
+  const { data: tasks, total, isLoading, error, refetch } = useApiList({
     fetcher: fetchCompletedTasks,
-    queryKey: ['task', 'my_list'],
+    queryKey: ['tasks', 'completed', paginationParams],
     enabled: true,
     retry: 3,
+    paginationParams,
   });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (isLoading) {
     return (
@@ -49,15 +62,16 @@ const TasksCompleted: React.FC<TasksCompletedProps> = ({ className }) => {
 
   return (
     <div className={`${styles.tasksCompleted} ${className || ''}`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>تکمیل شده</h1>
-      </div>
       <div className={styles.content}>
         <TaskDashboard 
           tasks={tasks}
           loading={isLoading}
           error={error ? (error as unknown as Error)?.message || null : null}
           onRefetch={refetch}
+          currentPage={currentPage}
+          totalItems={total}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

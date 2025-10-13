@@ -37,6 +37,10 @@ export interface TaskDashboardProps {
   loading?: boolean;
   error?: string | null;
   onRefetch?: () => void;
+  currentPage?: number;
+  totalItems?: number;
+  itemsPerPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export interface TaskTableProps {

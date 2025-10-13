@@ -6,9 +6,8 @@ export { default as Pagination } from './Pagination';
 
 // Export types
 export type {
-  Task,
+  TaskInterface,
   PerformerPerson,
-  TaskStatus,
   TaskOperation,
   FilterOptions,
   PaginationInfo,

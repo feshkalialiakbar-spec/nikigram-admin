@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
 import { fetchUnassignedTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
@@ -11,12 +11,25 @@ interface TasksUnassignedProps {
 }
 
 const TasksUnassigned: React.FC<TasksUnassignedProps> = ({ className }) => {
-  const { data: tasks, isLoading, error, refetch } = useApiList({
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+
+  const paginationParams = {
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  };
+
+  const { data: tasks, total, isLoading, error, refetch } = useApiList({
     fetcher: fetchUnassignedTasks,
-    queryKey: ['tasks', 'unassigned'],
+    queryKey: ['tasks', 'unassigned', paginationParams],
     enabled: true,
     retry: 3,
+    paginationParams,
   });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (isLoading) {
     return (
@@ -49,15 +62,16 @@ const TasksUnassigned: React.FC<TasksUnassignedProps> = ({ className }) => {
 
   return (
     <div className={`${styles.tasksUnassigned} ${className || ''}`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>اختصاص نیافته</h1>
-      </div>
       <div className={styles.content}>
-        <TaskDashboard 
+        <TaskDashboard
           tasks={tasks}
           loading={isLoading}
           error={error ? (error as unknown as Error)?.message || null : null}
           onRefetch={refetch}
+          currentPage={currentPage}
+          totalItems={total}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

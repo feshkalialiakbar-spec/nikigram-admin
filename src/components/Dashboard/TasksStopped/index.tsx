@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
 import { fetchStoppedTasks } from '@/services/taskServices';
 import { Task, TaskDashboard } from '@/components/tasks';
@@ -11,12 +11,25 @@ interface TasksStoppedProps {
 }
 
 const TasksStopped: React.FC<TasksStoppedProps> = ({ className }) => {
-  const { data: tasks, isLoading, error, refetch } = useApiList({
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+
+  const paginationParams = {
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  };
+
+  const { data: tasks, total, isLoading, error, refetch } = useApiList({
     fetcher: fetchStoppedTasks,
-    queryKey: ['tasks', 'stopped'],
+    queryKey: ['tasks', 'stopped', paginationParams],
     enabled: true,
     retry: 3,
+    paginationParams,
   });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (isLoading) {
     return (
@@ -49,15 +62,16 @@ const TasksStopped: React.FC<TasksStoppedProps> = ({ className }) => {
 
   return (
     <div className={`${styles.tasksStopped} ${className || ''}`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>متوقف شده</h1>
-      </div>
       <div className={styles.content}>
-        <TaskDashboard 
+        <TaskDashboard
           tasks={tasks as Task[]}
           loading={isLoading}
           error={error ? (error as unknown as Error)?.message || null : null}
           onRefetch={refetch}
+          currentPage={currentPage}
+          totalItems={total}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

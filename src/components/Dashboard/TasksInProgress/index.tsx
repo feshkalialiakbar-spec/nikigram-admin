@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
 import { fetchInProgressTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
@@ -11,12 +11,25 @@ interface TasksInProgressProps {
 }
 
 const TasksInProgress: React.FC<TasksInProgressProps> = ({ className }) => {
-  const { data: tasks, isLoading, error, refetch } = useApiList({
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+
+  const paginationParams = {
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  };
+
+  const { data: tasks, total, isLoading, error, refetch } = useApiList({
     fetcher: fetchInProgressTasks,
-    queryKey: ['tasks', 'in-progress'],
+    queryKey: ['tasks', 'in-progress', paginationParams],
     enabled: true,
     retry: 3,
+    paginationParams,
   });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (isLoading) {
     return (
@@ -49,15 +62,16 @@ const TasksInProgress: React.FC<TasksInProgressProps> = ({ className }) => {
 
   return (
     <div className={`${styles.tasksInProgress} ${className || ''}`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>در حال انجام</h1>
-      </div>
       <div className={styles.content}>
-        <TaskDashboard 
+        <TaskDashboard
           tasks={tasks}
           loading={isLoading}
           error={error ? (error as unknown as Error)?.message || null : null}
           onRefetch={refetch}
+          currentPage={currentPage}
+          totalItems={total}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

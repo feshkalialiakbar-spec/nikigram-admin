@@ -15,39 +15,66 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
   tasks: externalTasks, 
   loading: externalLoading, 
   error: externalError, 
-  onRefetch 
+  onRefetch,
+  currentPage: externalCurrentPage,
+  totalItems: externalTotalItems,
+  itemsPerPage: externalItemsPerPage = 15,
+  onPageChange: externalOnPageChange,
 }) => {
+  // Determine if we're using server-side or client-side pagination
+  const isServerSidePagination = externalCurrentPage !== undefined && externalTotalItems !== undefined && externalOnPageChange !== undefined;
+  
+  // Only use internal query if no external data is provided
+  const shouldUseInternalQuery = externalTasks === undefined;
   const { tasks: internalTasks, loading: internalLoading, error: internalError, refetch: internalRefetch } = useTasksQuery();
   
   // Use external data if provided, otherwise use internal data
-  const tasks = externalTasks !== undefined ? externalTasks : internalTasks;
-  const loading = externalLoading !== undefined ? externalLoading : internalLoading;
-  const error = externalError !== undefined ? externalError : internalError;
+  const tasks = shouldUseInternalQuery ? internalTasks : (externalTasks || []);
+  const loading = externalLoading !== undefined ? externalLoading : (shouldUseInternalQuery ? internalLoading : false);
+  const error = externalError !== undefined ? externalError : (shouldUseInternalQuery ? internalError : null);
   const refetch = onRefetch || internalRefetch;
   
   const { filters, filteredTasks, updateFilters } = useTaskFilters(tasks, DEFAULT_FILTERS);
-  const { currentPage, totalPages, paginatedTasks, goToPage } = useTaskPagination(filteredTasks);
+  
+  // Client-side pagination for filtered results
+  const { currentPage: clientCurrentPage, totalPages: clientTotalPages, paginatedTasks: clientPaginatedTasks, goToPage: clientGoToPage } = useTaskPagination(filteredTasks, externalItemsPerPage);
 
   const handleFilterChange = React.useCallback((newFilters: typeof filters) => {
     updateFilters(newFilters);
-    goToPage(1); // Reset to first page when filters change
-  }, [updateFilters, goToPage]);
+    if (isServerSidePagination) {
+      externalOnPageChange(1); // Reset to first page when filters change
+    } else {
+      clientGoToPage(1);
+    }
+  }, [updateFilters, isServerSidePagination, externalOnPageChange, clientGoToPage]);
 
   const handlePageChange = React.useCallback((page: number) => {
-    goToPage(page);
-  }, [goToPage]);
+    if (isServerSidePagination) {
+      externalOnPageChange(page);
+    } else {
+      clientGoToPage(page);
+    }
+  }, [isServerSidePagination, externalOnPageChange, clientGoToPage]);
 
   const handleOperationClick = React.useCallback((taskId: string, operation: string) => {
     console.log(`Operation ${operation} clicked for task ${taskId}`);
     // Here you would typically navigate to a detail page or open a modal
   }, []);
 
+  // Determine which pagination data to use
+  const currentPage = isServerSidePagination ? externalCurrentPage : clientCurrentPage;
+  const totalPages = isServerSidePagination 
+    ? Math.ceil((externalTotalItems || 0) / externalItemsPerPage) 
+    : clientTotalPages;
+  const totalItems = isServerSidePagination ? externalTotalItems : filteredTasks.length;
+  const displayTasks = isServerSidePagination ? filteredTasks : clientPaginatedTasks;
+
   const paginationInfo = React.useMemo(() => ({
     currentPage,
     totalPages,
-    totalItems: filteredTasks.length,
-    itemsPerPage: 15,
-  }), [currentPage, totalPages, filteredTasks.length]);
+    totalItems: totalItems || 0,
+    itemsPerPage: externalItemsPerPage,
+  }), [currentPage, totalPages, totalItems, externalItemsPerPage]);
 
   if (loading) {
     return (
@@ -79,7 +106,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
         />
 
         <TaskTable
-          tasks={paginatedTasks}
+          tasks={displayTasks}
           onOperationClick={handleOperationClick}
         />
 

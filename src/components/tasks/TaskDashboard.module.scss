@@ -7,10 +7,12 @@
 .mainContent {
   padding: 0;
   background: transparent;
-  overflow-x: auto;
   border-radius: 12px;
   border: 1px solid #E5E7EB;
-  overflow: hidden;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 150px);
 }
 
 .loading {

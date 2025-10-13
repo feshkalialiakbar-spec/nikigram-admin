@@ -1,15 +1,26 @@
 import { TaskInterface } from '@/interface';
 
-// The backend returns TaskInterface directly, no need for transformation
-// We'll use the data as-is from the backend
+export interface PaginatedResponse<T> {
+  tasks: T[];
+  total: number;
+  limit: number;
+  offset: number;
+}
 
-/**
- * Fetch all tasks for the current user
- */
-export const fetchMyTasks = async (): Promise<TaskInterface[]> => {
+export interface PaginationParams {
+  limit?: number;
+  offset?: number;
+}
+
+const DEFAULT_LIMIT = 15;
+
+export const fetchMyTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   try {
+    const limit = params?.limit ?? DEFAULT_LIMIT;
+    const offset = params?.offset ?? 0;
+    
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=10&offset=0`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
         headers: {
@@ -20,12 +31,21 @@ export const fetchMyTasks = async (): Promise<TaskInterface[]> => {
     );
 
     if (!response.ok) {
-      return []
+      return {
+        tasks: [],
+        total: 0,
+        limit,
+        offset,
+      };
     }
 
     const result = await response.json();
-    const tasks: TaskInterface[] = result?.tasks || [];
-    return tasks;
+    return {
+      tasks: result?.tasks || [],
+      total: (result?.total_count ?? result?.total) || 0,
+      limit,
+      offset,
+    };
   } catch (error) {
     console.error('Error fetching tasks:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch tasks');
@@ -35,10 +55,13 @@ export const fetchMyTasks = async (): Promise<TaskInterface[]> => {
 /**
  * Fetch unassigned tasks
  */
-export const fetchUnassignedTasks = async (): Promise<TaskInterface[]> => {
+export const fetchUnassignedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   try {
+    const limit = params?.limit ?? DEFAULT_LIMIT;
+    const offset = params?.offset ?? 0;
+    
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/all_tasks/?has_assignment=false&limit=10&offset=0`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/all_tasks/?has_assignment=false&limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
         headers: {
@@ -48,15 +71,29 @@ export const fetchUnassignedTasks = async (): Promise<TaskInterface[]> => {
     );
 
     if (!response.ok) {
-      return []
+      return {
+        tasks: [],
+        total: 0,
+        limit,
+        offset,
+      };
     }
 
     const result = await response.json();
-    const tasks: TaskInterface[] = result?.tasks || [];
-    return tasks;
+    return {
+      tasks: result?.tasks || [],
+      total: (result?.total_count ?? result?.total) || 0,
+      limit,
+      offset,
+    };
   } catch (error) {
     console.log('Error fetching unassigned tasks:', error);
-    return []
+    return {
+      tasks: [],
+      total: 0,
+      limit: params?.limit ?? DEFAULT_LIMIT,
+      offset: params?.offset ?? 0,
+    };
   }
 };
 
@@ -65,10 +102,13 @@ export const fetchUnassignedTasks = async (): Promise<TaskInterface[]> => {
 /**
  * Fetch tasks by status ID
  */
-export const fetchTasksByStatus = async (statusId: number): Promise<TaskInterface[]> => {
+export const fetchTasksByStatus = async (statusId: number, params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   try {
+    const limit = params?.limit ?? DEFAULT_LIMIT;
+    const offset = params?.offset ?? 0;
+    
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status=${statusId}&limit=100&offset=0`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status_id=${statusId}&limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
         headers: {
@@ -78,12 +118,21 @@ export const fetchTasksByStatus = async (statusId: number): Promise<TaskInterfac
     );
 
     if (!response.ok) {
-      return [];
+      return {
+        tasks: [],
+        total: 0,
+        limit,
+        offset,
+      };
     }
 
     const result = await response.json();
-    const tasks: TaskInterface[] = result?.tasks || [];
-    return tasks;
+    return {
+      tasks: result?.tasks || [],
+      total: (result?.total_count ?? result?.total) || 0,
+      limit,
+      offset,
+    };
   } catch (error) {
     console.error(`Error fetching tasks with status ${statusId}:`, error);
     throw error instanceof Error ? error : new Error(`Failed to fetch tasks with status ${statusId}`);
@@ -93,61 +142,61 @@ export const fetchTasksByStatus = async (statusId: number): Promise<TaskInterfac
 /**
  * Fetch in-progress tasks (status 38)
  */
-export const fetchInProgressTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(38);
+export const fetchInProgressTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(38, params);
 };
 
-export const fetchStoppedTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(45);
+export const fetchStoppedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(45, params);
 };
 
 /**
  * Fetch completed tasks (status 39)
  */
-export const fetchCompletedTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(39);
+export const fetchCompletedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(39, params);
 };
 
 /**
  * Fetch approved tasks (status 40)
  */
-export const fetchApprovedTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(40);
+export const fetchApprovedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(40, params);
 };
 
 /**
  * Fetch needs correction tasks (status 41)
  */
-export const fetchNeedsCorrectionTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(41);
+export const fetchNeedsCorrectionTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(41, params);
 };
 
 /**
  * Fetch rejected tasks (status 42)
  */
-export const fetchRejectedTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(44);
+export const fetchRejectedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(44, params);
 };
 
 /**
  * Fetch cancelled tasks (status 43)
  */
-export const fetchCancelledTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(43);
+export const fetchCancelledTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(43, params);
 };
 
 /**
  * Fetch tasks waiting for me (pending tasks assigned to current user - status 37)
  */
-export const fetchWaitingForMeTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(37);
+export const fetchWaitingForMeTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(37, params);
 };
 
 /**
  * Fetch shared to-do tasks (pending tasks for collaboration)
  */
-export const fetchToDoListTasks = async (): Promise<TaskInterface[]> => {
-  return fetchTasksByStatus(37);
+export const fetchToDoListTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  return fetchTasksByStatus(37, params);
 };
 
 /**

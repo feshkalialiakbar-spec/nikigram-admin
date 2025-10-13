@@ -2,13 +2,15 @@ import { useState, useMemo, useCallback } from 'react';
 import { TaskInterface, FilterOptions, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
 import { useMyTasks } from '@/hooks/useTaskServices';
 import { useSkeletonLoading } from './useSkeletonLoading';
+import { PaginationParams } from '@/services/taskServices';
 
-export const useTasksQuery = (_filters?: FilterOptions) => {
-  const { data: tasks = [], isLoading, error, refetch } = useMyTasks();
+export const useTasksQuery = (_filters?: FilterOptions, paginationParams?: PaginationParams) => {
+  const { data, isLoading, error, refetch } = useMyTasks(paginationParams);
   const showSkeleton = useSkeletonLoading({ isLoading });
 
   return {
-    tasks,
+    tasks: data?.tasks || [],
+    total: data?.total || 0,
     loading: showSkeleton,
     error: error?.message || null,
     refetch: async () => {
@@ -65,7 +67,7 @@ export const useTaskFilters = (
   };
 };
 
-// Hook for pagination
+// Hook for pagination - client-side only (filters results from a page)
 export const useTaskPagination = (
   tasks: TaskInterface[],
   itemsPerPage: number = 15
@@ -102,6 +104,36 @@ export const useTaskPagination = (
     currentPage,
     totalPages,
     paginatedTasks,
+    goToPage,
+    nextPage,
+    previousPage,
+  };
+};
+
+// Hook for server-side pagination
+export const useServerPagination = (itemsPerPage: number = 15) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  
+  const paginationParams: PaginationParams = useMemo(() => ({
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  }), [currentPage, itemsPerPage]);
+
+  const goToPage = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
+
+  const nextPage = useCallback(() => {
+    setCurrentPage(prev => prev + 1);
+  }, []);
+
+  const previousPage = useCallback(() => {
+    setCurrentPage(prev => Math.max(1, prev - 1));
+  }, []);
+
+  return {
+    currentPage,
+    paginationParams,
     goToPage,
     nextPage,
     previousPage,
