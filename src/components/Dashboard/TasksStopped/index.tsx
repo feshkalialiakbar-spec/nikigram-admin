@@ -3,7 +3,7 @@
 import React from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
 import { fetchStoppedTasks } from '@/services/taskServices';
-import { TaskDashboard } from '@/components/tasks';
+import { Task, TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
 
 interface TasksStoppedProps {
@@ -54,7 +54,7 @@ const TasksStopped: React.FC<TasksStoppedProps> = ({ className }) => {
       </div>
       <div className={styles.content}>
         <TaskDashboard 
-          tasks={tasks}
+          tasks={tasks as Task[]}
           loading={isLoading}
           error={error ? (error as unknown as Error)?.message || null : null}
           onRefetch={refetch}

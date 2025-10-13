@@ -38,7 +38,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     // Close children dock when navigating to a child item
     setSelectedParent(null)
   }, [router])
-
+  
   const handleParentToggle = useCallback((label: string) => {
     setExpandedParents((prev) => {
       const newSet = new Set(prev)

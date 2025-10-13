@@ -11,7 +11,7 @@ interface MyTasksProps {
 const MyTasks: React.FC<MyTasksProps> = ({ className }) => {
     const { data: tasks, isLoading, error, refetch } = useApiList({
         fetcher: fetchMyTasks,
-        queryKey: ['tasks', 'my-tasks'],
+        queryKey: ['task', 'my_list'],
         enabled: true,
         retry: 3,
     });

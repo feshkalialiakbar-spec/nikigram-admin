@@ -103,7 +103,7 @@ export const fetchMyTasks = async (): Promise<Task[]> => {
 export const fetchUnassignedTasks = async (): Promise<Task[]> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/unassigned/?limit=10&offset=0`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/all_tasks/?has_assignment=false&limit=10&offset=0`,
       {
         method: 'GET',
         headers: {
@@ -120,38 +120,12 @@ export const fetchUnassignedTasks = async (): Promise<Task[]> => {
     const apiTasks: ApiTask[] = result?.tasks || [];
     return apiTasks.map(mapApiTaskToTask);
   } catch (error) {
-    console.error('Error fetching unassigned tasks:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch unassigned tasks');
+    console.log('Error fetching unassigned tasks:', error);
+    return []
   }
 };
 
-/**
- * Fetch stopped tasks
- */
-export const fetchStoppedTasks = async (): Promise<Task[]> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/stopped/?limit=10&offset=0`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
 
-    if (!response.ok) {
-      return []
-    }
-
-    const result = await response.json();
-    const apiTasks: ApiTask[] = result?.tasks || [];
-    return apiTasks.map(mapApiTaskToTask);
-  } catch (error) {
-    console.error('Error fetching stopped tasks:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch stopped tasks');
-  }
-};
 
 /**
  * Fetch tasks by status ID
@@ -159,7 +133,7 @@ export const fetchStoppedTasks = async (): Promise<Task[]> => {
 export const fetchTasksByStatus = async (statusId: number): Promise<Task[]> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/list/?status=${statusId}&limit=100&offset=0`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status=${statusId}&limit=100&offset=0`,
       {
         method: 'GET',
         headers: {
@@ -188,6 +162,10 @@ export const fetchInProgressTasks = async (): Promise<Task[]> => {
   return fetchTasksByStatus(38);
 };
 
+export const fetchStoppedTasks = async (): Promise<Task[]> => {
+  return fetchTasksByStatus(45);
+};
+
 /**
  * Fetch completed tasks (status 39)
  */
@@ -213,7 +191,7 @@ export const fetchNeedsCorrectionTasks = async (): Promise<Task[]> => {
  * Fetch rejected tasks (status 42)
  */
 export const fetchRejectedTasks = async (): Promise<Task[]> => {
-  return fetchTasksByStatus(42);
+  return fetchTasksByStatus(44);
 };
 
 /**
@@ -234,28 +212,7 @@ export const fetchWaitingForMeTasks = async (): Promise<Task[]> => {
  * Fetch shared to-do tasks (pending tasks for collaboration)
  */
 export const fetchToDoListTasks = async (): Promise<Task[]> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared_pending/?limit=10&offset=0`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    if (!response.ok) {
-      return []
-    }
-
-    const result = await response.json();
-    const apiTasks: ApiTask[] = result?.tasks || [];
-    return apiTasks.map(mapApiTaskToTask);
-  } catch (error) {
-    console.error('Error fetching to-do list tasks:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch to-do list tasks');
-  }
+  return fetchTasksByStatus(37);
 };
 
 /**

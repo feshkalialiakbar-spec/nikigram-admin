@@ -3,14 +3,6 @@ import { Task } from '@/components/tasks/types';
 import {
   fetchMyTasks,
   fetchUnassignedTasks,
-  fetchStoppedTasks,
-  fetchInProgressTasks,
-  fetchCompletedTasks,
-  fetchApprovedTasks,
-  fetchNeedsCorrectionTasks,
-  fetchRejectedTasks,
-  fetchCancelledTasks,
-  fetchTaskById,
   createTask,
   updateTask,
   deleteTask,
@@ -76,96 +68,6 @@ export const useUnassignedTasks = (options?: Partial<UseQueryOptions<Task[], Err
     ...options,
   });
 };
-
-/**
- * Hook to fetch stopped tasks
- */
-export const useStoppedTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'stopped'],
-    queryFn: fetchStoppedTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch in-progress tasks (status 38)
- */
-export const useInProgressTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'in-progress'],
-    queryFn: fetchInProgressTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch completed tasks (status 39)
- */
-export const useCompletedTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'completed'],
-    queryFn: fetchCompletedTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch approved tasks (status 40)
- */
-export const useApprovedTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'approved'],
-    queryFn: fetchApprovedTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch needs correction tasks (status 41)
- */
-export const useNeedsCorrectionTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'needs-correction'],
-    queryFn: fetchNeedsCorrectionTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch rejected tasks (status 42)
- */
-export const useRejectedTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'rejected'],
-    queryFn: fetchRejectedTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch cancelled tasks (status 43)
- */
-export const useCancelledTasks = (options?: Partial<UseQueryOptions<Task[], Error>>) => {
-  return useQuery<Task[], Error>({
-    queryKey: ['tasks', 'cancelled'],
-    queryFn: fetchCancelledTasks,
-    ...options,
-  });
-};
-
-/**
- * Hook to fetch a single task by ID
- */
-export const useTask = (id: string | number, options?: Partial<UseQueryOptions<Task, Error>>) => {
-  return useQuery<Task, Error>({
-    queryKey: ['tasks', id],
-    queryFn: () => fetchTaskById(id),
-    enabled: !!id,
-    ...options,
-  });
-};
-
 /**
  * Hook to create a new task
  */

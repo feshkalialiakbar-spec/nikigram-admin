@@ -13,7 +13,7 @@ interface TasksCompletedProps {
 const TasksCompleted: React.FC<TasksCompletedProps> = ({ className }) => {
   const { data: tasks, isLoading, error, refetch } = useApiList({
     fetcher: fetchCompletedTasks,
-    queryKey: ['tasks', 'completed'],
+    queryKey: ['task', 'my_list'],
     enabled: true,
     retry: 3,
   });
