@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { CloseSquare, SearchNormal, ArrowLeft2 } from 'iconsax-react'
 import styles from './SidebarMenu.module.scss'
@@ -32,13 +32,14 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   const [isDesktop, setIsDesktop] = useState<boolean>(false)
   const [selectedParent, setSelectedParent] = useState<TaskMenuItem | null>(null)
 
-  const handleItemClick = useCallback((href: string, _label: string) => {
+  const handleItemClick = useCallback((href: string, _label?: string) => {
+    console.log(_label)
     setActiveItem(href)
     router.push(href)
     // Close children dock when navigating to a child item
     setSelectedParent(null)
   }, [router])
-  
+
   const handleParentToggle = useCallback((label: string) => {
     setExpandedParents((prev) => {
       const newSet = new Set(prev)
@@ -67,7 +68,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       } else {
         // Select this parent and expand it
         handleParentToggle(action.label)
-         setSelectedParent(action as unknown as TaskMenuItem)
+        setSelectedParent(action as unknown as TaskMenuItem)
       }
     } else {
       // Navigate if no children
@@ -94,7 +95,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   }
 
   // Default shortcuts
-  const defaultShortcuts = {
+  const defaultShortcuts = useMemo(() => ({
     toggleSidebar: { key: 'Ctrl+Alt+F', description: 'باز/بستن منوی کناری' },
     toggleShortcuts: {
       key: 'Ctrl+Shift+K',
@@ -106,7 +107,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     navigateRight: { key: 'ArrowRight', description: 'حرکت به راست در منو' },
     activate: { key: 'Enter', description: 'فعال‌سازی آیتم انتخاب شده' },
     close: { key: 'Escape', description: 'بستن منو یا لغو' },
-  }
+  }), [])
 
   // Initialize active item based on current pathname
   useEffect(() => {
@@ -174,6 +175,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       try {
         setCustomShortcuts(JSON.parse(savedShortcuts))
       } catch (_e) {
+        console.log(_e)
         setCustomShortcuts(defaultShortcuts)
       }
     } else {
@@ -183,7 +185,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     return () => {
       window.removeEventListener('resize', checkDesktop)
     }
-  }, [])
+  }, [defaultShortcuts])
 
   // Save shortcuts to cookies when changed
   useEffect(() => {
@@ -207,14 +209,15 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       document.addEventListener('keydown', handleEscape)
     }
 
+    const timeoutAtMount = childrenPopupTimeoutRef.current
     return () => {
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = 'unset'
-      if (childrenPopupTimeoutRef.current) {
-        clearTimeout(childrenPopupTimeoutRef.current)
+      if (timeoutAtMount) {
+        clearTimeout(timeoutAtMount)
       }
     }
-  }, [isOpen, onClose, childrenPopupTimeoutRef])
+  }, [isOpen, onClose])
 
   // Enhanced keyboard shortcuts with custom key support
   useEffect(() => {
@@ -227,7 +230,9 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         if (isOpen) {
           onClose()
         } else {
-          onOpen && onOpen()
+          if (onOpen) {
+            onOpen()
+          }
         }
         return
       }
@@ -380,9 +385,13 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                             }}
                             className={`${styles.parentItem} ${isParentActive ? styles.active : ''}`}
                             aria-expanded={expandedParents.has(action.label)}
-                            onClick={() =>
-                              isOpen ? handleRailClickWhenOpen(action) : onOpen && onOpen()
-                            }
+                            onClick={() => {
+                              if (isOpen) {
+                                handleRailClickWhenOpen(action)
+                              } else if (onOpen) {
+                                onOpen()
+                              }
+                            }}
                             title={action.label}
                           >
                             <action.icon

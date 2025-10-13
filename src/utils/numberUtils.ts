@@ -1,17 +1,3 @@
-/**
- * Utility functions for number normalization and formatting
- */
-
-/**
- * Normalizes Persian and Arabic numerals to English numerals
- * @param input - String containing Persian/Arabic numerals
- * @returns String with normalized English numerals
- * 
- * @example
- * normalizeDigits('۰۱۲۳') // returns '0123'
- * normalizeDigits('٠١٢٣') // returns '0123'
- * normalizeDigits('۰۹۱۲۳۴۵۶۷۸۹') // returns '09123456789'
- */
 export function normalizeDigits(input: string): string {
   if (!input || typeof input !== 'string') {
     return '';
