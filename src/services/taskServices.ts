@@ -18,7 +18,7 @@ export const fetchMyTasks = async (params?: PaginationParams): Promise<Paginated
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-    
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=${limit}&offset=${offset}`,
       {
@@ -59,7 +59,7 @@ export const fetchUnassignedTasks = async (params?: PaginationParams): Promise<P
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-    
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/all_tasks/?has_assignment=false&limit=${limit}&offset=${offset}`,
       {
@@ -106,7 +106,7 @@ export const fetchTasksByStatus = async (statusId: number, params?: PaginationPa
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-    
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status_id=${statusId}&limit=${limit}&offset=${offset}`,
       {
@@ -202,10 +202,10 @@ export const fetchToDoListTasks = async (params?: PaginationParams): Promise<Pag
 /**
  * Fetch a single task by ID
  */
-export const fetchTaskById = async (id: string | number): Promise<TaskInterface> => {
+export const fetchTaskById = async (id: string | number) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/detail/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/detail/${id}/`,
       {
         method: 'GET',
         headers: {
@@ -219,6 +219,9 @@ export const fetchTaskById = async (id: string | number): Promise<TaskInterface>
     }
 
     const task = await response.json();
+    if (task.redirect_url) {
+      // window.location.href = task.redirect_url;
+    }
     return task;
   } catch (error) {
     console.error('Error fetching task:', error);
@@ -313,7 +316,7 @@ export const deleteTask = async (id: string | number): Promise<void> => {
 export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<any> => {
   try {
     let endpoint = '';
-    
+
     // Determine endpoint based on ref_type
     switch (refType) {
       case 1: // REF_TYPE_PARTY_CHANGE_REQUEST - Profile change request

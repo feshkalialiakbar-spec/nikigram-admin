@@ -83,9 +83,9 @@ const mapPartyDocsToProfileDocuments = (
 export const mapProfileChangeRequestToComponent = (
   apiResponse: ApiProfileChangeRequestResponse
 ): ProfileChangeRequest => {
-  const { task_details, party_request_details, party_docs_data } = apiResponse;
+  const { task_details, party_request_details, party_docs_data, changed_fields } = apiResponse;
 
-  // Create real profile
+  // Create real profile with all available data
   const realProfile: RealProfile = {
     profileType: 'حقیقی',
     gender: getGenderLabel(party_request_details.gender),
@@ -96,7 +96,7 @@ export const mapProfileChangeRequestToComponent = (
     documents: mapPartyDocsToProfileDocuments(party_docs_data),
   };
 
-  // Create legal profile (using same data for now, can be different if API provides)
+  // Create legal profile (using alias as company name if available)
   const legalProfile: LegalProfile = {
     profileType: 'حقوقی',
     contactNumber: party_request_details.mobile,
@@ -105,6 +105,10 @@ export const mapProfileChangeRequestToComponent = (
     companyName: party_request_details.alias || 'نامشخص',
     documents: mapPartyDocsToProfileDocuments(party_docs_data),
   };
+
+  // Generate AI comment based on changed fields
+  const changedFieldsLabels = getChangedFieldsLabels(changed_fields);
+  const aiComment = `این درخواست شامل تغییر در فیلدهای ${changedFieldsLabels.join('، ')} می‌باشد. لطفاً اطلاعات را بررسی و تایید کنید.`;
 
   return {
     id: task_details.task_id.toString(),
@@ -116,7 +120,7 @@ export const mapProfileChangeRequestToComponent = (
     realProfile,
     legalProfile,
     primaryIndividuals: [], // Not provided in this API response
-    aiComment: 'در حال بررسی توسط سیستم هوش مصنوعی...', // Default comment
+    aiComment,
   };
 };
 
