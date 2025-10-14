@@ -63,6 +63,16 @@
   &.highlightedRow {
     background-color: #FEF2F2;
   }
+
+  &.clickableRow {
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #EFF6FF;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+  }
 }
 
 

@@ -1,0 +1,129 @@
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  width: 1162px;
+  height: 207px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  color: #334558;
+  font-weight: 400;
+  margin: 0;
+  width: 85px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+
+.profileTable {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 1162px;
+  height: 81px;
+  background: #FFFFFF;
+  border: 1px solid #DEE9F4;
+  border-radius: 8px;
+}
+
+.tableColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 193.67px;
+  height: 81px;
+  flex: 1;
+}
+
+.tableHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 193.67px;
+  height: 41px;
+}
+
+.tableHeaderContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 24px;
+  gap: 12px;
+  width: 193.67px;
+  height: 40px;
+  background: #EBF1F8;
+  border-radius: 16px 0px 0px 0px;
+}
+
+.tableHeaderText {
+  width: 145.67px;
+  height: 24px;
+  font-size: 14px;
+  color: #334558;
+  font-weight: 400;
+  text-align: center;
+}
+
+.tableSeparator {
+  width: 193.67px;
+  height: 1px;
+  background: #D1E1F2;
+}
+
+.tableRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 193.67px;
+  height: 40px;
+}
+
+.tableRowContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 24px;
+  gap: 12px;
+  width: 193.67px;
+  height: 40px;
+  background: #EBF1F8;
+}
+
+.tableRowText {
+  width: 145.67px;
+  height: 24px;
+  font-size: 14px;
+  color: #5E758E;
+  font-weight: 400;
+  text-align: center;
+}
+
+.documentsSection {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  width: 1162px;
+  height: 70px;
+}
+
+.documentItem {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0px 8px 12px;
+  gap: 24px;
+  width: 376.67px;
+  height: 70px;
+  background: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  border-radius: 8px;
+  flex: 1;
+}

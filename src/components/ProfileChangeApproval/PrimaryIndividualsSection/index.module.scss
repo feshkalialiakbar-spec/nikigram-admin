@@ -1,0 +1,140 @@
+.primaryIndividualsSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  width: 1162px;
+  height: 183px;
+}
+
+.primaryTitle {
+  width: 700px;
+  height: 24px;
+  font-size: 16px;
+  color: #131D28;
+  font-weight: 500;
+  margin: 0;
+  text-align: right;
+  line-height: 24px;
+}
+
+.individualsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  width: 1162px;
+  height: 143px;
+}
+
+.individualCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 16px 12px;
+  gap: 8px;
+  width: 376.67px;
+  height: 143px;
+  background: #EDFAFF;
+  border: 1px solid #007BFF;
+  border-radius: 8px;
+}
+
+.individualHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 352.67px;
+  height: 49px;
+}
+
+.selectButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  width: 187px;
+  height: 37px;
+  border: 2px solid #007BFF;
+  border-radius: 24px;
+  background: transparent;
+  color: #007BFF;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.individualDetails {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 115px;
+  height: 49px;
+}
+
+.individualInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+  width: 75px;
+  height: 49px;
+}
+
+.individualName {
+  width: 75px;
+  height: 21px;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 500;
+  text-align: right;
+  line-height: 21px;
+}
+
+.individualRole {
+  width: 54px;
+  height: 24px;
+  font-size: 14px;
+  color: #334558;
+  font-weight: 400;
+  text-align: right;
+  line-height: 24px;
+}
+
+.individualAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 63px;
+  object-fit: cover;
+  border: 2px solid #FFFFFF;
+}
+
+.individualAvatarPlaceholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 63px;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+.avatarText {
+  font-size: 14px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.individualDocument {
+  width: 352.67px;
+  height: 54px;
+}
