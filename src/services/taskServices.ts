@@ -205,7 +205,7 @@ export const fetchToDoListTasks = async (params?: PaginationParams): Promise<Pag
 export const fetchTaskById = async (id: string | number): Promise<TaskInterface> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/detail/${id}`,
       {
         method: 'GET',
         headers: {
@@ -303,6 +303,54 @@ export const deleteTask = async (id: string | number): Promise<void> => {
   } catch (error) {
     console.error('Error deleting task:', error);
     throw error instanceof Error ? error : new Error('Failed to delete task');
+  }
+};
+
+/**
+ * Fetch task details based on ref_type and ref_id
+ * Different task types have different endpoints and response structures
+ */
+export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<any> => {
+  try {
+    let endpoint = '';
+    
+    // Determine endpoint based on ref_type
+    switch (refType) {
+      case 1: // REF_TYPE_PARTY_CHANGE_REQUEST - Profile change request
+        endpoint = `/api/admin/task/profile/change_request/${refId}/`;
+        break;
+      case 2: // REF_TYPE_PROJECT_REQUEST - Project request
+        endpoint = `/api/admin/task/project/request/${refId}/`;
+        break;
+      case 3: // REF_TYPE_PROJECT_TASKS - Project tasks
+        endpoint = `/api/admin/task/project/tasks/${refId}/`;
+        break;
+      case 4: // REF_TYPE_REQUEST_PROJECT_TEMPLATE - Project template request
+        endpoint = `/api/admin/task/project/template/${refId}/`;
+        break;
+      default:
+        throw new Error(`Unsupported ref_type: ${refType}`);
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch task details: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching task details:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch task details');
   }
 };
 

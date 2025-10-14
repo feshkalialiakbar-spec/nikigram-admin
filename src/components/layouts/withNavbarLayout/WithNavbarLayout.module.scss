@@ -12,9 +12,7 @@
   margin: 0 auto;
   padding: 16px 20px;
   display: block;
-  box-sizing: border-box;
-  /* keep clear of the right rail (56px) */
-  margin-right: 56px;
+  box-sizing: border-box; 
 }
 
 @media (max-width: 768px) {

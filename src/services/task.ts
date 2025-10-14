@@ -19,4 +19,5 @@ export {
   fetchWaitingForMeTasks,
   fetchToDoListTasks,
   fetchTasksByStatus,
+  fetchTaskDetailsByRefType,
 } from './taskServices';
