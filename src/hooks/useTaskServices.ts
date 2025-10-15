@@ -62,7 +62,7 @@ export const useMyTasks = (
   options?: Partial<UseQueryOptions<PaginatedResponse<TaskInterface>, Error>>
 ) => {
   return useQuery<PaginatedResponse<TaskInterface>, Error>({
-    queryKey: ['tasks', 'my-tasks', paginationParams],
+    queryKey: ['tasks', 'my-profile', paginationParams],
     queryFn: () => fetchMyTasks(paginationParams),
     ...options,
   });

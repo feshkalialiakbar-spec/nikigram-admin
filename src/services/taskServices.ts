@@ -191,17 +191,11 @@ export const fetchCancelledTasks = async (params?: PaginationParams): Promise<Pa
 export const fetchWaitingForMeTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   return fetchTasksByStatus(37, params);
 };
-
-/**
- * Fetch shared to-do tasks (pending tasks for collaboration)
- */
+ 
 export const fetchToDoListTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   return fetchTasksByStatus(37, params);
 };
-
-/**
- * Fetch a single task by ID
- */
+ 
 export const fetchTaskById = async (id: string | number) => {
   try {
     const response = await fetch(
