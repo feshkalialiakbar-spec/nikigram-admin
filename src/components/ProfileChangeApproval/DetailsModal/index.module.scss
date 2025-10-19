@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
   padding: 20px;
 }
 
@@ -163,6 +163,21 @@
   object-fit: cover;
   border-radius: 8px;
   border: 2px solid #e5e7eb;
+}
+
+.noImagePlaceholder {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 12px;
+  text-align: center;
+  padding: 8px;
 }
 
 .documentsList {

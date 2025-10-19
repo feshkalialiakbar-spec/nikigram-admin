@@ -47,14 +47,16 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
   };
 
   const getImageUrl = (fileUid: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${fileUid}`;
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com';
+    return `${baseUrl}/api/sys/files/download/${fileUid}`;
   };
 
   const getProfileImageUrl = (profileImage: string): string => {
     if (profileImage.startsWith('http')) {
       return profileImage;
     }
-    return `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${profileImage}`;
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com';
+    return `${baseUrl}/api/sys/files/download/${profileImage}`;
   };
 
   const renderTaskDetails = () => (
@@ -188,15 +190,23 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
         <div className={styles.detailItem}>
           <span className={styles.label}>تصویر پروفایل:</span>
           <div className={styles.imageContainer}>
-            {data.party_request_details.profile_image && (
+            {data.party_request_details.profile_image ? (
               <img
                 src={getProfileImageUrl(data.party_request_details.profile_image)}
                 alt="تصویر پروفایل"
                 className={styles.profileImage}
                 onError={(e) => {
+                  console.error('Profile image failed to load:', getProfileImageUrl(data.party_request_details.profile_image));
                   e.currentTarget.style.display = 'none';
                 }}
+                onLoad={() => {
+                  console.log('Profile image loaded successfully:', getProfileImageUrl(data.party_request_details.profile_image));
+                }}
               />
+            ) : (
+              <div className={styles.noImagePlaceholder}>
+                <span>تصویر پروفایل موجود نیست</span>
+              </div>
             )}
           </div>
         </div>

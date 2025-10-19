@@ -12,7 +12,7 @@ const handleDocumentView = (document: ProfileDocument) => {
   if (!document.url) return;
   const absoluteUrl = document.url.startsWith('http')
     ? document.url
-    : `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${document.url}`;
+    : `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${document.url}`;
   window.open(absoluteUrl, '_blank', 'noopener,noreferrer');
 };
 
@@ -20,7 +20,7 @@ const handleDocumentDownload = async (fileDoc: ProfileDocument) => {
   if (!fileDoc.url) return;
   const absoluteUrl = fileDoc.url.startsWith('http')
     ? fileDoc.url
-    : `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${fileDoc.url}`;
+    : `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${fileDoc.url}`;
   try {
     const response = await fetch(absoluteUrl);
     const blob = await response.blob();
