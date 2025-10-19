@@ -108,6 +108,7 @@ export const TASK_TYPES = {
   REF_TYPE_PROJECT_REQUEST: 2, // تسک درخواست کمک
   REF_TYPE_PROJECT_TASKS: 3, // تسک های مربوط به انجام پروژه
   REF_TYPE_REQUEST_PROJECT_TEMPLATE: 4, // تسک درخواست ایجاد تمپلیت
+  REF_TYPE_COOPERATION_REQUEST: 5, // تسک درخواست همکاری
 } as const;
 
 export type TaskType = typeof TASK_TYPES[keyof typeof TASK_TYPES];
@@ -270,5 +271,213 @@ export function mapApiProfileChangeToProps(api: ApiProfileChangeRequestResponse)
   };
 
   return request;
+}
+
+// Help Request Types
+export interface HelpRequestDocument {
+  id: string;
+  filename: string;
+  fileType: 'jpg' | 'pdf' | 'png';
+  uploadDate: string;
+  fileSize: string;
+  url?: string;
+}
+
+export interface HelpRequestUser {
+  id: string;
+  name: string;
+  level: string;
+  avatar?: string;
+}
+
+export interface HelpRequestDetails {
+  id: string;
+  requestDate: string;
+  requestType: string;
+  requestTitle: string;
+  category: string;
+  subcategory: string;
+  timeframe: string;
+  requiredAmount: string;
+  contactInfo: string;
+  shebaNumber: string;
+  isShebaVerified: boolean;
+  description: string;
+  attachedFile?: HelpRequestDocument;
+  user: HelpRequestUser;
+  aiComment?: string;
+}
+
+export interface HelpRequestApprovalProps {
+  request: HelpRequestDetails;
+  rawApiData?: ApiHelpRequestResponse;
+  onApprove: (requestId: string) => void;
+  onReject: (requestId: string) => void;
+  className?: string;
+}
+
+// API Response Types for Help Request
+export interface ApiHelpRequestResponse {
+  task_details: {
+    task_id: number;
+    task_title: string;
+    task_description: string;
+    ref_type: number;
+    ref_id: number;
+    status_id: number;
+    status_name: string;
+    created_at: string;
+    source_template_id: number | null;
+    parent_task_id: number | null;
+  };
+  project_request_details: {
+    project_request_id: number;
+    user_id: number;
+    customer_id: number;
+    customer_uid: string;
+    first_name: string;
+    last_name: string;
+    profile_image: string;
+    user_level: number;
+    request_type: number;
+    request_title: string;
+    category_id: number;
+    category_name: string;
+    subcategory_id: number;
+    subcategory_name: string;
+    timeframe: string;
+    required_amount: number;
+    contact_info: string;
+    sheba_number: string;
+    is_sheba_verified: boolean;
+    description: string;
+    created_at: string;
+  };
+  project_docs_data?: {
+    document_id: number;
+    file_uid: string;
+    filename: string;
+    file_size: number;
+    upload_date: string;
+    is_verified: number;
+  }[];
+}
+
+// Cooperation Request Types
+export interface CooperationSpecialization {
+  party_specialization_id: number;
+  specialization_id: number;
+  specialization_name: string;
+  skill_category_id: number;
+  category_name: string;
+}
+
+export interface CooperationRequestDetails {
+  id: string;
+  requestDate: string;
+  notes: string;
+  status: string;
+  userName: string;
+  userAvatar?: string;
+  specializations: CooperationSpecialization[];
+}
+
+export interface CooperationRequestApprovalProps {
+  request: CooperationRequestDetails;
+  rawApiData?: ApiCooperationRequestResponse;
+  onApprove: (requestId: string) => void;
+  onReject: (requestId: string) => void;
+  className?: string;
+}
+
+// API Response Types for Cooperation Request
+export interface ApiCooperationRequestResponse {
+  task_details: {
+    task_id: number;
+    task_title: string;
+    task_description: string;
+    ref_type: number;
+    ref_id: number;
+    status_id: number;
+    status_name: string;
+    created_at: string;
+    source_template_id: number | null;
+    parent_task_id: number | null;
+  };
+  staff_id: number;
+  assignment_id: number;
+  cooperation_request_details: {
+    request_id: number;
+    party_id: number;
+    notes: string;
+    request_date: string;
+    status: number;
+    first_name: string;
+    last_name: string;
+    full_name: string;
+    profile_image: string;
+  };
+  specialization_details: CooperationSpecialization[];
+}
+
+// Template Request Types
+export interface TemplateRequestDetails {
+  id: string;
+  requestDate: string;
+  requestType: string;
+  title: string;
+  description: string;
+  category: string;
+  parentCategory: string;
+  maxAmountMonthly: string;
+  timePeriod: string;
+  amountInPeriod: string;
+  status: string;
+  userName: string;
+  userAvatar?: string;
+  isVerified: boolean;
+}
+
+export interface TemplateRequestApprovalProps {
+  request: TemplateRequestDetails;
+  rawApiData?: ApiTemplateRequestResponse;
+  onApprove: (requestId: string) => void;
+  onReject: (requestId: string) => void;
+  className?: string;
+}
+
+// API Response Types for Template Request
+export interface ApiTemplateRequestResponse {
+  task_details: {
+    task_id: number;
+    task_title: string;
+    task_description: string;
+    ref_type: number;
+    ref_id: number;
+    status_id: number;
+    status_name: string;
+    created_at: string;
+    source_template_id: number | null;
+    parent_task_id: number | null;
+  };
+  staff_id: number;
+  request_id: number;
+  request_type: number;
+  category_id: number;
+  title: string;
+  description: string;
+  max_amount_monthly: number;
+  time_period: number;
+  amount_in_period: number;
+  status: number;
+  created_at: string;
+  updated_at: string;
+  category_name: string;
+  parent_category_name: string;
+  user_id: number;
+  cust_id: number;
+  is_verified: number;
+  verified_by: number;
+  verified_at: string | null;
 }
 
