@@ -1,65 +1,44 @@
-.container {
+.dashboard {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background: transparent;
   direction: rtl;
-  font-family: 'Vazir', sans-serif;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .mainContent {
-  display: flex;
-  justify-content: center;
-  padding: 2rem;
-}
-
-.contentWrapper {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.requestContainer {
-  background: white;
+  padding: 0;
+  background: transparent;
   border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.requestCard {
-  padding: 2rem;
-}
-
-.requestContent {
+  border: 1px solid #E5E7EB;
+  overflow: visible;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  max-height: calc(100vh - 150px);
 }
 
-.requestHeader {
+.headerSection {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 20px 20px 16px 20px;
+  background: #EBF1F8;
+  border-bottom: 1px solid #E5E7EB;
+  border-radius: 12px 12px 0 0;
 }
 
 .headerLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .requestDateLabel {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #6b7280;
   font-weight: 500;
 }
 
 .requestDate {
-  font-size: 1rem;
+  font-size: 16px;
   color: #374151;
   font-weight: 600;
 }
@@ -68,120 +47,167 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .title {
-  font-size: 1.875rem;
+  font-size: 24px;
   font-weight: 700;
   color: #1f2937;
   margin: 0;
 }
 
-.detailsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.tableContainer {
+  background: #ffffff;
+  border-radius: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  box-shadow: none;
+  direction: rtl;
+  border: none;
+  width: 100%;
+  flex: 1;
+  max-height: calc(100vh - 300px);
 }
 
-.detailsGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
 }
 
-.detailRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  align-items: flex-start;
-  padding: 1rem 0;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.detailRow:last-child {
-  border-bottom: none;
-}
-
-.detailLabel {
+.table th {
+  background: #EBF1F8;
+  padding: 16px 12px;
+  text-align: right;
   font-weight: 600;
-  color: #374151;
-  font-size: 1rem;
-  text-align: right;
-  padding-right: 1rem;
+  color: #435A73; 
+  white-space: nowrap;
+  font-size: 14px;
 }
 
-.detailValue {
-  font-size: 1rem;
-  color: #6b7280;
+.table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #F3F4F6;
   text-align: right;
-  padding-right: 1rem;
+  vertical-align: middle;
+  color: #374151;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+  background-color: #ffffff;
+
+  &:nth-child(even) {
+    background-color: #F9FAFB;
+  }
+
+  &:hover {
+    background-color: #F3F4F6;
+  }
+
+  &.clickableRow {
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #EFF6FF;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+.userName {
+  font-weight: 500;
+  color: #333;
+  max-width: 250px;
+  word-wrap: break-word;
 }
 
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
   direction: rtl;
 }
 
 .userAvatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e5e7eb;
 }
 
-.userName {
+.userNameText {
   font-weight: 600;
   color: #1f2937;
 }
 
+.status {
+  text-align: center;
+}
+
 .statusBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
   display: inline-block;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .statusBadge.tایید-شده {
-  background-color: #10b981;
-  color: white;
+  background-color: #E9FBF1;
+  color: #047857;
+  border: 1px solid #A7F3D0;
 }
 
 .statusBadge.رد-شده {
-  background-color: #ef4444;
-  color: white;
+  background-color: #DC2626;
+  color: #FFFFFF;
+  border: 1px solid #B91C1C;
 }
 
 .statusBadge.در-انتظار-بررسی {
-  background-color: #f59e0b;
-  color: white;
+  background-color: #FFF4D6;
+  color: #A16207;
+  border: 1px solid #FDE68A;
 }
 
 .description {
+  color: #666;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.descriptionText {
   line-height: 1.6;
-  max-height: 8rem;
+  max-height: 120px;
   overflow-y: auto;
-  padding: 0.75rem;
+  padding: 8px;
   background-color: #f9fafb;
-  border-radius: 0.5rem;
+  border-radius: 6px;
   border: 1px solid #e5e7eb;
+}
+
+.specializations {
+  max-width: 300px;
+  word-wrap: break-word;
 }
 
 .specializationsContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 8px;
 }
 
 .specializationCard {
-  padding: 1rem;
+  padding: 8px;
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  border-radius: 6px;
   transition: all 0.2s;
 }
 
@@ -194,43 +220,44 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 8px;
 }
 
 .specializationName {
   font-weight: 600;
   color: #1f2937;
-  font-size: 1rem;
+  font-size: 12px;
 }
 
 .categoryName {
-  font-size: 0.875rem;
+  font-size: 10px;
   color: #6b7280;
   background-color: #e5e7eb;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .aiSection {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
   border: 1px solid #bae6fd;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 0 0 12px 12px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 12px;
+  border-top: 1px solid #E5E7EB;
 }
 
 .aiHeader {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
   direction: rtl;
 }
 
 .aiIcon {
-  width: 2rem;
-  height: 2rem;
+  width: 32px;
+  height: 32px;
   background-color: #0ea5e9;
   border-radius: 50%;
   display: flex;
@@ -240,45 +267,48 @@
 }
 
 .aiIconSvg {
-  width: 1rem;
-  height: 1rem;
+  width: 16px;
+  height: 16px;
 }
 
 .aiTitle {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 700;
   color: #0c4a6e;
   margin: 0;
 }
 
 .aiSubtitle {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #0369a1;
   font-weight: 500;
 }
 
 .aiComment {
   background-color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
+  padding: 16px;
+  border-radius: 8px;
   border: 1px solid #bae6fd;
   line-height: 1.6;
   color: #374151;
+  font-size: 14px;
 }
 
 .actionButtons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  padding: 1rem 0;
+  gap: 16px;
+  padding: 20px;
+  background: #ffffff;
+  border-top: 1px solid #E5E7EB;
 }
 
 .approveButton,
 .rejectButton {
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
+  padding: 12px 24px;
+  border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
@@ -305,45 +335,74 @@
   color: white;
 }
 
-// Responsive design
+// Mobile responsive
+@media (max-width: 1024px) {
+  .mainContent {
+    margin: 75px 15px 15px 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .mainContent {
-    padding: 1rem;
+    margin: 70px 15px 15px 15px;
   }
 
-  .requestCard {
-    padding: 1rem;
+  .tableContainer {
+    overflow-x: auto;
+    border-radius: 8px;
+    margin: 0 -10px;
   }
 
-  .detailRow {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
+  .table {
+    min-width: 600px;
   }
 
-  .detailLabel {
-    text-align: right;
-    padding-right: 0;
+  .table th,
+  .table td {
+    padding: 12px 8px;
+    font-size: 12px;
   }
 
-  .detailValue {
-    text-align: right;
-    padding-right: 0;
+  .userName,
+  .description,
+  .specializations {
+    max-width: 120px;
   }
 
   .actionButtons {
     flex-direction: column;
+    gap: 12px;
   }
 
   .approveButton,
   .rejectButton {
     width: 100%;
+    padding: 12px 16px;
   }
 }
 
 @media (max-width: 480px) {
-  .requestHeader {
+  .mainContent {
+    margin: 65px 10px 10px 10px;
+  }
+
+  .tableContainer {
+    margin: 0 -15px;
+  }
+
+  .table {
+    min-width: 500px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+
+  .headerSection {
     flex-direction: column;
-    gap: 1rem;
+    gap: 12px;
     align-items: flex-start;
   }
 
@@ -352,6 +411,20 @@
   }
 
   .title {
-    font-size: 1.5rem;
+    font-size: 20px;
+  }
+
+  .statusBadge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .specializationName {
+    font-size: 10px;
+  }
+
+  .categoryName {
+    font-size: 8px;
+    padding: 1px 4px;
   }
 }
