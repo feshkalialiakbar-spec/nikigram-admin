@@ -306,6 +306,7 @@ export const deleteTask = async (id: string | number): Promise<void> => {
 /**
  * Fetch task details based on ref_type and ref_id
  * Different task types have different endpoints and response structures
+ * @deprecated Use fetchTaskDetailsByRefType from taskDetailServices instead
  */
 export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<any> => {
   try {
@@ -329,8 +330,11 @@ export const fetchTaskDetailsByRefType = async (refType: number, refId: number):
         throw new Error(`Unsupported ref_type: ${refType}`);
     }
 
+    // Use internal API routes for supported types, external for others
+    const baseUrl = (refType === 1 || refType === 4) ? '' : process.env.NEXT_PUBLIC_API_URL;
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+      `${baseUrl}${endpoint}`,
       {
         method: 'GET',
         headers: {

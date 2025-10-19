@@ -119,6 +119,7 @@ const ProfileTaskDetailPage: React.FC = () => {
   return (
     <ProfileChangeApproval
       request={profileRequest}
+      rawApiData={taskData}
       onApprove={handleApprove}
       onReject={handleReject}
       onSelectPrimary={handleSelectPrimary}

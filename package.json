@@ -18,8 +18,9 @@
     "next-intl": "^4.3.9",
     "react": "19.1.0",
     "react-datepicker2": "^3.3.13",
-    "react-dom": "19.1.0", 
-    "sass": "^1.93.2"
+    "react-dom": "19.1.0",
+    "sass": "^1.93.2",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

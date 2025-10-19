@@ -27,7 +27,7 @@ const AIAssistantSection: React.FC<AIAssistantSectionProps> = ({
       
       <div className={styles.aiContent}>
         <div className={styles.aiComment}>
-          این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.
+          {comment}
         </div>
       </div>
     </div>

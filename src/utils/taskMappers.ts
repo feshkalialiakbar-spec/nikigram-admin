@@ -73,7 +73,7 @@ const mapPartyDocsToProfileDocuments = (
     fileType: 'pdf' as 'jpg' | 'pdf', // Default to pdf, can be determined from file_uid if needed
     uploadDate: formatDate(doc.upload_date),
     fileSize: '۴ MB', // Size not provided in API, using default
-    url: doc.file_uid,
+    url: `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${doc.file_uid}`,
   }));
 };
 
@@ -115,7 +115,7 @@ export const mapProfileChangeRequestToComponent = (
     requestDate: formatDate(task_details.created_at),
     userName: `${party_request_details.first_name} ${party_request_details.last_name}`,
     userAvatar: party_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL}/media/${party_request_details.profile_image}`
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${party_request_details.profile_image}`
       : undefined,
     realProfile,
     legalProfile,

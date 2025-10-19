@@ -162,6 +162,7 @@ export interface ProfileChangeRequest {
 
 export interface ProfileChangeApprovalProps {
   request: ProfileChangeRequest;
+  rawApiData?: ApiProfileChangeRequestResponse;
   onApprove: (requestId: string) => void;
   onReject: (requestId: string) => void;
   onSelectPrimary: (individualId: string) => void;
@@ -227,5 +228,47 @@ export interface ApiProfileChangeRequestResponse {
     platform_active: number;
     status_id: number;
   }[];
+}
+
+// Mapper: API -> internal ProfileChangeRequest
+export function mapApiProfileChangeToProps(api: ApiProfileChangeRequestResponse): ProfileChangeRequest {
+  const realProfile: RealProfile = {
+    profileType: 'حقیقی',
+    gender: api.party_request_details.gender === 1 ? 'مرد' : 'زن',
+    contactNumber: api.party_request_details.mobile,
+    nationalId: api.party_request_details.national_id,
+    lastName: api.party_request_details.last_name,
+    firstName: api.party_request_details.first_name,
+    documents: api.party_docs_data.map((d) => ({
+      id: String(d.document_id),
+      filename: `مدرک ${d.document_id}`,
+      fileType: 'pdf',
+      uploadDate: d.upload_date,
+      fileSize: '—',
+      url: d.file_uid,
+    })),
+  };
+
+  const legalProfile: LegalProfile = {
+    profileType: 'حقوقی',
+    contactNumber: api.party_request_details.mobile,
+    roleInCompany: 'مدیرعامل',
+    nationalId: '—',
+    companyName: '—',
+    documents: [],
+  };
+
+  const request: ProfileChangeRequest = {
+    id: String(api.task_details.task_id),
+    requestDate: api.task_details.created_at,
+    userName: `${api.party_request_details.first_name} ${api.party_request_details.last_name}`,
+    userAvatar: api.party_request_details.profile_image,
+    realProfile,
+    legalProfile,
+    primaryIndividuals: [],
+    aiComment: undefined,
+  };
+
+  return request;
 }
 

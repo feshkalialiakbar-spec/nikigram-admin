@@ -1,0 +1,6 @@
+---
+rules:{
+alwaysApply: true
+useYarn:true
+}
+---
