@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ApiProfileChangeRequestResponse } from '@/components/tasks/types';
 import styles from './index.module.scss';
 
@@ -25,7 +26,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
         hour: '2-digit',
         minute: '2-digit'
       }).format(date);
-    } catch (error) {
+    } catch {
       return dateString;
     }
   };
@@ -191,17 +192,12 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
           <span className={styles.label}>تصویر پروفایل:</span>
           <div className={styles.imageContainer}>
             {data.party_request_details.profile_image ? (
-              <img
+              <Image
                 src={getProfileImageUrl(data.party_request_details.profile_image)}
                 alt="تصویر پروفایل"
                 className={styles.profileImage}
-                onError={(e) => {
-                  console.error('Profile image failed to load:', getProfileImageUrl(data.party_request_details.profile_image));
-                  e.currentTarget.style.display = 'none';
-                }}
-                onLoad={() => {
-                  console.log('Profile image loaded successfully:', getProfileImageUrl(data.party_request_details.profile_image));
-                }}
+                width={64}
+                height={64}
               />
             ) : (
               <div className={styles.noImagePlaceholder}>
@@ -292,18 +288,17 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
     <div className={styles.tabContent}>
       <h3 className={styles.sectionTitle}>پلتفرم‌ها</h3>
       <div className={styles.platformsList}>
-        {data.party_platforms_data.map((platform, index) => (
+        {data.party_platforms_data.map((platform) => (
           <div key={platform.account_id} className={styles.platformItem}>
             <div className={styles.platformHeader}>
               <div className={styles.platformInfo}>
                 {platform.platform_icon && (
-                  <img
+                  <Image
                     src={platform.platform_icon}
                     alt={platform.platform_name}
                     className={styles.platformIcon}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
+                    width={24}
+                    height={24}
                   />
                 )}
                 <div>

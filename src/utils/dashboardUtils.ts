@@ -1,4 +1,4 @@
-import { usePathname } from 'next/navigation';
+// Removed unused import
 
 /**
  * Get the dashboard route prefix based on current pathname

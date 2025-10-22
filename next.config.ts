@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async rewrites() {
-    return [
+  images: {
+    remotePatterns: [
       {
-        source: '/api/external/:path*',
-        destination: 'https://nikicity.com/api/:path*',
+        protocol: 'https',
+        hostname: new URL(process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com').hostname,
       },
-    ];
+    ],
   },
 };
 

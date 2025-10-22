@@ -308,7 +308,7 @@ export const deleteTask = async (id: string | number): Promise<void> => {
  * Different task types have different endpoints and response structures
  * @deprecated Use fetchTaskDetailsByRefType from taskDetailServices instead
  */
-export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<any> => {
+export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<unknown> => {
   try {
     let endpoint = '';
 

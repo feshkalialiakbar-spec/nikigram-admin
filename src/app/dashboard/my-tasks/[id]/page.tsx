@@ -6,8 +6,13 @@ import ProfileChangeApproval from '@/components/ProfileChangeApproval';
 import HelpRequestApproval from '@/components/HelpRequestApproval';
 import CooperationRequestApproval from '@/components/CooperationRequestApproval';
 import TemplateRequestApproval from '@/components/TemplateRequestApproval';
-import { mapProfileChangeRequestToComponent, mapHelpRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent } from '@/utils/taskMappers';
-import { ApiProfileChangeRequestResponse, ApiHelpRequestResponse, ApiCooperationRequestResponse, ApiTemplateRequestResponse } from '@/components/tasks/types';
+import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent } from '@/utils/taskMappers';
+import {
+  ApiProfileChangeRequestResponse,
+  ApiHelpRequestResponse,
+  ApiCooperationRequestResponse,
+  ApiTemplateRequestResponse,
+} from '@/components/tasks/types';
 
 const TaskDetailPage: React.FC = () => {
   const params = useParams();
@@ -16,7 +21,13 @@ const TaskDetailPage: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [taskData, setTaskData] = useState<any>(null);
+  const [taskData, setTaskData] = useState<
+    | ApiProfileChangeRequestResponse
+    | ApiHelpRequestResponse
+    | ApiCooperationRequestResponse
+    | ApiTemplateRequestResponse
+    | null
+  >(null);
   const [taskType, setTaskType] = useState<'profile' | 'help' | 'template' | 'cooperation' | null>(null);
 
   useEffect(() => {
@@ -37,11 +48,18 @@ const TaskDetailPage: React.FC = () => {
           throw new Error('Failed to fetch task data');
         }
 
-        const result = await response.json();
+        const result: {
+          taskData:
+            | ApiProfileChangeRequestResponse
+            | ApiHelpRequestResponse
+            | ApiCooperationRequestResponse
+            | ApiTemplateRequestResponse;
+          redirectData: { ref_type: number };
+        } = await response.json();
         console.log('API Response data:', result);
 
         const { taskData, redirectData } = result;
-        
+
         // Determine task type based on ref_type
         if (redirectData.ref_type === 1) {
           setTaskType('profile');
@@ -71,27 +89,22 @@ const TaskDetailPage: React.FC = () => {
     console.log('Approving request:', requestId);
     try {
       if (taskType === 'profile') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${requestId}/approve/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${requestId}/approve/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
       } else if (taskType === 'help') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${requestId}/approve/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${requestId}/approve/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
       } else if (taskType === 'template') {
-        await fetch(`${process.env.NEXT一点UBLIC_API_URL}/api/admin/task/project/template/${requestId}/approve/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${requestId}/approve/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
       } else if (taskType === 'cooperation') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/cooperation_request/${requestId}/approve/`, { 
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } else if (taskType === 'template') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${requestId}/approve/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/cooperation_request/${requestId}/approve/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
@@ -106,27 +119,22 @@ const TaskDetailPage: React.FC = () => {
     console.log('Rejecting request:', requestId);
     try {
       if (taskType === 'profile') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${requestId}/reject/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${requestId}/reject/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
       } else if (taskType === 'help') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${requestId}/reject/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${requestId}/reject/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
       } else if (taskType === 'template') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${requestId}/reject/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${requestId}/reject/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
       } else if (taskType === 'cooperation') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/cooperation_request/${requestId}/reject/`, { 
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } else if (taskType === 'template') {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${requestId}/reject/`, { 
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/cooperation_request/${requestId}/reject/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
@@ -189,11 +197,13 @@ const TaskDetailPage: React.FC = () => {
 
   // Render appropriate component based on task type
   if (taskType === 'profile' && taskData) {
-    const profileRequest = mapProfileChangeRequestToComponent(taskData);
+    const profileRequest = mapProfileChangeRequestToComponent(
+      taskData as ApiProfileChangeRequestResponse
+    );
     return (
       <ProfileChangeApproval
         request={profileRequest}
-        rawApiData={taskData}
+        rawApiData={taskData as ApiProfileChangeRequestResponse}
         onApprove={handleApprove}
         onReject={handleReject}
         onSelectPrimary={handleSelectPrimary}
@@ -204,24 +214,24 @@ const TaskDetailPage: React.FC = () => {
   if (taskType === 'help' && taskData) {
     // Create a simple help request object based on the actual API response structure
     const helpRequest = {
-      id: taskData.task_details.task_id.toString(),
-      requestDate: taskData.task_details.created_at,
-      requestType: taskData.project_request_details.request_type === 1 ? 'درخواست کمک برای خود' : 'درخواست کمک برای دیگران',
-      requestTitle: taskData.project_request_details.title,
-      category: taskData.project_request_details.category_name,
-      subcategory: taskData.project_request_details.parent_category_name,
-      timeframe: `${taskData.project_request_details.time_period} بار`,
-      requiredAmount: new Intl.NumberFormat('fa-IR').format(taskData.project_request_details.amount_in_period) + ' تومان',
-      contactInfo: taskData.project_request_details.mobile,
-      shebaNumber: taskData.project_request_details.ibn,
-      isShebaVerified: taskData.project_request_details.is_verified === 1,
-      description: taskData.project_request_details.description,
+      id: (taskData as ApiHelpRequestResponse).task_details.task_id.toString(),
+      requestDate: (taskData as ApiHelpRequestResponse).task_details.created_at,
+      requestType: (taskData as ApiHelpRequestResponse).project_request_details.request_type === 1 ? 'درخواست کمک برای خود' : 'درخواست کمک برای دیگران',
+      requestTitle: (taskData as ApiHelpRequestResponse).project_request_details.request_title,
+      category: (taskData as ApiHelpRequestResponse).project_request_details.category_name,
+      subcategory: (taskData as ApiHelpRequestResponse).project_request_details.subcategory_name,
+      timeframe: (taskData as ApiHelpRequestResponse).project_request_details.timeframe,
+      requiredAmount: new Intl.NumberFormat('fa-IR').format((taskData as ApiHelpRequestResponse).project_request_details.required_amount) + ' تومان',
+      contactInfo: (taskData as ApiHelpRequestResponse).project_request_details.contact_info,
+      shebaNumber: (taskData as ApiHelpRequestResponse).project_request_details.sheba_number,
+      isShebaVerified: (taskData as ApiHelpRequestResponse).project_request_details.is_sheba_verified,
+      description: (taskData as ApiHelpRequestResponse).project_request_details.description,
       user: {
-        id: taskData.project_request_details.user_id.toString(),
-        name: `${taskData.project_request_details.first_name} ${taskData.project_request_details.last_name}`,
-        level: `سطح ${taskData.project_request_details.user_id}`, // You might want to get actual level
-        avatar: taskData.project_request_details.profile_image 
-          ? `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${taskData.project_request_details.profile_image}`
+        id: (taskData as ApiHelpRequestResponse).project_request_details.user_id.toString(),
+        name: `${(taskData as ApiHelpRequestResponse).project_request_details.first_name} ${(taskData as ApiHelpRequestResponse).project_request_details.last_name}`,
+        level: `سطح ${(taskData as ApiHelpRequestResponse).project_request_details.user_level}`,
+        avatar: (taskData as ApiHelpRequestResponse).project_request_details.profile_image
+          ? `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${(taskData as ApiHelpRequestResponse).project_request_details.profile_image}`
           : undefined,
       },
       aiComment: 'این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین میدهد.',
@@ -230,7 +240,7 @@ const TaskDetailPage: React.FC = () => {
     return (
       <HelpRequestApproval
         request={helpRequest}
-        rawApiData={taskData}
+        rawApiData={taskData as ApiHelpRequestResponse}
         onApprove={handleApprove}
         onReject={handleReject}
       />
@@ -238,11 +248,13 @@ const TaskDetailPage: React.FC = () => {
   }
 
   if (taskType === 'cooperation' && taskData) {
-    const cooperationRequest = mapCooperationRequestToComponent(taskData);
+    const cooperationRequest = mapCooperationRequestToComponent(
+      taskData as ApiCooperationRequestResponse
+    );
     return (
       <CooperationRequestApproval
         request={cooperationRequest}
-        rawApiData={taskData}
+        rawApiData={taskData as ApiCooperationRequestResponse}
         onApprove={handleApprove}
         onReject={handleReject}
       />
@@ -250,11 +262,13 @@ const TaskDetailPage: React.FC = () => {
   }
 
   if (taskType === 'template' && taskData) {
-    const templateRequest = mapTemplateRequestToComponent(taskData);
+    const templateRequest = mapTemplateRequestToComponent(
+      taskData as ApiTemplateRequestResponse
+    );
     return (
       <TemplateRequestApproval
         request={templateRequest}
-        rawApiData={taskData}
+        rawApiData={taskData as ApiTemplateRequestResponse}
         onApprove={handleApprove}
         onReject={handleReject}
       />

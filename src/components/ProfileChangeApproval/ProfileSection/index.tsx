@@ -32,7 +32,7 @@ const handleDocumentDownload = async (fileDoc: ProfileDocument) => {
     a.click();
     a.remove();
     window.URL.revokeObjectURL(blobUrl);
-  } catch (e) {
+  } catch {
     window.open(absoluteUrl, '_blank', 'noopener,noreferrer');
   }
 };

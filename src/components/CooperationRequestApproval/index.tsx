@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { CooperationRequestApprovalProps } from '@/components/tasks/types';
 import styles from './index.module.scss';
 
@@ -40,10 +41,12 @@ const CooperationRequestApproval: React.FC<CooperationRequestApprovalProps> = ({
                 <td className={styles.userName}>
                   <div className={styles.userInfo}>
                     {request.userAvatar && (
-                      <img
+                      <Image
                         src={request.userAvatar}
                         alt={request.userName}
                         className={styles.userAvatar}
+                        width={48}
+                        height={48}
                       />
                     )}
                     <span className={styles.userNameText}>{request.userName}</span>

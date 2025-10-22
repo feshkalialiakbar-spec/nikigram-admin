@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { HelpRequestApprovalProps } from '@/components/tasks/types';
 import styles from './index.module.scss';
 
@@ -37,10 +38,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                     <div className={styles.valueItem}>
                       <div className={styles.userInfo}>
                         {request.user.avatar && (
-                          <img
+                          <Image
                             src={request.user.avatar}
                             alt={request.user.name}
                             className={styles.userAvatar}
+                            width={48}
+                            height={48}
                           />
                         )}
                         <span className={styles.userName}>{request.user.name}</span>

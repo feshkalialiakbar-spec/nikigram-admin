@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { PrimaryIndividual } from '@/components/tasks/types';
 import { DocumentDisplay } from '../DocumentDisplay';
 import styles from './index.module.scss';
@@ -16,11 +17,11 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
   onSelectPrimary,
   className
 }) => {
-  const handleDocumentView = (document: any) => {
+  const handleDocumentView = (document: PrimaryIndividual['document']) => {
     console.log('View document:', document);
   };
 
-  const handleDocumentDownload = (document: any) => {
+  const handleDocumentDownload = (document: PrimaryIndividual['document']) => {
     console.log('Download document:', document);
   };
 
@@ -48,10 +49,12 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
                   <span className={styles.individualRole}>{individual.role}</span>
                 </div>
                 {individual.avatar ? (
-                  <img 
+                  <Image 
                     src={individual.avatar} 
                     alt={individual.name}
                     className={styles.individualAvatar}
+                    width={48}
+                    height={48}
                   />
                 ) : (
                   <div className={styles.individualAvatarPlaceholder}>

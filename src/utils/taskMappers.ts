@@ -10,7 +10,6 @@ import {
   HelpRequestUser,
   ApiCooperationRequestResponse,
   CooperationRequestDetails,
-  CooperationSpecialization,
   ApiTemplateRequestResponse,
   TemplateRequestDetails,
 } from '@/components/tasks/types';
@@ -18,17 +17,7 @@ import {
 /**
  * Convert education degree code to Persian label
  */
-const getEducationDegreeLabel = (degree: number): string => {
-  const degrees: Record<number, string> = {
-    1: 'زیر دیپلم',
-    2: 'دیپلم',
-    3: 'کاردانی',
-    4: 'کارشناسی',
-    5: 'کارشناسی ارشد',
-    6: 'دکتری',
-  };
-  return degrees[degree] || 'نامشخص';
-};
+// Removed unused function
 
 /**
  * Convert gender code to Persian label
@@ -46,7 +35,7 @@ const formatDate = (dateString: string): string => {
     // You can use a Persian date library here if needed
     // For now, return a simple format
     return new Intl.DateTimeFormat('fa-IR').format(date);
-  } catch (error) {
+  } catch {
     return dateString;
   }
 };

@@ -66,7 +66,7 @@ export interface ProjectTemplate {
 
 export interface ApiError {
   error: string;
-  details?: any;
+  details?: unknown;
 }
 
 export interface ApiSuccess {

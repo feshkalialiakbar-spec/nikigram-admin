@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ProfileChangeApprovalProps, ApiProfileChangeRequestResponse } from '@/components/tasks/types';
-import { DocumentDisplay } from './DocumentDisplay';
+import { ProfileChangeApprovalProps } from '@/components/tasks/types';
+import Image from 'next/image';
 import { RealProfileSection, LegalProfileSection } from './ProfileSection';
 import { PrimaryIndividualsSection } from './PrimaryIndividualsSection';
 import { ActionButtons } from './ActionButtons';
@@ -53,10 +53,12 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
                       <div className={styles.userDetails}>
                         <span className={styles.userName}>{request.userName}</span>
                         {request.userAvatar && (
-                          <img
+                          <Image
                             src={request.userAvatar}
                             alt={request.userName}
                             className={styles.userAvatar}
+                            width={48}
+                            height={48}
                           />
                         )}
                       </div>

@@ -1,2 +1,5 @@
 import MyTasks from '@/components/Dashboard/MyTasks';
-export default MyTasks
+
+export default function Page() {
+  return <MyTasks />;
+}

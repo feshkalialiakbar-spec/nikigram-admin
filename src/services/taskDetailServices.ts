@@ -1,7 +1,6 @@
 import { 
   ProfileChangeRequest, 
   ProjectTemplate, 
-  TaskDetailResponse, 
   RefType 
 } from '@/types/api';
 
@@ -151,7 +150,10 @@ export const deleteProjectTemplate = async (taskId: number): Promise<void> => {
 /**
  * Fetch task details by ref type - Updated to use internal API routes
  */
-export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<any> => {
+export const fetchTaskDetailsByRefType = async (
+  refType: number, 
+  refId: number
+): Promise<ProfileChangeRequest | ProjectTemplate> => {
   try {
     switch (refType) {
       case RefType.PARTY_CHANGE_REQUEST:

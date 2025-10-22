@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { TemplateRequestApprovalProps } from '@/components/tasks/types';
 import styles from './index.module.scss';
 
@@ -38,10 +39,12 @@ const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
                       <div className={styles.detailValue}>
                         <div className={styles.userInfo}>
                           {request.userAvatar && (
-                            <img
+                            <Image
                               src={request.userAvatar}
                               alt={request.userName}
                               className={styles.userAvatar}
+                              width={48}
+                              height={48}
                             />
                           )}
                           <span className={styles.userName}>{request.userName}</span>
@@ -135,7 +138,7 @@ const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
             </div>
             <div className={styles.aiSubtitle}>تولید شده توسط هوش مصنوعی</div>
             <div className={styles.aiComment}>
-              این درخواست ایجاد تمپلیت برای دسته‌بندی "{request.category}" با مبلغ {request.maxAmountMonthly} 
+              این درخواست ایجاد تمپلیت برای دسته‌بندی &quot;{request.category}&quot; با مبلغ {request.maxAmountMonthly} 
               در بازه زمانی {request.timePeriod} ارائه شده است. 
               لطفاً محتوای تمپلیت، مبالغ و دسته‌بندی را بررسی کنید.
             </div>
