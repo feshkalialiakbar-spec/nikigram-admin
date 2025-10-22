@@ -1,2 +1,8 @@
+
 import TasksUnassigned from '@/components/Dashboard/TasksUnassigned';
-export default TasksUnassigned;
+
+const TasksUnassignedPage: React.FC = () => {
+    return <TasksUnassigned />;
+};
+
+export default TasksUnassignedPage;

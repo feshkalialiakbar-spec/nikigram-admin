@@ -20,7 +20,7 @@ const MyTasks: React.FC<MyTasksProps> = ({ className }) => {
 
     const { data: tasks, total, isLoading, error, refetch } = useApiList({
         fetcher: fetchMyTasks,
-        queryKey: ['tasks', 'profile', paginationParams],
+        queryKey: ['my-tasks', 'profile', paginationParams],
         enabled: true,
         retry: 3,
         paginationParams,

@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ProfileChangeApprovalProps } from '@/components/tasks/types';
 import Image from 'next/image';
+import { ArrowLeft2 } from 'iconsax-react';
 import { RealProfileSection, LegalProfileSection } from './ProfileSection';
 import { PrimaryIndividualsSection } from './PrimaryIndividualsSection';
 import { ActionButtons } from './ActionButtons';
@@ -19,6 +21,7 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
   className
 }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const router = useRouter();
   return (
     <div className={`${styles.container} ${className}`}>
 
@@ -29,40 +32,51 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
             <div className={styles.profileCard}>
               <div className={styles.profileContent}>
                 <div className={styles.profileHeader}>
-                  <div className={styles.headerLeft}>
-                    <span className={styles.requestDateLabel}>تاریخ درخواست :</span>
-                    <span className={styles.requestDate}>{request.requestDate}</span>
-                  </div>
-                  <div className={styles.headerRight}>
-                    <div className={styles.titleSection}>
-                      <h1 className={styles.title}>تایید تغییرات (پروفایل)</h1>
-                      {rawApiData && (
-                        <button
-                          className={styles.detailsButton}
-                          onClick={() => setIsDetailsModalOpen(true)}
-                        >
-                          <svg className={styles.detailsIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          جزئیات کامل
-                        </button>
-                      )}
-                    </div>
-                    <div className={styles.userInfo}>
-                      <span className={styles.userLabel}>نام کاربر</span>
-                      <div className={styles.userDetails}>
-                        <span className={styles.userName}>{request.userName}</span>
-                        {request.userAvatar && (
-                          <Image
-                            src={request.userAvatar}
-                            alt={request.userName}
-                            className={styles.userAvatar}
-                            width={48}
-                            height={48}
-                          />
-                        )}
+                  <button 
+                    className={styles.backButton}
+                    onClick={() => router.back()}
+                  >
+                    <ArrowLeft2 size={20} />
+                    بازگشت
+                  </button>
+                  
+                  <div className={styles.headerContent}>
+                    <h1 className={styles.title}>تایید پروفایل (ریو فایل)</h1>
+                    
+                    <div className={styles.requestInfo}>
+                      <div className={styles.requestDate}>
+                        <span className={styles.requestDateLabel}>تاریخ درخواست :</span>
+                        <span className={styles.requestDateValue}>{request.requestDate}</span>
+                      </div>
+                      
+                      <div className={styles.userInfo}>
+                        <span className={styles.userLabel}>نام کاربر</span>
+                        <div className={styles.userDetails}>
+                          {request.userAvatar && (
+                            <Image
+                              src={request.userAvatar}
+                              alt={request.userName}
+                              className={styles.userAvatar}
+                              width={24}
+                              height={24}
+                            />
+                          )}
+                          <span className={styles.userName}>{request.userName}</span>
+                        </div>
                       </div>
                     </div>
+                    
+                    {rawApiData && (
+                      <button
+                        className={styles.detailsButton}
+                        onClick={() => setIsDetailsModalOpen(true)}
+                      >
+                        <svg className={styles.detailsIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        جزئیات کامل
+                      </button>
+                    )}
                   </div>
                 </div>
 

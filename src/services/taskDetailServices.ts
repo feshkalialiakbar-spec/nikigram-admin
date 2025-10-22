@@ -1,7 +1,8 @@
-import { 
-  ProfileChangeRequest, 
-  ProjectTemplate, 
-  RefType 
+import { getCookieByKey } from '@/actions/cookieToken';
+import {
+  ProfileChangeRequest,
+  ProjectTemplate,
+  RefType
 } from '@/types/api';
 
 /**
@@ -12,6 +13,7 @@ export const fetchProfileChangeRequest = async (taskId: number): Promise<Profile
     const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
       method: 'GET',
       headers: {
+        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -32,13 +34,14 @@ export const fetchProfileChangeRequest = async (taskId: number): Promise<Profile
  * Update profile change request
  */
 export const updateProfileChangeRequest = async (
-  taskId: number, 
+  taskId: number,
   updateData: Partial<ProfileChangeRequest>
 ): Promise<void> => {
   try {
     const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
       method: 'PUT',
       headers: {
+        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
@@ -61,6 +64,7 @@ export const deleteProfileChangeRequest = async (taskId: number): Promise<void> 
     const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
       method: 'DELETE',
       headers: {
+        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -78,13 +82,14 @@ export const deleteProfileChangeRequest = async (taskId: number): Promise<void> 
  * Fetch project template details
  */
 export const fetchProjectTemplate = async (
-  taskId: number, 
+  taskId: number,
   languageId: string = 'fa'
 ): Promise<ProjectTemplate> => {
   try {
     const response = await fetch(`/api/admin/task/project/template/${taskId}/?LAN_ID=${languageId}`, {
       method: 'GET',
       headers: {
+        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -105,13 +110,14 @@ export const fetchProjectTemplate = async (
  * Update project template
  */
 export const updateProjectTemplate = async (
-  taskId: number, 
+  taskId: number,
   updateData: Partial<ProjectTemplate>
 ): Promise<void> => {
   try {
     const response = await fetch(`/api/admin/task/project/template/${taskId}/`, {
       method: 'PUT',
       headers: {
+        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
@@ -134,6 +140,7 @@ export const deleteProjectTemplate = async (taskId: number): Promise<void> => {
     const response = await fetch(`/api/admin/task/project/template/${taskId}/`, {
       method: 'DELETE',
       headers: {
+        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -151,7 +158,7 @@ export const deleteProjectTemplate = async (taskId: number): Promise<void> => {
  * Fetch task details by ref type - Updated to use internal API routes
  */
 export const fetchTaskDetailsByRefType = async (
-  refType: number, 
+  refType: number,
   refId: number
 ): Promise<ProfileChangeRequest | ProjectTemplate> => {
   try {

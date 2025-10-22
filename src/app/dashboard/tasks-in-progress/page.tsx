@@ -1,2 +1,8 @@
+
 import TasksInProgress from '@/components/Dashboard/TasksInProgress';
-export default TasksInProgress;
+
+const TasksInProgressPage: React.FC = () => {
+    return <TasksInProgress />;
+};
+
+export default TasksInProgressPage;

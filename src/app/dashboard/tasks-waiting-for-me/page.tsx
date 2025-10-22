@@ -1,2 +1,10 @@
+
 import TasksWaitingForMe from '@/components/Dashboard/TasksWaitingForMe';
-export default TasksWaitingForMe;
+
+const TasksWaitingForMePage: React.FC = () => {
+    return <TasksWaitingForMe />;
+};
+
+export default TasksWaitingForMePage;
+
+

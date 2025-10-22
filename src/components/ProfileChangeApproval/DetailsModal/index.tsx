@@ -48,7 +48,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
   };
 
   const getImageUrl = (fileUid: string): string => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
     return `${baseUrl}/api/sys/files/download/${fileUid}`;
   };
 
@@ -56,7 +56,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
     if (profileImage.startsWith('http')) {
       return profileImage;
     }
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
     return `${baseUrl}/api/sys/files/download/${profileImage}`;
   };
 
@@ -292,7 +292,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
           <div key={platform.account_id} className={styles.platformItem}>
             <div className={styles.platformHeader}>
               <div className={styles.platformInfo}>
-                {platform.platform_icon && (
+                {platform.platform_icon && platform.platform_icon.startsWith('http') && (
                   <Image
                     src={platform.platform_icon}
                     alt={platform.platform_name}

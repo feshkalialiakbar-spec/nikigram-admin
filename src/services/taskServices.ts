@@ -1,4 +1,6 @@
+import { getCookieByKey } from '@/actions/cookieToken';
 import { TaskInterface } from '@/interface';
+
 
 export interface PaginatedResponse<T> {
   tasks: T[];
@@ -18,14 +20,14 @@ export const fetchMyTasks = async (params?: PaginationParams): Promise<Paginated
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-
+    const accessToken = await getCookieByKey('user_token');
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          // Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -65,6 +67,7 @@ export const fetchUnassignedTasks = async (params?: PaginationParams): Promise<P
       {
         method: 'GET',
         headers: {
+          Authorization: `Bearer ${await getCookieByKey('user_token')}`,
           'Content-Type': 'application/json',
         },
       }
@@ -106,13 +109,14 @@ export const fetchTasksByStatus = async (statusId: number, params?: PaginationPa
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-
+    const accessToken = await getCookieByKey('user_token');
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status_id=${statusId}&limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -191,11 +195,11 @@ export const fetchCancelledTasks = async (params?: PaginationParams): Promise<Pa
 export const fetchWaitingForMeTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   return fetchTasksByStatus(37, params);
 };
- 
+
 export const fetchToDoListTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   return fetchTasksByStatus(37, params);
 };
- 
+
 export const fetchTaskById = async (id: string | number) => {
   try {
     const response = await fetch(
@@ -203,6 +207,7 @@ export const fetchTaskById = async (id: string | number) => {
       {
         method: 'GET',
         headers: {
+          Authorization: `Bearer ${await getCookieByKey('user_token')}`,
           'Content-Type': 'application/json',
         },
       }
@@ -233,6 +238,7 @@ export const createTask = async (taskData: Partial<TaskInterface>): Promise<Task
       {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${await getCookieByKey('user_token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(taskData),
@@ -261,6 +267,7 @@ export const updateTask = async (id: string | number, taskData: Partial<TaskInte
       {
         method: 'PUT',
         headers: {
+          Authorization: `Bearer ${await getCookieByKey('user_token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(taskData),
@@ -289,6 +296,7 @@ export const deleteTask = async (id: string | number): Promise<void> => {
       {
         method: 'DELETE',
         headers: {
+          Authorization: `Bearer ${await getCookieByKey('user_token')}`,
           'Content-Type': 'application/json',
         },
       }
@@ -338,6 +346,7 @@ export const fetchTaskDetailsByRefType = async (refType: number, refId: number):
       {
         method: 'GET',
         headers: {
+          Authorization: `Bearer ${await getCookieByKey('user_token')}`,
           'Content-Type': 'application/json',
         },
       }

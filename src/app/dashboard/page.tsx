@@ -1,2 +1,5 @@
 import Dashboard from '@/components/Dashboard';
-export default <Dashboard title="میز کار من" />;
+
+export default function Page() {
+  return <Dashboard title="میز کار من" />;
+}

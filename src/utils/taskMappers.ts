@@ -71,7 +71,7 @@ const mapPartyDocsToProfileDocuments = (
     fileType: 'pdf' as 'jpg' | 'pdf', // Default to pdf, can be determined from file_uid if needed
     uploadDate: formatDate(doc.upload_date),
     fileSize: '۴ MB', // Size not provided in API, using default
-    url: `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${doc.file_uid}`,
+    url: `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`,
   }));
 };
 
@@ -81,7 +81,17 @@ const mapPartyDocsToProfileDocuments = (
 export const mapProfileChangeRequestToComponent = (
   apiResponse: ApiProfileChangeRequestResponse
 ): ProfileChangeRequest => {
+  console.log('Mapping profile change request:', apiResponse);
+  
   const { task_details, party_request_details, party_docs_data, changed_fields } = apiResponse;
+
+  if (!task_details) {
+    throw new Error('task_details is missing from API response');
+  }
+  
+  if (!party_request_details) {
+    throw new Error('party_request_details is missing from API response');
+  }
 
   // Create real profile with all available data
   const realProfile: RealProfile = {
@@ -109,11 +119,11 @@ export const mapProfileChangeRequestToComponent = (
   const aiComment = `این درخواست شامل تغییر در فیلدهای ${changedFieldsLabels.join('، ')} می‌باشد. لطفاً اطلاعات را بررسی و تایید کنید.`;
 
   return {
-    id: task_details.task_id.toString(),
-    requestDate: formatDate(task_details.created_at),
-    userName: `${party_request_details.first_name} ${party_request_details.last_name}`,
+    id: task_details.task_id?.toString() || 'unknown',
+    requestDate: formatDate(task_details.created_at || new Date().toISOString()),
+    userName: `${party_request_details.first_name || ''} ${party_request_details.last_name || ''}`.trim() || 'نامشخص',
     userAvatar: party_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${party_request_details.profile_image}`
+      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${party_request_details.profile_image}`
       : undefined,
     realProfile,
     legalProfile,
@@ -185,7 +195,7 @@ const mapProjectDocsToHelpDocuments = (
       : 'pdf',
     uploadDate: 'امروز', // Using static value as in the image
     fileSize: formatFileSize(doc.file_size),
-    url: `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${doc.file_uid}`,
+    url: `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`,
   };
 };
 
@@ -202,7 +212,7 @@ export const mapHelpRequestToComponent = (
     name: `${project_request_details.first_name} ${project_request_details.last_name}`,
     level: getUserLevelLabel(project_request_details.user_level),
     avatar: project_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${project_request_details.profile_image}`
+      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${project_request_details.profile_image}`
       : undefined,
   };
 
@@ -245,18 +255,28 @@ const getStatusLabel = (status: number): string => {
 export const mapCooperationRequestToComponent = (
   apiResponse: ApiCooperationRequestResponse
 ): CooperationRequestDetails => {
+  console.log('Mapping cooperation request:', apiResponse);
+  
   const { task_details, cooperation_request_details, specialization_details } = apiResponse;
 
+  if (!task_details) {
+    throw new Error('task_details is missing from API response');
+  }
+  
+  if (!cooperation_request_details) {
+    throw new Error('cooperation_request_details is missing from API response');
+  }
+
   const request: CooperationRequestDetails = {
-    id: task_details.task_id.toString(),
-    requestDate: formatDate(task_details.created_at),
-    notes: cooperation_request_details.notes,
-    status: getStatusLabel(cooperation_request_details.status),
-    userName: cooperation_request_details.full_name,
+    id: task_details.task_id?.toString() || 'unknown',
+    requestDate: formatDate(task_details.created_at || new Date().toISOString()),
+    notes: cooperation_request_details.notes || '',
+    status: getStatusLabel(cooperation_request_details.status || 1),
+    userName: cooperation_request_details.full_name || 'نامشخص',
     userAvatar: cooperation_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com'}/api/sys/files/download/${cooperation_request_details.profile_image}`
+      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${cooperation_request_details.profile_image}`
       : undefined,
-    specializations: specialization_details,
+    specializations: specialization_details || [],
   };
 
   return request;

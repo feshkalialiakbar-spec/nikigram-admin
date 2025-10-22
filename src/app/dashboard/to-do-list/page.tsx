@@ -1,2 +1,10 @@
- import ToDoList from '@/components/Dashboard/ToDoList';
-export default ToDoList;
+
+import ToDoList from '@/components/Dashboard/ToDoList';
+
+const ToDoListPage: React.FC = () => {
+    return <ToDoList />;
+};
+
+export default ToDoListPage;
+
+

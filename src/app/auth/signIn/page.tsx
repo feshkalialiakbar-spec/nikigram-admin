@@ -1,0 +1,223 @@
+"use client";
+import { useEffect, useState } from "react";
+import styles from "./SignIn.module.scss";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/actions/button/Button";
+import TextField from "@/components/ui/forms/textField/TextField";
+import Logo from "@/components/logo/Logo";
+import { Eye, EyeSlash, ArrowLeft2 } from "iconsax-react";
+import { useLogin } from "@/components/auth/useLogin";
+
+export default function Signin() {
+  const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    values,
+    errors,
+    isLoading,
+    isOtpLoading,
+    handleChange,
+    handleFocus,
+    handleBlur,
+    handleLogin,
+    handleLoginWithOtp,
+  } = useLogin();
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const validatePhone = (value: string) => {
+    if (!value) return "شماره موبایل الزامی است";
+    if (!/^09\d{9}$/.test(value))
+      return "شماره موبایل باید با 09 شروع شود و 11 رقم باشد";
+    return "";
+  };
+
+  const handlePasswordChange = (value: string) => {
+    handleChange("password", value);
+  };
+
+  function handleShowPassword() {
+    setShowPassword(!showPassword);
+  }
+  
+  if (!hydrated) return null;
+  
+  return (
+    <div className={styles["signin"]}>
+      {/* Background Pattern */}
+      <div className={styles["signin__background"]}>
+        <div className={styles["signin__background-pattern"]}></div>
+        <div className={styles["signin__background-gradient"]}></div>
+      </div>
+
+      {/* Back Button */}
+      <button 
+        className={styles["signin__back-button"]}
+        onClick={() => router.back()}
+      >
+        <ArrowLeft2 size={20} />
+        <span>بازگشت</span>
+      </button>
+
+      {/* Main Content */}
+      <div className={styles["signin__container"]}>
+        <div className={styles["signin__left-panel"]}>
+          <div className={styles["signin__left-content"]}>
+            <div className={styles["signin__welcome-text"]}>
+              <h1 className={styles["signin__welcome-title"]}>
+                به نیکی‌گرام خوش آمدید
+              </h1>
+              <p className={styles["signin__welcome-subtitle"]}>
+                جایی که نیکی جریان دارد و تو هم می‌توانی بخشی از این مسیر باشی
+              </p>
+            </div>
+            <div className={styles["signin__decoration"]}>
+              <div className={styles["signin__decoration-circle"]}></div>
+              <div className={styles["signin__decoration-circle"]}></div>
+              <div className={styles["signin__decoration-circle"]}></div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles["signin__right-panel"]}>
+          <div className={styles["signin__form-container"]}>
+            <div className={styles["signin__header"]}>
+              <div className={styles["signin__logo"]}>
+                <Logo size="60px" />
+              </div>
+              <h2 className={styles["signin__title"]}>ورود به حساب کاربری</h2>
+              <p className={styles["signin__subtitle"]}>
+                شماره موبایل و رمز عبور خود را وارد کنید
+              </p>
+            </div>
+
+            <form className={styles["signin__form"]}>
+              <div className={styles["signin__field-group"]}>
+                <TextField
+                  id="phone"
+                  value={values.phone}
+                  onChangeAction={(val) => {
+                    if (/^\d*$/.test(val) && val.length <= 11) {
+                      handleChange("phone", val);
+                    }
+                  }}
+                  onFocus={() => handleFocus("phone")}
+                  onBlur={() => handleBlur("phone", validatePhone)}
+                  placeholder="09123456789"
+                  label="شماره موبایل"
+                  errorIcon={errors.phone ? { text: errors.phone } : undefined}
+                  className={styles["signin__input"]}
+                  inputMode="numeric"
+                  maxLength={11}
+                  size="sm"
+                  autoFocus={true}
+                  normalizeDigits={true}
+                  baseColor={{
+                    borderAndLabel: "gray-300",
+                    inputBgColor: "main-white",
+                    textInput: "gray-950",
+                    textError: "error-700",
+                  }}
+                />
+              </div>
+
+              <div className={styles["signin__field-group"]}>
+                <TextField
+                  size="sm"
+                  baseColor={{
+                    borderAndLabel: "gray-300",
+                    inputBgColor: "main-white",
+                    textInput: "gray-950",
+                    textError: "error-700",
+                  }}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="رمز عبور خود را وارد کنید"
+                  label="رمز عبور"
+                  value={values.password}
+                  onChangeAction={handlePasswordChange}
+                  className={styles["signin__input"]}
+                  leftContent={{
+                    Icon: showPassword ? Eye : EyeSlash,
+                    iconColor: showPassword
+                      ? "var(--primary-700)"
+                      : "var(--gray-500)",
+                    iconSize: "20",
+                    variant: "Bulk",
+                    onClick: () => {
+                      handleShowPassword();
+                    },
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles["signin__forgot-password"]}
+                  onClick={() => {
+                    console.log("Forgot password clicked");
+                  }}
+                >
+                  رمز عبور خود را فراموش کرده‌اید؟
+                </button>
+              </div>
+
+              {errors.general && (
+                <div className={styles["signin__error-message"]}>
+                  {errors.general}
+                </div>
+              )}
+
+              <div className={styles["signin__buttons"]}>
+                <Button
+                  variant="primary"
+                  onClick={handleLogin}
+                  disabled={
+                    !!errors.phone ||
+                    !!errors.password ||
+                    isLoading ||
+                    !values.password
+                  }
+                  paddingStyle="equal-8"
+                >
+                  {isLoading ? "در حال ورود..." : "ورود"}
+                </Button>
+                
+                <div className={styles["signin__divider"]}>
+                  <span>یا</span>
+                </div>
+                
+                <Button
+                  variant="outline"
+                  disabled={
+                    !!errors.phone ||
+                    !values.phone ||
+                    isLoading ||
+                    isOtpLoading
+                  }
+                  onClick={handleLoginWithOtp}
+                  paddingStyle="equal-8"
+                >
+                  {isOtpLoading
+                    ? "در حال ارسال کد..."
+                    : "ورود با کد یک بار مصرف"}
+                </Button>
+              </div>
+            </form>
+
+            <div className={styles["signin__signup-link"]}>
+              <span>حساب کاربری ندارید؟</span>
+              <button
+                className={styles["signin__signup-button"]}
+                onClick={() => router.push("/auth/signUp")}
+              >
+                ثبت‌نام کنید
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

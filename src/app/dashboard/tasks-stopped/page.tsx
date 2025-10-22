@@ -1,2 +1,10 @@
+'use client';
+
+import React from 'react';
 import TasksStopped from '@/components/Dashboard/TasksStopped';
-export default TasksStopped;
+
+const TasksStoppedPage: React.FC = () => {
+  return <TasksStopped />;
+};
+
+export default TasksStoppedPage;
