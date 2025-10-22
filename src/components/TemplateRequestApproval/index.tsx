@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft2 } from 'iconsax-react';
@@ -25,17 +23,17 @@ const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
               <div className={styles.requestContent}>
                 {/* Header */}
                 <div className={styles.requestHeader}>
-                  <button 
+                  <button
                     className={styles.backButton}
                     onClick={() => router.back()}
                   >
                     <ArrowLeft2 size={20} />
                     بازگشت
                   </button>
-                  
+
                   <div className={styles.headerContent}>
                     <h1 className={styles.title}>ایجاد تمپلیت جدید</h1>
-                    
+
                     <div className={styles.requestInfo}>
                       <div className={styles.userInfo}>
                         {request.userAvatar && (
@@ -60,22 +58,22 @@ const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
                       <span className={styles.detailLabel}>تاریخ درخواست :</span>
                       <span className={styles.detailValue}>{request.requestDate}</span>
                     </div>
-                    
+
                     <div className={styles.detailItem}>
                       <span className={styles.detailLabel}>عنوان درخواستی :</span>
                       <span className={styles.detailValue}>{request.title}</span>
                     </div>
-                    
+
                     <div className={styles.detailItem}>
                       <span className={styles.detailLabel}>موقعیت :</span>
                       <span className={styles.detailValue}>{request.category}</span>
                     </div>
-                    
+
                     <div className={styles.detailItem}>
                       <span className={styles.detailLabel}>نوع درخواست :</span>
                       <span className={styles.detailValue}>{request.requestType}</span>
                     </div>
-                    
+
                     <div className={styles.detailItem}>
                       <span className={styles.detailLabel}>بازه زمانی نیاز به کمک :</span>
                       <span className={styles.detailValue}>{request.timePeriod}</span>

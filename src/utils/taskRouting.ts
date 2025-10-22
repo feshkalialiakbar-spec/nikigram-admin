@@ -19,7 +19,7 @@ export const getTaskTypePathname = (refType: number): string => {
  */
 export const getTaskDetailUrl = (taskId: number | string, refType: number): string => {
   const pathname = getTaskTypePathname(refType);
-  return `/dashboard/tasks/${pathname}/${taskId}`;
+  return `/dashboard/my-tasks/${pathname}/${taskId}`;
 };
 
 

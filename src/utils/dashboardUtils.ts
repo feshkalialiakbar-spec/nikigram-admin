@@ -27,7 +27,7 @@ export const getDashboardRoutePrefix = (pathname: string): string => {
   }
   
   // Default fallback
-  return '/dashboard/tasks';
+  return '/dashboard/my-tasks';
 };
 
 /**
