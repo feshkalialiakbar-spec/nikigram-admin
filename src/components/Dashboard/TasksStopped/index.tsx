@@ -5,6 +5,7 @@ import { useApiList } from '@/hooks/useTaskServices';
 import { fetchStoppedTasks } from '@/services/taskServices';
 import { TaskDashboard, TaskInterface } from '@/components/tasks';
 import styles from './index.module.scss';
+import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 
 interface TasksStoppedProps {
   className?: string;
@@ -61,20 +62,22 @@ const TasksStopped: React.FC<TasksStoppedProps> = ({ className }) => {
   }
 
   return (
-    <div className={`${styles.tasksStopped} ${className || ''}`}>
-      <div className={styles.content}>
-        <TaskDashboard
-          tasks={tasks as TaskInterface[]}
-          loading={isLoading}
-          error={error ? (error as unknown as Error)?.message || null : null}
-          onRefetch={refetch}
-          currentPage={currentPage}
-          totalItems={total}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-        />
+    <WithNavbarLayout>
+      <div className={`${styles.tasksStopped} ${className || ''}`}>
+        <div className={styles.content}>
+          <TaskDashboard
+            tasks={tasks as TaskInterface[]}
+            loading={isLoading}
+            error={error ? (error as unknown as Error)?.message || null : null}
+            onRefetch={refetch}
+            currentPage={currentPage}
+            totalItems={total}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+    </WithNavbarLayout>
   );
 };
 

@@ -1,13 +1,10 @@
 
 import { Geist, } from 'next/font/google'
 import '../styles/main.scss'
-import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout'
+import '../styles/modal-animations.css'
 import { QueryProvider } from '@/components/providers/QueryProvider'
+import { ToastProvider } from '@/components/ui'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
 
 
 export default function RootLayout({
@@ -17,15 +14,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl">
-      <body className={`${geistSans.variable}  `}>
+      <body  >
         <QueryProvider>
-          <div className="parent">
-            <WithNavbarLayout>
-            <div className="mainStyles">
-              {children}
+          <ToastProvider>
+            <div  >
+              <div className="mainStyles">
+                {children}
+              </div>
             </div>
-            </WithNavbarLayout>
-          </div>
+          </ToastProvider>
         </QueryProvider>
       </body>
     </html>

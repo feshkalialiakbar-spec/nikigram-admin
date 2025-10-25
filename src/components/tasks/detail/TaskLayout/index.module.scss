@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: #F0F4FA;
+  direction: rtl;
+  padding: 32px;
+
+}
+
+.taskBox {
+  width: 100%;
+  max-width: 1258px;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.backButtonRow {
+  color: #007BFF;
+  display: flex;
+  align-items: center;
+
+}

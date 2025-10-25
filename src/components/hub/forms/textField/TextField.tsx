@@ -130,7 +130,6 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
                 textStyle="14S5"
                 textColor={baseColor?.textInput || "main-black"}
                 htmlFor={id}
-                fontFamily="moraba"
                 wrap="wrap"
                 textAlign="right"
                 bgColor={baseColor?.inputBgColor || "main-black"}
@@ -236,7 +235,6 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
               textColor={baseColor?.textError || "main-black"}
               wrap="wrap"
               textAlign="right"
-              fontFamily="moraba"
             >
               {errorIcon.text}
             </Text>

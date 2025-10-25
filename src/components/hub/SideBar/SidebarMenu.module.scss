@@ -1,5 +1,6 @@
 $header-offset: 108px;
 $rail-width-closed: 56px;
+$rail-width-collapsed: 56px;
 $rail-width-open: 209px;
 $breakpoint-desktop: 900px;
 
@@ -54,7 +55,11 @@ $breakpoint-desktop: 900px;
 
   &.railOpen {
     width: $rail-width-open;
+    border-radius: 24px;
+  }
 
+  &.railCollapsed {
+    width: $rail-width-collapsed;
     border-radius: 24px;
   }
 }
@@ -81,6 +86,26 @@ $breakpoint-desktop: 900px;
 
   .menuCol {
     width: 56px;
+  }
+}
+
+// Collapsed state styles
+.railCollapsed {
+  .parentItem {
+    justify-content: center;
+    padding: 10px;
+    
+    .itemLabel {
+      display: none;
+    }
+  }
+  
+  .searchBox {
+    display: none;
+  }
+  
+  .childrenDock {
+    display: none;
   }
 }
 
@@ -269,6 +294,30 @@ $breakpoint-desktop: 900px;
   }
 }
 
+.collapseButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--gray-100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all 0.3s ease;
+  z-index: 10;
+
+  &:hover {
+    background: var(--primary-100);
+    color: var(--primary-600);
+    transform: scale(1.1);
+  }
+}
+
 .searchBox {
   display: flex;
   align-items: center;
@@ -422,6 +471,14 @@ $breakpoint-desktop: 900px;
     &.railOpen {
       width: $rail-width-open; // Keep consistent width
     }
+    
+    &.railCollapsed {
+      width: $rail-width-closed; // Same as closed on mobile
+    }
+  }
+  
+  .collapseButton {
+    display: none; // Hide collapse button on mobile
   }
 }
 

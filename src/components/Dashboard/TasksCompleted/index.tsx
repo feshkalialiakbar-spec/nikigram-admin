@@ -5,6 +5,7 @@ import { useApiList } from '@/hooks/useTaskServices';
 import { fetchCompletedTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
+import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 
 interface TasksCompletedProps {
   className?: string;
@@ -61,20 +62,22 @@ const TasksCompleted: React.FC<TasksCompletedProps> = ({ className }) => {
   }
 
   return (
-    <div className={`${styles.tasksCompleted} ${className || ''}`}>
-      <div className={styles.content}>
-        <TaskDashboard 
-          tasks={tasks}
-          loading={isLoading}
-          error={error ? (error as unknown as Error)?.message || null : null}
-          onRefetch={refetch}
-          currentPage={currentPage}
-          totalItems={total}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-        />
+    <WithNavbarLayout>
+      <div className={`${styles.tasksCompleted} ${className || ''}`}>
+        <div className={styles.content}>
+          <TaskDashboard
+            tasks={tasks}
+            loading={isLoading}
+            error={error ? (error as unknown as Error)?.message || null : null}
+            onRefetch={refetch}
+            currentPage={currentPage}
+            totalItems={total}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+    </WithNavbarLayout>
   );
 };
 

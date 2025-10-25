@@ -43,59 +43,43 @@ export default function Signin() {
   function handleShowPassword() {
     setShowPassword(!showPassword);
   }
-  
+
   if (!hydrated) return null;
-  
+
   return (
-    <div className={styles["signin"]}>
+    <div className={styles["signin"]} role="main" aria-label="صفحه ورود">
       {/* Background Pattern */}
-      <div className={styles["signin__background"]}>
+      <div className={styles["signin__background"]} aria-hidden="true">
         <div className={styles["signin__background-pattern"]}></div>
         <div className={styles["signin__background-gradient"]}></div>
       </div>
 
       {/* Back Button */}
-      <button 
+      <button
         className={styles["signin__back-button"]}
         onClick={() => router.back()}
+        aria-label="بازگشت به صفحه قبلی"
+        type="button"
       >
-        <ArrowLeft2 size={20} />
+        <ArrowLeft2 size={20} aria-hidden="true" />
         <span>بازگشت</span>
       </button>
 
       {/* Main Content */}
       <div className={styles["signin__container"]}>
-        <div className={styles["signin__left-panel"]}>
-          <div className={styles["signin__left-content"]}>
-            <div className={styles["signin__welcome-text"]}>
-              <h1 className={styles["signin__welcome-title"]}>
-                به نیکی‌گرام خوش آمدید
-              </h1>
-              <p className={styles["signin__welcome-subtitle"]}>
-                جایی که نیکی جریان دارد و تو هم می‌توانی بخشی از این مسیر باشی
-              </p>
-            </div>
-            <div className={styles["signin__decoration"]}>
-              <div className={styles["signin__decoration-circle"]}></div>
-              <div className={styles["signin__decoration-circle"]}></div>
-              <div className={styles["signin__decoration-circle"]}></div>
-            </div>
-          </div>
-        </div>
-
         <div className={styles["signin__right-panel"]}>
           <div className={styles["signin__form-container"]}>
             <div className={styles["signin__header"]}>
               <div className={styles["signin__logo"]}>
                 <Logo size="60px" />
               </div>
-              <h2 className={styles["signin__title"]}>ورود به حساب کاربری</h2>
+              <h6 className={styles["signin__title"]}>ورود به حساب کاربری</h6>
               <p className={styles["signin__subtitle"]}>
                 شماره موبایل و رمز عبور خود را وارد کنید
               </p>
             </div>
 
-            <form className={styles["signin__form"]}>
+            <form className={styles["signin__form"]} noValidate aria-label="فرم ورود">
               <div className={styles["signin__field-group"]}>
                 <TextField
                   id="phone"
@@ -116,6 +100,8 @@ export default function Signin() {
                   size="sm"
                   autoFocus={true}
                   normalizeDigits={true}
+                  aria-describedby={errors.phone ? "phone-error" : undefined}
+                  aria-invalid={!!errors.phone}
                   baseColor={{
                     borderAndLabel: "gray-300",
                     inputBgColor: "main-white",
@@ -123,10 +109,16 @@ export default function Signin() {
                     textError: "error-700",
                   }}
                 />
+                {errors.phone && (
+                  <div id="phone-error" role="alert" className={styles["signin__field-error"]}>
+                    {errors.phone}
+                  </div>
+                )}
               </div>
 
               <div className={styles["signin__field-group"]}>
                 <TextField
+                  id="password"
                   size="sm"
                   baseColor={{
                     borderAndLabel: "gray-300",
@@ -140,6 +132,8 @@ export default function Signin() {
                   value={values.password}
                   onChangeAction={handlePasswordChange}
                   className={styles["signin__input"]}
+                  aria-describedby={errors.password ? "password-error" : undefined}
+                  aria-invalid={!!errors.password}
                   leftContent={{
                     Icon: showPassword ? Eye : EyeSlash,
                     iconColor: showPassword
@@ -152,19 +146,25 @@ export default function Signin() {
                     },
                   }}
                 />
+                {errors.password && (
+                  <div id="password-error" role="alert" className={styles["signin__field-error"]}>
+                    {errors.password}
+                  </div>
+                )}
                 <button
                   type="button"
                   className={styles["signin__forgot-password"]}
                   onClick={() => {
                     console.log("Forgot password clicked");
                   }}
+                  aria-label="بازیابی رمز عبور"
                 >
                   رمز عبور خود را فراموش کرده‌اید؟
                 </button>
               </div>
 
               {errors.general && (
-                <div className={styles["signin__error-message"]}>
+                <div className={styles["signin__error-message"]} role="alert" aria-live="polite">
                   {errors.general}
                 </div>
               )}
@@ -180,14 +180,24 @@ export default function Signin() {
                     !values.password
                   }
                   paddingStyle="equal-8"
+                  className={styles["signin__login-button"]}
+                  aria-describedby={errors.phone || errors.password ? "form-errors" : undefined}
+                  aria-label={isLoading ? "در حال ورود، لطفاً صبر کنید" : "ورود به حساب کاربری"}
                 >
-                  {isLoading ? "در حال ورود..." : "ورود"}
+                  {isLoading ? (
+                    <>
+                      <span className={styles["signin__loading-spinner"]} aria-hidden="true"></span>
+                      در حال ورود...
+                    </>
+                  ) : (
+                    "ورود"
+                  )}
                 </Button>
-                
-                <div className={styles["signin__divider"]}>
+
+                <div className={styles["signin__divider"]} aria-hidden="true">
                   <span>یا</span>
                 </div>
-                
+
                 <Button
                   variant="outline"
                   disabled={
@@ -198,10 +208,17 @@ export default function Signin() {
                   }
                   onClick={handleLoginWithOtp}
                   paddingStyle="equal-8"
+                  className={styles["signin__otp-button"]}
+                  aria-label={isOtpLoading ? "در حال ارسال کد، لطفاً صبر کنید" : "ورود با کد یک بار مصرف"}
                 >
-                  {isOtpLoading
-                    ? "در حال ارسال کد..."
-                    : "ورود با کد یک بار مصرف"}
+                  {isOtpLoading ? (
+                    <>
+                      <span className={styles["signin__loading-spinner"]} aria-hidden="true"></span>
+                      در حال ارسال کد...
+                    </>
+                  ) : (
+                    "ورود با کد یک بار مصرف"
+                  )}
                 </Button>
               </div>
             </form>
@@ -211,12 +228,33 @@ export default function Signin() {
               <button
                 className={styles["signin__signup-button"]}
                 onClick={() => router.push("/auth/signUp")}
+                aria-label="ثبت‌نام در نیکی‌گرام"
+                type="button"
               >
                 ثبت‌نام کنید
               </button>
             </div>
           </div>
         </div>
+        <div className={styles["signin__left-panel"]}>
+          <div className={styles["signin__left-content"]}>
+            <div className={styles["signin__welcome-text"]}>
+              <h1 className={styles["signin__welcome-title"]}>
+                به نیکی‌گرام خوش آمدید
+              </h1>
+              <p className={styles["signin__welcome-subtitle"]}>
+                جایی که نیکی جریان دارد و تو هم می‌توانی بخشی از این مسیر باشی
+              </p>
+            </div>
+            <div className={styles["signin__decoration"]}>
+              <div className={styles["signin__decoration-circle"]}></div>
+              <div className={styles["signin__decoration-circle"]}></div>
+              <div className={styles["signin__decoration-circle"]}></div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
   );

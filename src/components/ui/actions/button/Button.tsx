@@ -9,6 +9,7 @@ interface ButtonProps {
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
+  className?: string
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   type = 'button',
   variant = 'ghost',
+  className = '',
 }) => {
   const paddingClass = {
     'equal-4': styles['button--padding-4'],

@@ -81,10 +81,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
                 <button
                   className={styles.operationButton}
                   data-operation="perform"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOperationClick(String(task.task_id), 'perform');
-                  }}
+                  onClick={() => handleRowClick(task.task_id)}
                   type="button"
                   aria-label={`انجام عملیات برای وظیفه ${task.task_title}`}
                 >

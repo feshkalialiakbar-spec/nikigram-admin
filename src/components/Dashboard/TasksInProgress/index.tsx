@@ -5,6 +5,7 @@ import { useApiList } from '@/hooks/useTaskServices';
 import { fetchInProgressTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
+import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 
 interface TasksInProgressProps {
   className?: string;
@@ -61,20 +62,22 @@ const TasksInProgress: React.FC<TasksInProgressProps> = ({ className }) => {
   }
 
   return (
-    <div className={`${styles.tasksInProgress} ${className || ''}`}>
-      <div className={styles.content}>
-        <TaskDashboard
-          tasks={tasks}
-          loading={isLoading}
-          error={error ? (error as unknown as Error)?.message || null : null}
-          onRefetch={refetch}
-          currentPage={currentPage}
-          totalItems={total}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-        />
+    <WithNavbarLayout>
+      <div className={`${styles.tasksInProgress} ${className || ''}`}>
+        <div className={styles.content}>
+          <TaskDashboard
+            tasks={tasks}
+            loading={isLoading}
+            error={error ? (error as unknown as Error)?.message || null : null}
+            onRefetch={refetch}
+            currentPage={currentPage}
+            totalItems={total}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+    </WithNavbarLayout>
   );
 };
 

@@ -22,7 +22,7 @@ export const UserLoginAPI = async ({
     })
     
     const data = await response.json()
-    
+    console.log(data)
     // Check if response is successful (2xx status)
     if (response.ok) {
       return { success: true, ...data }

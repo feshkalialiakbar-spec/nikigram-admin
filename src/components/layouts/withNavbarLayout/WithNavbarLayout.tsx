@@ -5,14 +5,19 @@ import TopNavigation from '@/components/hub/TopNavigation/TopNavigation'
 import SidebarMenu from '@/components/hub/SideBar/SidebarMenu'
 interface WithNavbarLayoutProps {
   children: ReactNode
-  className?: string
+
 }
 
 export default function WithNavbarLayout({
   children,
-  className,
+
 }: WithNavbarLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+
+  const handleToggleCollapse = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed)
+  }
 
   return (
     <div className={styles.container}>
@@ -22,10 +27,12 @@ export default function WithNavbarLayout({
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         onOpen={() => setIsSidebarOpen(true)}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={handleToggleCollapse}
       />
-      <main className={`${styles['body-container']} ${className ?? ''}`}>
+      <main className={`${styles.mainContent} ${isSidebarOpen ? (isSidebarCollapsed ? styles.mainContentCollapsed : styles.mainContentOpen) : styles.mainContentClosed}`}>
         {children}
       </main>
-    </div>
+    </div >
   )
 }

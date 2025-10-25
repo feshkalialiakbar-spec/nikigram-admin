@@ -1,5 +1,3 @@
-// UI Components exports
-export { Skeleton } from './Skeleton';
-export { SidebarSkeleton } from './SidebarSkeleton';
-export { TaskTableSkeleton } from './TaskTableSkeleton';
-export { SkeletonDemo } from './SkeletonDemo';
+export { default as ConfirmationModal } from './ConfirmationModal';
+export { default as Toast } from './Toast';
+export { ToastProvider, useToast } from './ToastProvider';

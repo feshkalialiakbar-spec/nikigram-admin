@@ -6,13 +6,27 @@
   position: relative;
   padding-top: 60px; // height of fixed TopNavigation
 }
+
+.mainContent {
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  min-height: calc(100vh - 60px);
+}
+
+.mainContentClosed {
+  margin-right: 0;
+}
+
+.mainContentCollapsed {
+  margin-right: 56px; // rail-width-collapsed
+}
+
 .body-container {
   width: 100%;
-  max-width: 1280px;
   margin: 0 auto;
   padding: 16px 20px;
   display: block;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {

@@ -4,6 +4,7 @@ import { useApiList } from '@/hooks/useTaskServices';
 import { fetchMyTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
+import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 
 interface MyTasksProps {
     className?: string;
@@ -60,20 +61,22 @@ const MyTasks: React.FC<MyTasksProps> = ({ className }) => {
     }
 
     return (
-        <div className={`${styles.myTasks} ${className || ''}`}>
-            <div className={styles.content} >
-                <TaskDashboard
-                    tasks={tasks}
-                    loading={isLoading}
-                    error={error ? (error as unknown as Error)?.message || null : null}
-                    onRefetch={refetch}
-                    currentPage={currentPage}
-                    totalItems={total}
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                />
+        <WithNavbarLayout>
+            <div className={`${styles.myTasks} ${className || ''}`}>
+                <div className={styles.content} >
+                    <TaskDashboard
+                        tasks={tasks}
+                        loading={isLoading}
+                        error={error ? (error as unknown as Error)?.message || null : null}
+                        onRefetch={refetch}
+                        currentPage={currentPage}
+                        totalItems={total}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
             </div>
-        </div>
+        </WithNavbarLayout>
     );
 };
 

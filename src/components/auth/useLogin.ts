@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserLoginAPI, RequestOTP, LoginWithOtpAndMobile } from '@/services/user';
+import { useToast } from '../ui';
 
 interface LoginFormData {
   phone: string;
@@ -30,6 +31,7 @@ interface UseLoginReturn {
 
 export const useLogin = (): UseLoginReturn => {
   const router = useRouter();
+  const { showSuccess } = useToast();
   const [values, setValues] = useState<LoginFormData>({
     phone: '',
     password: ''
@@ -62,19 +64,36 @@ export const useLogin = (): UseLoginReturn => {
     }
   };
 
-  const setCookie = (name: string, value: string, days: number = 7) => {
+  const setCookie = (name: string, value: string, days: number = 7, minutes?: number) => {
     const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    if (minutes) {
+      // Set expiration in minutes (e.g., 30 minutes for tokens)
+      expires.setTime(expires.getTime() + (minutes * 60 * 1000));
+    } else {
+      // Set expiration in days (default behavior)
+      expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    }
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;secure;samesite=strict`;
   };
 
   const setUserData = (userData: { token?: string; access_token?: string; user_id?: string; id?: string; mobile?: string; name?: string; full_name?: string }) => {
-    // Store user data in cookies
-    setCookie('user_token', userData.token || userData.access_token || '', 7);
+    // Store user token with 30 minutes expiration
+    const token = userData.token || userData.access_token || '';
+    if (token) {
+      setCookie('user_token', token, 7, 30); // 30 minutes
+    }
+    
+    // Store other user data with 7 days expiration
     setCookie('user_id', userData.user_id || userData.id || '', 7);
     setCookie('user_mobile', userData.mobile || values.phone, 7);
     setCookie('user_name', userData.name || userData.full_name || '', 7);
     setCookie('is_authenticated', 'true', 7);
+    
+    console.log('User data stored successfully:', {
+      hasToken: !!token,
+      userId: userData.user_id || userData.id,
+      mobile: userData.mobile || values.phone
+    });
   };
 
   const handleLogin = async () => {
@@ -102,15 +121,32 @@ export const useLogin = (): UseLoginReturn => {
       });
 
       console.log('Login response:', response); // Debug log
-
-      // Only redirect if login is successful
-      if (response && response.success === true) {
-        setUserData(response);
-        router.push('/dashboard');
+      
+      // Check if login is successful
+      // Check multiple success conditions: success === true, status === '1', or response has token
+      const isSuccess = response.success === true || response.status === '1' || response.status === 1 || !!(response.token || response.access_token);
+      
+      if (isSuccess) {
+        // Verify token exists before proceeding
+        const hasToken = !!(response.token || response.access_token);
+        
+        if (hasToken) {
+          showSuccess('ورود با موفقیت انجام شد');
+          setUserData(response);
+          // Wait a moment for cookies to be set, then redirect
+          setTimeout(() => {
+            router.push('/dashboard');
+            router.refresh(); // Force refresh to update the UI
+          }, 100);
+        } else {
+          setErrors({
+            general: 'خطا در دریافت اطلاعات ورود. لطفاً مجدداً تلاش کنید.'
+          });
+        }
       } else {
         // Show error message from API
-        setErrors({ 
-          general: response?.message || 'خطا در ورود. لطفاً مجدداً تلاش کنید.' 
+        setErrors({
+          general: response?.message || response?.detail || 'خطا در ورود. لطفاً مجدداً تلاش کنید.'
         });
       }
     } catch (error) {
@@ -152,12 +188,26 @@ export const useLogin = (): UseLoginReturn => {
 
           console.log('OTP login response:', loginResponse); // Debug log
 
-          // Only redirect if OTP login is successful
-          if (loginResponse && loginResponse.success === true) {
-            setUserData(loginResponse);
-            router.push('/dashboard');
+          // Check if OTP login is successful
+          const isSuccess = loginResponse && (loginResponse.success === true || !!(loginResponse.token || loginResponse.access_token));
+          
+          if (isSuccess) {
+            // Verify token exists before proceeding
+            const hasToken = !!(loginResponse.token || loginResponse.access_token);
+            
+            if (hasToken) {
+              showSuccess('ورود با موفقیت انجام شد');
+              setUserData(loginResponse);
+              // Wait a moment for cookies to be set, then redirect
+              setTimeout(() => {
+                router.push('/dashboard');
+                router.refresh(); // Force refresh to update the UI
+              }, 100);
+            } else {
+              setErrors({ general: 'خطا در دریافت اطلاعات ورود. لطفاً مجدداً تلاش کنید.' });
+            }
           } else {
-            setErrors({ general: loginResponse?.message || 'کد وارد شده اشتباه است.' });
+            setErrors({ general: loginResponse?.message || loginResponse?.detail || 'کد وارد شده اشتباه است.' });
           }
         }
       } else {

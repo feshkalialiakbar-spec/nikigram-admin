@@ -1,9 +1,12 @@
 .container {
   position: relative;
   width: 100%;
-  height: 100%;
-  background: #F0F4FA;
   direction: rtl;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border-radius: 24px;
+  overflow: hidden;
 }
 
 .profileHeader {
@@ -29,10 +32,11 @@
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 8px;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   
   &:hover {
     background-color: #F0F4FA;
+    transform: translateX(-2px);
   }
 }
 
@@ -91,6 +95,8 @@
   &:hover {
     background: #e2e8f0;
     color: #334155;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -138,50 +144,6 @@
   border: 1px solid #E5E7EB;
 }
 
-.mainContent {
-  width: 1258px;
-  height: 1182px;
-  background: #FFFFFF;
-  border-radius: 24px;
-  padding: 0 24px 40px 24px;
-}
-
-.contentWrapper {
-  display: flex;
-  flex-direction: column;
-  width: 1210px;
-  height: 1102px;
-}
-
-.profileContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 1210px;
-  height: 990px;
-}
-
-.profileCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0;
-  gap: 0;
-  width: 1210px;
-  height: 857px;
-  background: #DEE9F4;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.profileContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 1162px;
-  height: 590px;
-}
 
 
 
@@ -191,14 +153,13 @@
   justify-content: flex-start;
   align-items: flex-end;
   gap: 24px;
-  width: 1162px;
-  height: 494px;
-  padding-top: 32px;
+  width: 100%;
+  padding: 32px;
+  background: #DEE9F4;
 }
 
 .profileSection {
-  width: 1162px;
-  height: 207px;
+  width: 100%;
 }
 
 .sectionTitle {
@@ -212,11 +173,12 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  width: 1162px;
+  width: 100%;
   height: 81px;
   background: #FFFFFF;
   border: 1px solid #DEE9F4;
   border-radius: 8px;
+  margin-bottom: 16px;
 }
 
 .tableColumn {
@@ -245,7 +207,7 @@
   width: 193.67px;
   height: 40px;
   background: #EBF1F8;
-  border-radius: 16px 0px 0px 0px;
+  border-radius: 8px 0px 0px 0px;
 }
 
 .tableHeaderText {
@@ -253,7 +215,7 @@
   height: 24px;
   font-size: 14px;
   color: #334558;
-  font-weight: 400;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -261,6 +223,7 @@
   width: 193.67px;
   height: 1px;
   background: #D1E1F2;
+  border: none;
 }
 
 .tableRow {
@@ -269,6 +232,7 @@
   align-items: flex-start;
   width: 193.67px;
   height: 40px;
+  border-left: 1px solid #D1E1F2;
 }
 
 .tableRowContent {
@@ -279,21 +243,20 @@
   gap: 12px;
   width: 193.67px;
   height: 40px;
-  background: #EBF1F8;
+  background: #FFFFFF;
 }
 
 .tableRowText {
   width: 145.67px;
   height: 24px;
   font-size: 14px;
-  color: #5E758E;
-  font-weight: 400;
+  color: #334558;
+  font-weight: 500;
   text-align: center;
 }
 
 .primaryIndividualsSection {
-  width: 1162px;
-  height: 183px;
+  width: 100%;
 }
 
 .primaryTitle {
@@ -311,8 +274,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 16px;
-  width: 1162px;
-  height: 143px;
+  width: 100%;
 }
 
 .individualCard {
@@ -327,6 +289,12 @@
   background: #EDFAFF;
   border: 1px solid #007BFF;
   border-radius: 8px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+  }
 }
 
 .individualHeader {
@@ -354,6 +322,13 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #007BFF;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+  }
 }
 
 .individualDetails {
@@ -402,8 +377,9 @@
 }
 
 .aiSection {
-  width: 1210px;
-  height: 109px;
+  width: 100%;
+  padding: 24px 32px;
+  background: #FFFFFF;
 }
 
 .aiHeader {
@@ -460,19 +436,15 @@
 }
 
 .aiContent {
-  width: 1210px;
-  height: 65px;
+  width: 100%;
   background: #EBF1F8;
   border-radius: 16px;
   position: relative;
+  padding: 20px;
+  min-height: 65px;
 }
 
 .aiComment {
-  position: absolute;
-  width: 647px;
-  height: 24px;
-  right: 16px;
-  top: 21px;
   font-size: 14px;
   color: #000000;
   font-weight: 400;
@@ -486,8 +458,10 @@
   justify-content: flex-end;
   align-items: center;
   gap: 24px;
-  width: 418px;
-  height: 52px;
+  width: 100%;
+  padding: 24px 32px;
+  background: #FFFFFF;
+  border-radius: 0 0 24px 24px;
 }
 
 .approveButton {
@@ -505,6 +479,12 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+  }
 }
 
 .rejectButton {
@@ -522,41 +502,11 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-}
-
-.sidebar {
-  position: absolute;
-  width: 93px;
-  height: 868px;
-  right: 31.8px;
-  top: 108.5px;
-  background: #FCFDFF;
-  border-left: 1px solid #D1E1F2;
-  border-radius: 0px 24px 24px 0px;
-  padding: 24px 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.sidebarItem {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-  width: 48px;
-  height: 40px;
-  border-radius: 0px 4px 4px 0px;
-  cursor: pointer;
-}
-
-.sidebarItem.active {
-  border-right: 4px solid #007BFF;
-}
-
-.sidebarIcon {
-  width: 24px;
-  height: 24px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #E70218;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+  }
 }

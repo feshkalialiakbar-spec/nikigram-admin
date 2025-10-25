@@ -5,6 +5,7 @@ import { useApiList } from '@/hooks/useTaskServices';
 import { fetchToDoListTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
+import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 
 interface ToDoListProps {
   className?: string;
@@ -61,20 +62,22 @@ const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
   }
 
   return (
-    <div className={`${styles.toDoList} ${className || ''}`}>
-      <div className={styles.content}>
-        <TaskDashboard
-          tasks={tasks}
-          loading={isLoading}
-          error={error ? (error as unknown as Error)?.message || null : null}
-          onRefetch={refetch}
-          currentPage={currentPage}
-          totalItems={total}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-        />
+    <WithNavbarLayout>
+      <div className={`${styles.toDoList} ${className || ''}`}>
+        <div className={styles.content}>
+          <TaskDashboard
+            tasks={tasks}
+            loading={isLoading}
+            error={error ? (error as unknown as Error)?.message || null : null}
+            onRefetch={refetch}
+            currentPage={currentPage}
+            totalItems={total}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+    </WithNavbarLayout>
   );
 };
 
