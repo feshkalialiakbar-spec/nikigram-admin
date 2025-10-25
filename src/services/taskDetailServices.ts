@@ -13,7 +13,7 @@ export const fetchProfileChangeRequest = async (taskId: number): Promise<Profile
     const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
+        Authorization: `Bearer ${await getCookieByKey('access_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -41,7 +41,7 @@ export const updateProfileChangeRequest = async (
     const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
+        Authorization: `Bearer ${await getCookieByKey('access_token')}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
@@ -64,7 +64,7 @@ export const deleteProfileChangeRequest = async (taskId: number): Promise<void> 
     const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
+        Authorization: `Bearer ${await getCookieByKey('access_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -89,7 +89,7 @@ export const fetchProjectTemplate = async (
     const response = await fetch(`/api/admin/task/project/template/${taskId}/?LAN_ID=${languageId}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
+        Authorization: `Bearer ${await getCookieByKey('access_token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -117,7 +117,7 @@ export const updateProjectTemplate = async (
     const response = await fetch(`/api/admin/task/project/template/${taskId}/`, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
+        Authorization: `Bearer ${await getCookieByKey('access_token')}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
@@ -140,7 +140,7 @@ export const deleteProjectTemplate = async (taskId: number): Promise<void> => {
     const response = await fetch(`/api/admin/task/project/template/${taskId}/`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${await getCookieByKey('user_token')}`,
+        Authorization: `Bearer ${await getCookieByKey('access_token')}`,
         'Content-Type': 'application/json',
       },
     });

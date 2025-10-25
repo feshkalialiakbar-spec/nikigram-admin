@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const isAuthenticated = request.cookies.has('user_token')
+  const isAuthenticated = request.cookies.has('access_token')
   const userStatus = request.cookies.get('user_status')?.value
 
   if (

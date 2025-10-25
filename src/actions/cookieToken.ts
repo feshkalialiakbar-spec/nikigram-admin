@@ -2,14 +2,11 @@
 import { cookies } from 'next/headers'
 
 export interface IAccessTokenResponse {
+  status: string,
   access_token: string
-  token_type: string
-  lastlogin_date: string
-  lastlogin_time: string
-  last_login_ip: string
-  role_id: number
+  message: string,
+  user_id: number
 }
-
 
 export async function setTokenIntoCookie({
   data,
@@ -24,8 +21,6 @@ export async function setTokenIntoCookie({
     path: '/',
   })
   store.set('mobile', mobile)
-  store.set('lastlogin_date', data.lastlogin_date)
-  store.set('lastlogin_time', data.lastlogin_time)
 }
 
 export async function deleteAllCookies() {

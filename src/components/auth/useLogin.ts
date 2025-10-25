@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserLoginAPI, RequestOTP, LoginWithOtpAndMobile } from '@/services/user';
 import { useToast } from '../ui';
+import { IAccessTokenResponse, setTokenIntoCookie } from '@/actions/cookieToken';
 
 interface LoginFormData {
   phone: string;
@@ -64,36 +65,14 @@ export const useLogin = (): UseLoginReturn => {
     }
   };
 
-  const setCookie = (name: string, value: string, days: number = 7, minutes?: number) => {
-    const expires = new Date();
-    if (minutes) {
-      // Set expiration in minutes (e.g., 30 minutes for tokens)
-      expires.setTime(expires.getTime() + (minutes * 60 * 1000));
-    } else {
-      // Set expiration in days (default behavior)
-      expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-    }
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;secure;samesite=strict`;
-  };
 
-  const setUserData = (userData: { token?: string; access_token?: string; user_id?: string; id?: string; mobile?: string; name?: string; full_name?: string }) => {
-    // Store user token with 30 minutes expiration
-    const token = userData.token || userData.access_token || '';
+  const setUserData = async (userData: IAccessTokenResponse) => {
+    const token = userData.access_token || '';
     if (token) {
-      setCookie('user_token', token, 7, 30); // 30 minutes
+      await setTokenIntoCookie({ data: userData, mobile: values.phone }); // 30 minutes
     }
-    
-    // Store other user data with 7 days expiration
-    setCookie('user_id', userData.user_id || userData.id || '', 7);
-    setCookie('user_mobile', userData.mobile || values.phone, 7);
-    setCookie('user_name', userData.name || userData.full_name || '', 7);
-    setCookie('is_authenticated', 'true', 7);
-    
-    console.log('User data stored successfully:', {
-      hasToken: !!token,
-      userId: userData.user_id || userData.id,
-      mobile: userData.mobile || values.phone
-    });
+
+
   };
 
   const handleLogin = async () => {
@@ -121,15 +100,15 @@ export const useLogin = (): UseLoginReturn => {
       });
 
       console.log('Login response:', response); // Debug log
-      
+
       // Check if login is successful
       // Check multiple success conditions: success === true, status === '1', or response has token
       const isSuccess = response.success === true || response.status === '1' || response.status === 1 || !!(response.token || response.access_token);
-      
+
       if (isSuccess) {
         // Verify token exists before proceeding
         const hasToken = !!(response.token || response.access_token);
-        
+
         if (hasToken) {
           showSuccess('ورود با موفقیت انجام شد');
           setUserData(response);
@@ -190,11 +169,11 @@ export const useLogin = (): UseLoginReturn => {
 
           // Check if OTP login is successful
           const isSuccess = loginResponse && (loginResponse.success === true || !!(loginResponse.token || loginResponse.access_token));
-          
+
           if (isSuccess) {
             // Verify token exists before proceeding
             const hasToken = !!(loginResponse.token || loginResponse.access_token);
-            
+
             if (hasToken) {
               showSuccess('ورود با موفقیت انجام شد');
               setUserData(loginResponse);

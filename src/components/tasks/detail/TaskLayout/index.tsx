@@ -2,7 +2,8 @@
 
 import { ReactNode } from 'react';
 import styles from './index.module.scss';
-import { ArrowRight2 } from 'iconsax-react';
+import { ArrowRight2, Forbidden } from 'iconsax-react';
+import { useRouter } from 'next/navigation';
 
 interface TaskLayoutProps {
   children: ReactNode;
@@ -10,16 +11,17 @@ interface TaskLayoutProps {
 }
 
 const TaskLayout: React.FC<TaskLayoutProps> = ({ children, className }) => {
+  const router = useRouter();
   return (
     <div className={`${styles.container} ${className || ''}`}>
-    <div className="">
+      <div className={styles.topRow}>
 
-      <div className={styles.backButtonRow}>
-        <ArrowRight2 variant="Bulk" size={24} color="#007BFF" />
-        <span>بازگشت</span>
+        <div className={styles.backButtonRow} onClick={() => router.back()}>
+          <ArrowRight2 variant="Bulk" size={24} color="#007BFF" />
+          <span>بازگشت</span>
+        </div>
+        <Forbidden variant="Bulk" size={24} color='#E70218' />
       </div>
-   
-    </div>
       <div className={styles.taskBox}>
         {children}
       </div>

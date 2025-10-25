@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { id } = await context.params;
     const taskId = id;
-    const token = request.cookies.get('user_token')?.value;
+    const token = request.cookies.get('access_token')?.value;
     const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
     if (!baseUrl) {
       throw new Error('NEXT_PUBLIC_API_URL is not defined');

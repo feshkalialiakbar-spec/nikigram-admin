@@ -8,6 +8,7 @@ import CooperationRequestApproval from '@/components/CooperationRequestApproval'
 import TemplateRequestApproval from '@/components/TemplateRequestApproval';
 import TaskLayout from '@/components/tasks/detail/TaskLayout';
 import { ConfirmationModal, useToast } from '@/components/ui';
+import TaskDetailSkeleton from '@/components/tasks/detail/TaskDetailSkeleton';
 import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent } from '@/utils/taskMappers';
 import {
   ApiProfileChangeRequestResponse,
@@ -119,7 +120,7 @@ const TaskDetailPage: React.FC = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${await getCookieByKey('user_token')}`
+            Authorization: `Bearer ${await getCookieByKey('access_token')}`
           },
           body: JSON.stringify({
             is_verified: true,
@@ -232,14 +233,7 @@ const TaskDetailPage: React.FC = () => {
 
   // Loading state
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen scrollable">
-        <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
-          <p className="mt-4 text-gray-600">در حال بارگذاری...</p>
-        </div>
-      </div>
-    );
+    return <TaskDetailSkeleton />;
   }
 
   // Error state

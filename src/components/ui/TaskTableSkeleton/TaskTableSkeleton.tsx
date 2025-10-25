@@ -16,6 +16,20 @@ const TaskTableSkeleton: React.FC<TaskTableSkeletonProps> = ({
   
   return (
     <div className={`${styles.tableSkeletonContainer} ${className || ''}`}>
+      {/* Beautiful Loading Animation */}
+      <div className={styles.loadingOverlay}>
+        <div className={styles.loadingContent}>
+          <div className={styles.spinnerContainer}>
+            <div className={styles.spinner}>
+              <div className={styles.spinnerRing}></div>
+              <div className={styles.spinnerRing}></div>
+              <div className={styles.spinnerRing}></div>
+            </div>
+          </div>
+          <p className={styles.loadingText}>در حال بارگذاری...</p>
+        </div>
+      </div>
+
       {/* Filter bar skeleton */}
       <div className={styles.filterSkeleton}>
         <div className={styles.filterRow}>
