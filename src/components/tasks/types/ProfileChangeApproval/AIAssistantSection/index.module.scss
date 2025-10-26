@@ -1,7 +1,6 @@
 .aiSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 4px;
   width: 1210px;
   height: 109px;
@@ -10,7 +9,6 @@
 .aiHeader {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
   gap: 8px;
   width: 168px;
@@ -19,10 +17,10 @@
 }
 
 .aiTitleContainer {
+  color: #334558;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
   gap: 4px;
   width: 128px;
   height: 40px;
@@ -67,6 +65,7 @@
   height: 65px;
   background: #EBF1F8;
   border-radius: 16px;
+  padding: 10px;
   position: relative;
 }
 

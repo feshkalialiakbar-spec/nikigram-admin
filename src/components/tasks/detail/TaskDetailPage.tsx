@@ -108,7 +108,7 @@ const TaskDetailPage: React.FC = () => {
     setShowRejectModal(true);
   };
 
-  const confirmApprove = async () => {
+  const confirmApprove = async (isApprove: boolean) => {
     if (!pendingRequestId) return;
 
     setActionLoading(true);
@@ -123,21 +123,28 @@ const TaskDetailPage: React.FC = () => {
             Authorization: `Bearer ${await getCookieByKey('access_token')}`
           },
           body: JSON.stringify({
-            is_verified: true,
+            is_verified: isApprove,
             description: ''
           })
         });
-        if (response && response.ok) {
-          const result = await response.json();
-          if (result.success) {
-            showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
-            router.back();
-          } else {
-            showError('خطا در تایید', result.message || 'خطا در تایید درخواست');
-          }
-        } else {
-          showError('خطا در ارتباط با سرور', 'خطا در تایید درخواست');
+        const result = await response.json();
+        if (result.status == '1') {
+          showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
+          return
         }
+        if (result.detail) showError('خطا در تایید', result.detail || 'خطا در تایید درخواست');
+        // if (!result) showError('خطا در ارتباط با سرور', 'خطا در تایید درخواست');
+
+        // if (result) {
+        // if (result.status == '1') {
+        //   showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
+        //   router.back();
+        //   } else {
+        //     showError('خطا در تایید', result.detail || 'خطا در تایید درخواست');
+        //   }
+        // } else {
+        //   showError('خطا در ارتباط با سرور', 'خطا در تایید درخواست');
+        // }
       } else if (taskType === 'help') {
         response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${pendingRequestId}/approve/`, {
           method: 'POST',
@@ -155,73 +162,23 @@ const TaskDetailPage: React.FC = () => {
         });
       }
 
-      if (response && response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
-          router.back();
-        } else {
-          showError('خطا در تایید', result.message || 'خطا در تایید درخواست');
-        }
-      } else {
-        showError('خطا در تایید', 'خطا در ارتباط با سرور');
-      }
+      // if (response) {
+      //   const result = await response.json();
+      //   if (result.success) {
+      //     showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
+      //     router.back();
+      //   } else {
+      //     showError('خطا در تایید', result.message || 'خطا در تایید درخواست');
+      //   }
+      // } else {
+      //   showError('خطا در تایید', 'خطا در ارتباط با سرور');
+      // }
     } catch (error) {
       console.error('Error approving request:', error);
       showError('خطا در تایید', 'خطا در ارتباط با سرور');
     } finally {
       setActionLoading(false);
       setShowApproveModal(false);
-      setPendingRequestId(null);
-    }
-  };
-
-  const confirmReject = async () => {
-    if (!pendingRequestId) return;
-
-    setActionLoading(true);
-    try {
-      let response;
-
-      if (taskType === 'profile') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${pendingRequestId}/reject/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } else if (taskType === 'help') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${pendingRequestId}/reject/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } else if (taskType === 'template') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${pendingRequestId}/reject/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } else if (taskType === 'cooperation') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/cooperation_request/${pendingRequestId}/reject/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-
-      if (response && response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          showSuccess('عملیات موفق', 'درخواست با موفقیت رد شد');
-          router.back();
-        } else {
-          showError('خطا در رد', result.message || 'خطا در رد درخواست');
-        }
-      } else {
-        showError('خطا در رد', 'خطا در ارتباط با سرور');
-      }
-    } catch (error) {
-      console.error('Error rejecting request:', error);
-      showError('خطا در رد', 'خطا در ارتباط با سرور');
-    } finally {
-      setActionLoading(false);
-      setShowRejectModal(false);
       setPendingRequestId(null);
     }
   };
@@ -290,7 +247,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showApproveModal}
           onClose={() => setShowApproveModal(false)}
-          onConfirm={confirmApprove}
+          onConfirm={() => confirmApprove(true)}
           title="تایید درخواست"
           message="آیا از تایید این درخواست اطمینان دارید؟"
           confirmText="تایید"
@@ -301,7 +258,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showRejectModal}
           onClose={() => setShowRejectModal(false)}
-          onConfirm={confirmReject}
+          onConfirm={() => confirmApprove(false)}
           title="رد درخواست"
           message="آیا از رد این درخواست اطمینان دارید؟"
           confirmText="رد"
@@ -353,7 +310,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showApproveModal}
           onClose={() => setShowApproveModal(false)}
-          onConfirm={confirmApprove}
+          onConfirm={() => confirmApprove(true)}
           title="تایید درخواست"
           message="آیا از تایید این درخواست اطمینان دارید؟"
           confirmText="تایید"
@@ -364,8 +321,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showRejectModal}
           onClose={() => setShowRejectModal(false)}
-          onConfirm={confirmReject}
-          title="رد درخواست"
+          onConfirm={() => confirmApprove(false)} title="رد درخواست"
           message="آیا از رد این درخواست اطمینان دارید؟"
           confirmText="رد"
           type="reject"
@@ -394,7 +350,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showApproveModal}
           onClose={() => setShowApproveModal(false)}
-          onConfirm={confirmApprove}
+          onConfirm={() => confirmApprove(true)}
           title="تایید درخواست"
           message="آیا از تایید این درخواست اطمینان دارید؟"
           confirmText="تایید"
@@ -405,7 +361,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showRejectModal}
           onClose={() => setShowRejectModal(false)}
-          onConfirm={confirmReject}
+          onConfirm={() => confirmApprove(false)}
           title="رد درخواست"
           message="آیا از رد این درخواست اطمینان دارید؟"
           confirmText="رد"
@@ -435,7 +391,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showApproveModal}
           onClose={() => setShowApproveModal(false)}
-          onConfirm={confirmApprove}
+          onConfirm={() => confirmApprove(true)}
           title="تایید درخواست"
           message="آیا از تایید این درخواست اطمینان دارید؟"
           confirmText="تایید"
@@ -446,7 +402,7 @@ const TaskDetailPage: React.FC = () => {
         <ConfirmationModal
           isOpen={showRejectModal}
           onClose={() => setShowRejectModal(false)}
-          onConfirm={confirmReject}
+          onConfirm={() => confirmApprove(false)}
           title="رد درخواست"
           message="آیا از رد این درخواست اطمینان دارید؟"
           confirmText="رد"

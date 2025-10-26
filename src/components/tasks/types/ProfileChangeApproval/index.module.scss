@@ -5,19 +5,24 @@
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border-radius: 24px; 
-  padding:40px 24px;
+  border-radius: 24px;
+  padding: 40px 24px;
 }
 
 .profileHeader {
-  display: flex;
-  flex-direction: row;
   align-items: flex-start;
   width: 100%;
   background: #DEE9F4;
   padding: 24px 32px;
   border-radius: 16px 16px 0 0;
-  gap: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rightSideHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .backButton {
@@ -42,7 +47,7 @@
 
 .headerContent {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   gap: 16px;
   flex: 1;
 }
@@ -114,7 +119,6 @@
 
 .userInfo {
   display: flex;
-  flex-direction: column;
   gap: 4px;
 }
 
@@ -128,6 +132,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin: 0 20px;
 }
 
 .userName {

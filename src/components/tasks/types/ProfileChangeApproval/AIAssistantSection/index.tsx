@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
- import styles from './index.module.scss';
-import { BatteryCharging } from 'iconsax-react';
+import styles from './index.module.scss';
+import { Bubble } from 'iconsax-react';
 
 interface AIAssistantSectionProps {
   comment: string;
@@ -16,19 +16,18 @@ const AIAssistantSection: React.FC<AIAssistantSectionProps> = ({
   return (
     <div className={`${styles.aiSection} ${className || ''}`}>
       <div className={styles.aiHeader}>
+        <div className={styles.aiIcon}>
+          <Bubble size={16} color="#0E315D" variant="Bulk" />
+        </div>
         <div className={styles.aiTitleContainer}>
           <span className={styles.aiTitle}>دستیار هوشمند</span>
           <span className={styles.aiSubtitle}>تولید شده توسط هوش مصنوعی</span>
         </div>
-        <div className={styles.aiIcon}>
-          <BatteryCharging size={16} color="#0E315D" variant="Bulk" />
-        </div>
+
       </div>
-      
+
       <div className={styles.aiContent}>
-        <div className={styles.aiComment}>
-          {comment}
-        </div>
+        این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.
       </div>
     </div>
   );
