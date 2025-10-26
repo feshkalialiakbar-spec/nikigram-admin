@@ -17,11 +17,10 @@ export default function RootLayout({
       <body  >
         <QueryProvider>
           <ToastProvider>
-            <div  >
-              <div className="mainStyles">
-                {children}
-              </div>
+            <div className="mainStyles" >
+              {children}
             </div>
+
           </ToastProvider>
         </QueryProvider>
       </body>

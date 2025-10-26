@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ProfileChangeApprovalProps } from '@/components/tasks/types';
 import Image from 'next/image';
-import { ArrowLeft2 } from 'iconsax-react';
 import { RealProfileSection, LegalProfileSection } from './ProfileSection';
 import { PrimaryIndividualsSection } from './PrimaryIndividualsSection';
 import { ActionButtons } from './ActionButtons';
@@ -21,22 +19,15 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
   className
 }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const router = useRouter();
+
   return (
     <div className={`${styles.container} ${className}`}>
       {/* Header Section */}
       <div className={styles.profileHeader}>
-        <button
-          className={styles.backButton}
-          onClick={() => router.back()}
-        >
-          <ArrowLeft2 size={20} />
-          بازگشت
-        </button>
+
 
         <div className={styles.headerContent}>
           <h1 className={styles.title}>تایید پروفایل (ریو فایل)</h1>
-
           <div className={styles.requestInfo}>
             <div className={styles.requestDate}>
               <span className={styles.requestDateLabel}>تاریخ درخواست :</span>
@@ -108,7 +99,7 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
 
       {/* Action Buttons */}
       <ActionButtons
-        onApprove={() => onApprove(request.id )}
+        onApprove={() => onApprove(request.id)}
         onReject={() => onReject(request.id)}
         className={styles.actionButtons}
       />

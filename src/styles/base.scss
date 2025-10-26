@@ -1,3 +1,4 @@
+@import "tailwindcss";
 :root {
   --rem: 16px;
 
@@ -122,8 +123,7 @@ body {
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px;
-  max-width: 100vw;
+  font-size: 16px; 
   background-color: var(--main-white);
   color: var(--main-black);
 }
@@ -149,8 +149,7 @@ body {
 
 .body-container {
   flex: 1;
-  width: 100%;
-  max-width: 1280px;
+  width: 100%; 
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -169,31 +168,7 @@ a {
 
 * {
   font-family: iransans, sans-serif;
-}
-
-// Global scrollable settings - only for body and main containers
-body {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-// Specific scrollable containers
-.container, .content, .wrapper, .main, .page, .section {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-// Scrollable cards and components
-.card, .panel, .modal, .drawer, .sidebar {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-// Scrollable lists and tables
-.list, .table, .grid, .flex {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+}  
 
 button,
 input,
@@ -202,8 +177,7 @@ label {
   margin: 0;
   outline: none;
   border: none;
-  background-color: transparent;
-}
+  }
 
 @media (width >=768px) {
   :root {
@@ -214,58 +188,11 @@ label {
     font-size: 16px;
   }
 }
-
-@media (width>1111px) {
-  .mainStyles {
-    margin-right: 70px;
+ 
+   .mainStyles {
+    margin-right: 90px; 
   }
-}
-
-// Additional scrollable utilities
-.scrollable {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.scrollable-x {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.scrollable-both {
-  overflow: auto;
-}
-
-.no-scroll {
-  overflow: hidden;
-}
-
-// Ensure specific React components are scrollable
-[data-react-component], .react-component {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-// Prevent scrollbar on form elements
-input, textarea, select, button {
-  overflow: visible;
-}
-
-// Task and dashboard specific scrollable settings
-.task-container, .dashboard-container, .my-tasks-container {
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 100vh;
-  height: 100vh;
-}
-
-// Profile and help request components
-.profile-container, .help-request-container, .template-container {
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 100vh;
-}
-
+ 
 // Custom scrollbar styles
 ::-webkit-scrollbar {
   width: 8px;
@@ -290,28 +217,8 @@ input, textarea, select, button {
 ::-webkit-scrollbar-corner {
   background: var(--gray-100);
 }
-
-// Firefox scrollbar styles
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-500) var(--gray-100);
-}
-
-// Custom scrollbar for specific containers
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-400) var(--gray-50);
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--gray-50);
-  border-radius: 3px;
-}
-
+ 
+ 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--primary-400);
   border-radius: 3px;
@@ -319,4 +226,20 @@ input, textarea, select, button {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--primary-500);
+}
+
+.fill-button {
+  background-color: #477fc0;
+  color: #ffffff;
+  height: 40px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.border-button {
+  color: #4773c0;
+  border: 1px #4794c0 solid;
+  height: 40px;
+  width: 100%;
+  border-radius: 8px;
 }

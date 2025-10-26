@@ -2,7 +2,6 @@ import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { ArrowRotateRight, ExportSquare, Eye } from 'iconsax-react';
 import { convertToPersianDate } from '@/utils/dateUtils';
-import { getTaskDetailRoute } from '@/utils/dashboardUtils';
 import { TaskTableProps } from './types';
 import { getStatusText, getStatusClass } from './utils';
 import styles from './TaskTable.module.scss';
@@ -29,9 +28,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   }, []);
 
   const handleRowClick = (taskId: number) => {
-    // Navigate to task detail page based on current dashboard context
-    const taskDetailRoute = getTaskDetailRoute(pathname, String(taskId));
-    router.push(taskDetailRoute);
+    router.push(`/dashboard/my-tasks/${taskId}`);
   };
 
   if (tasks.length === 0) {
@@ -61,7 +58,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
             <tr
               key={task.task_id}
               className={`${index === 3 ? styles.highlightedRow : ''} ${styles.clickableRow}`}
-              onClick={() => handleRowClick(task.task_id)}
             >
               <td className={styles.taskName}>{task.task_title}</td>
               <td className={styles.process}>{task.ref_id || task.ref_type}</td>

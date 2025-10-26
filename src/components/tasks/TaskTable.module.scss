@@ -35,7 +35,7 @@
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
-  color: #435A73; 
+  color: #435A73;
   white-space: nowrap;
   font-size: 14px;
 }
@@ -53,20 +53,20 @@
   background-color: #ffffff;
 
   &:nth-child(even) {
-    background-color: #F9FAFB;
+    background-color: #f3f9ffa3;
   }
 
   &:hover {
-    background-color: #F3F4F6;
+    background-color: #effcffc8;
   }
 
   &.highlightedRow {
-    background-color: #FEF2F2;
+    background-color: #f9ffffce;
   }
 
   &.clickableRow {
     cursor: pointer;
-    
+
     &:hover {
       background-color: #EFF6FF;
       transform: translateY(-1px);
@@ -131,8 +131,7 @@
 }
 
 .date {
-  color: #666;
-  font-family: monospace;
+  color: #035ebf2a;
   white-space: nowrap;
 }
 
@@ -151,8 +150,8 @@
 }
 
 .statusPending {
-  background-color: #FFF4D6;
-  color: #A16207;
+  background-color: #FFFBC5;
+  color: #E29400;
   border: 1px solid #FDE68A;
 }
 
@@ -175,8 +174,8 @@
 }
 
 .statusNeedsCorrection {
-  background-color: #FEECEC;
-  color: #B91C1C;
+  background-color: #FFF0F1;
+  color: #E70218;
   border: 1px solid #FECACA;
 }
 
@@ -220,7 +219,7 @@
 .operationIcon {
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

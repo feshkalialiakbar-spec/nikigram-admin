@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import ProfileChangeApproval from '@/components/ProfileChangeApproval';
+import ProfileChangeApproval from '@/components/tasks/types/ProfileChangeApproval';
 import { ProfileChangeRequest } from '@/components/tasks/types';
 
 const ProfileSubmissionTestPage: React.FC = () => {

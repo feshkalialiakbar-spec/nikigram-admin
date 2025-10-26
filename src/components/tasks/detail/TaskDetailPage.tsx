@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import ProfileChangeApproval from '@/components/ProfileChangeApproval';
-import HelpRequestApproval from '@/components/HelpRequestApproval';
-import CooperationRequestApproval from '@/components/CooperationRequestApproval';
-import TemplateRequestApproval from '@/components/TemplateRequestApproval';
+import ProfileChangeApproval from '@/components/tasks/types/ProfileChangeApproval';
+import HelpRequestApproval from '@/components/tasks/types/HelpRequestApproval';
+import CooperationRequestApproval from '@/components/tasks/types/CooperationRequestApproval';
+import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApproval';
 import TaskLayout from '@/components/tasks/detail/TaskLayout';
 import { ConfirmationModal, useToast } from '@/components/ui';
 import TaskDetailSkeleton from '@/components/tasks/detail/TaskDetailSkeleton';

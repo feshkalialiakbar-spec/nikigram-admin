@@ -22,7 +22,7 @@ const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
 
   const { data: tasks, total, isLoading, error, refetch } = useApiList({
     fetcher: fetchWaitingForMeTasks,
-    queryKey: ['tasks', 'waiting-for-me', paginationParams],
+    queryKey: ['my-tasks', 'waiting-for-me', paginationParams],
     enabled: true,
     retry: 3,
     paginationParams,

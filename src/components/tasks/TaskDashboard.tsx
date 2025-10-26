@@ -104,7 +104,6 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
           filters={filters}
           onFilterChange={handleFilterChange}
         />
-
         <TaskTable
           tasks={displayTasks}
           onOperationClick={handleOperationClick}

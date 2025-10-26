@@ -54,16 +54,7 @@ export default function Signin() {
         <div className={styles["signin__background-gradient"]}></div>
       </div>
 
-      {/* Back Button */}
-      <button
-        className={styles["signin__back-button"]}
-        onClick={() => router.back()}
-        aria-label="بازگشت به صفحه قبلی"
-        type="button"
-      >
-        <ArrowLeft2 size={20} aria-hidden="true" />
-        <span>بازگشت</span>
-      </button>
+
 
       {/* Main Content */}
       <div className={styles["signin__container"]}>
@@ -170,8 +161,8 @@ export default function Signin() {
               )}
 
               <div className={styles["signin__buttons"]}>
-                <Button
-                  variant="primary"
+                <button
+
                   onClick={handleLogin}
                   disabled={
                     !!errors.phone ||
@@ -179,11 +170,7 @@ export default function Signin() {
                     isLoading ||
                     !values.password
                   }
-                  paddingStyle="equal-8"
-                  className={styles["signin__login-button"]}
-                  aria-describedby={errors.phone || errors.password ? "form-errors" : undefined}
-                  aria-label={isLoading ? "در حال ورود، لطفاً صبر کنید" : "ورود به حساب کاربری"}
-                >
+                  className={'fill-button'}     >
                   {isLoading ? (
                     <>
                       <span className={styles["signin__loading-spinner"]} aria-hidden="true"></span>
@@ -192,14 +179,13 @@ export default function Signin() {
                   ) : (
                     "ورود"
                   )}
-                </Button>
+                </button>
 
                 <div className={styles["signin__divider"]} aria-hidden="true">
                   <span>یا</span>
                 </div>
 
-                <Button
-                  variant="outline"
+                <button
                   disabled={
                     !!errors.phone ||
                     !values.phone ||
@@ -207,8 +193,7 @@ export default function Signin() {
                     isOtpLoading
                   }
                   onClick={handleLoginWithOtp}
-                  paddingStyle="equal-8"
-                  className={styles["signin__otp-button"]}
+                  className={'border-button'}
                   aria-label={isOtpLoading ? "در حال ارسال کد، لطفاً صبر کنید" : "ورود با کد یک بار مصرف"}
                 >
                   {isOtpLoading ? (
@@ -219,7 +204,7 @@ export default function Signin() {
                   ) : (
                     "ورود با کد یک بار مصرف"
                   )}
-                </Button>
+                </button>
               </div>
             </form>
 

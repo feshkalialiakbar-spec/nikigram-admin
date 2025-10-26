@@ -99,8 +99,7 @@ export const useLogin = (): UseLoginReturn => {
         auth: 'username_password'
       });
 
-      console.log('Login response:', response); // Debug log
-
+ 
       // Check if login is successful
       // Check multiple success conditions: success === true, status === '1', or response has token
       const isSuccess = response.success === true || response.status === '1' || response.status === 1 || !!(response.token || response.access_token);
@@ -114,7 +113,7 @@ export const useLogin = (): UseLoginReturn => {
           setUserData(response);
           // Wait a moment for cookies to be set, then redirect
           setTimeout(() => {
-            router.push('/dashboard');
+            location.href = '/dashboard'
             router.refresh(); // Force refresh to update the UI
           }, 100);
         } else {

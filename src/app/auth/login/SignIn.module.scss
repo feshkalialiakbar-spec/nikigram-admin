@@ -61,48 +61,7 @@
     }
   }
 
-  // Enhanced Back Button
-  &__back-button {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 20px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 16px;
-    color: var(--gray-700);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    text-decoration: none;
 
-    &:hover {
-      background: rgba(255, 255, 255, 1);
-      border-color: var(--primary-300);
-      color: var(--primary-700);
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 12px 40px rgba(0, 123, 255, 0.2);
-    }
-
-    &:active {
-      transform: translateY(-1px) scale(0.98);
-    }
-
-    svg {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover svg {
-      transform: translateX(-2px);
-    }
-  }
 
   // Main Container
   &__container {

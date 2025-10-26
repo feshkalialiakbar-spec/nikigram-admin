@@ -1,12 +1,12 @@
 import React from 'react';
-import { ArrowLeft2, ArrowRight2 } from 'iconsax-react';
+import { ArrowLeft2, ArrowRight2, ArrowSquareLeft, ArrowSquareRight } from 'iconsax-react';
 import { PaginationProps } from './types';
 import styles from './Pagination.module.scss';
 
-const Pagination: React.FC<PaginationProps> = ({ 
-  pagination, 
-  onPageChange, 
-  className 
+const Pagination: React.FC<PaginationProps> = ({
+  pagination,
+  onPageChange,
+  className
 }) => {
   const { currentPage, totalPages } = pagination;
 
@@ -29,10 +29,10 @@ const Pagination: React.FC<PaginationProps> = ({
   const renderPageNumbers = React.useMemo(() => {
     const pages: React.ReactNode[] = [];
     const maxVisiblePages = 3;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
+
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
@@ -60,7 +60,7 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <nav 
+    <nav
       className={`${styles.pagination} ${className || ''}`}
       aria-label="صفحه‌بندی"
     >
@@ -71,11 +71,11 @@ const Pagination: React.FC<PaginationProps> = ({
         type="button"
         aria-label="صفحه قبلی"
       >
-        <ArrowLeft2 size={16} color="#6B7280" variant="Linear" />
+        <ArrowSquareLeft variant={'Bulk'} size={32} color="#007BFF" />
       </button>
-      
+
       {renderPageNumbers}
-      
+
       <button
         className={`${styles.navButton} ${currentPage === totalPages ? styles.disabled : ''}`}
         onClick={handleNext}
@@ -83,7 +83,7 @@ const Pagination: React.FC<PaginationProps> = ({
         type="button"
         aria-label="صفحه بعدی"
       >
-        <ArrowRight2 size={16} color="#6B7280" variant="Linear" />
+        <ArrowSquareRight variant={'Bulk'} size={32} color="#007BFF" />
       </button>
     </nav>
   );

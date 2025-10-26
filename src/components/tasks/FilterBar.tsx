@@ -1,21 +1,21 @@
 import React from 'react';
-import { SearchNormal1 } from 'iconsax-react';
+import { SearchNormal, SearchNormal1 } from 'iconsax-react';
 import { FilterBarProps } from './types';
-import { 
-  PROCESS_OPTIONS, 
+import {
+  PROCESS_OPTIONS,
   STATUS_OPTIONS
 } from './utils';
 import TextField from '@/components/hub/forms/textField/TextField';
 import Dropdown from '@/components/hub/forms/dropdown/Dropdown';
 import styles from './FilterBar.module.scss';
 
-const FilterBar: React.FC<FilterBarProps> = ({ 
-  filters, 
-  onFilterChange, 
-  className 
+const FilterBar: React.FC<FilterBarProps> = ({
+  filters,
+  onFilterChange,
+  className
 }) => {
   const handleInputChange = React.useCallback((
-    field: keyof typeof filters, 
+    field: keyof typeof filters,
     value: string
   ) => {
     onFilterChange({
@@ -34,10 +34,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
             value={filters.search}
             onChangeAction={(value) => handleInputChange('search', value)}
             rightContent={{
-              Icon: SearchNormal1,
+              Icon: SearchNormal,
               iconSize: 16,
-              iconColor: 'var(--gray-500)',
-              variant: 'Linear'
+              iconColor: '#1F2B37',
+              variant: 'Bulk'
             }}
             size="sm"
             baseColor={{
