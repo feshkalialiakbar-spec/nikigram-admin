@@ -99,7 +99,6 @@ export const useLogin = (): UseLoginReturn => {
         auth: 'username_password'
       });
 
- 
       // Check if login is successful
       // Check multiple success conditions: success === true, status === '1', or response has token
       const isSuccess = response.success === true || response.status === '1' || response.status === 1 || !!(response.token || response.access_token);
@@ -111,11 +110,9 @@ export const useLogin = (): UseLoginReturn => {
         if (hasToken) {
           showSuccess('ورود با موفقیت انجام شد');
           setUserData(response);
-          // Wait a moment for cookies to be set, then redirect
-          setTimeout(() => {
-            location.href = '/dashboard'
-            router.refresh(); // Force refresh to update the UI
-          }, 100);
+
+          location.href = '/dashboard'
+
         } else {
           setErrors({
             general: 'خطا در دریافت اطلاعات ورود. لطفاً مجدداً تلاش کنید.'

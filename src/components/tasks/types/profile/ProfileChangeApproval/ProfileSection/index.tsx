@@ -1,7 +1,7 @@
 'use client';
 import { RealProfile, LegalProfile, ProfileDocument } from '@/components/tasks/types';
-import { DocumentDisplay } from '../DocumentDisplay';
 import styles from './index.module.scss';
+import FileDownload from '@/components/ui/fileDownload/FileDownload';
 
 interface BaseProps {
   title: string;
@@ -123,12 +123,15 @@ const RealProfileSection: React.FC<BaseProps & { profile: RealProfile }> = ({ ti
 
     <div className={styles.documentsSection}>
       {profile.documents.map((document) => (
-        <DocumentDisplay
+
+
+        <FileDownload
           key={document.id}
-          document={document}
-          onView={handleDocumentView}
-          onDownload={handleDocumentDownload}
-          className={styles.documentItem}
+          fileUrl={document.url as string}
+          fileName={document.filename}
+          title={document.filename}
+          // onView={() => handleDocumentView(document)}
+          onDownload={() => handleDocumentDownload(document)}
         />
       ))}
     </div>
@@ -208,12 +211,13 @@ const LegalProfileSection: React.FC<BaseProps & { profile: LegalProfile }> = ({ 
 
     <div className={styles.documentsSection}>
       {profile.documents.map((document) => (
-        <DocumentDisplay
+        <FileDownload
           key={document.id}
-          document={document}
-          onView={handleDocumentView}
-          onDownload={handleDocumentDownload}
-          className={styles.documentItem}
+          fileUrl={document.url as string}
+          fileName={document.filename}
+          title={document.filename}
+          // onView={() => handleDocumentView(document)}
+          // onDownload={() => handleDocumentDownload(document)}
         />
       ))}
     </div>

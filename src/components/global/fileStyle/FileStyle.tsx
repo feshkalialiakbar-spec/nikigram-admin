@@ -105,7 +105,7 @@ export default function FileStyle({ file }: FileStyleProps) {
         </Text>
       </div>
       <div className={styles["file-style__image"]}>
-        <ParsehImage imgAlt="upload-icon" imgSrc={ImageFrame} width={40} />
+        <ParsehImage imgAlt="upload-icon" imgSrc={ImageFrame} width={'40'} />
       </div>
     </div>
   );

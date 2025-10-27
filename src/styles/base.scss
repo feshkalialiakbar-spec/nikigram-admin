@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 :root {
   --rem: 16px;
 
@@ -123,7 +124,7 @@ body {
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px; 
+  font-size: 16px;
   background-color: var(--main-white);
   color: var(--main-black);
 }
@@ -149,7 +150,7 @@ body {
 
 .body-container {
   flex: 1;
-  width: 100%; 
+  width: 100%;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -168,7 +169,7 @@ a {
 
 * {
   font-family: iransans, sans-serif;
-}  
+}
 
 button,
 input,
@@ -177,7 +178,7 @@ label {
   margin: 0;
   outline: none;
   border: none;
-  }
+}
 
 @media (width >=768px) {
   :root {
@@ -188,11 +189,11 @@ label {
     font-size: 16px;
   }
 }
- 
-   .mainStyles {
-    margin-right: 90px; 
-  }
- 
+
+.mainStyles {
+  margin-right: 90px;
+}
+
 // Custom scrollbar styles
 ::-webkit-scrollbar {
   width: 8px;
@@ -217,8 +218,8 @@ label {
 ::-webkit-scrollbar-corner {
   background: var(--gray-100);
 }
- 
- 
+
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--primary-400);
   border-radius: 3px;
@@ -234,12 +235,13 @@ label {
   height: 40px;
   width: 100%;
   border-radius: 8px;
+  cursor: pointer;
 }
-
 .border-button {
   color: #4773c0;
   border: 1px #4794c0 solid;
   height: 40px;
   width: 100%;
   border-radius: 8px;
+  cursor: pointer;
 }

@@ -299,6 +299,7 @@
 
   // Enhanced Buttons
   &__buttons {
+    cursor: pointer;
     margin-top: 40px;
     animation: fadeInUp 0.8s ease-out 0.4s both;
   }
@@ -523,11 +524,11 @@
 
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(20px);
   }
 
   50% {
-    transform: translateY(-8px);
+    transform: translateY(0);
   }
 }
 

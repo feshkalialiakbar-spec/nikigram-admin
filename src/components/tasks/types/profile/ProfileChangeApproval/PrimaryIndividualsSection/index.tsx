@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { PrimaryIndividual } from '@/components/tasks/types';
 import styles from './index.module.scss';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
-import FileViewerModal from '@/components/ui/FileViewerModal';
 
 interface PrimaryIndividualsSectionProps {
   individuals: PrimaryIndividual[];
@@ -18,22 +17,9 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
   onSelectPrimary,
   className
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<PrimaryIndividual['document'] | null>(null);
-
-  const handleDocumentView = (document: PrimaryIndividual['document']) => {
-    setSelectedDocument(document);
-    setIsModalOpen(true);
-  };
-
   const handleDocumentDownload = (document: PrimaryIndividual['document']) => {
     console.log('Download document:', document);
     // The actual download is handled by the Link component in FileDownload
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setSelectedDocument(null);
   };
 
   return (
@@ -82,23 +68,12 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
                 fileUrl={individual.document.url as string}
                 fileName={individual.document.filename}
                 title={individual.document.filename}
-                onView={() => handleDocumentView(individual.document)}
                 onDownload={() => handleDocumentDownload(individual.document)}
               />
             </div>
           </div>
         ))}
       </div>
-
-      {/* File Viewer Modal */}
-      {selectedDocument && (
-        <FileViewerModal
-          isOpen={isModalOpen}
-          onClose={handleModalClose}
-          fileUrl={selectedDocument.url as string}
-          fileName={selectedDocument.filename}
-        />
-      )}
     </div>
   );
 };

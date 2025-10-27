@@ -115,12 +115,13 @@ export type TaskType = typeof TASK_TYPES[keyof typeof TASK_TYPES];
 
 // Profile Change Request Types
 export interface ProfileDocument {
-  id: string;
-  filename: string;
-  fileType: 'jpg' | 'pdf';
-  uploadDate: string;
-  fileSize: string;
-  url?: string;
+  document_id: number;
+  document_type: number;
+  file_uid: string;
+  upload_date: string;
+  is_verified: number;
+  status_id: number;
+  version: number;
 }
 
 export interface RealProfile {
@@ -240,14 +241,7 @@ export function mapApiProfileChangeToProps(api: ApiProfileChangeRequestResponse)
     nationalId: api.party_request_details.national_id,
     lastName: api.party_request_details.last_name,
     firstName: api.party_request_details.first_name,
-    documents: api.party_docs_data.map((d) => ({
-      id: String(d.document_id),
-      filename: `مدرک ${d.document_id}`,
-      fileType: 'pdf',
-      uploadDate: d.upload_date,
-      fileSize: '—',
-      url: d.file_uid,
-    })),
+    documents: api.party_docs_data
   };
 
   const legalProfile: LegalProfile = {

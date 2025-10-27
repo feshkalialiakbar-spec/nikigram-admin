@@ -2,10 +2,9 @@
 import { useEffect, useState } from "react";
 import styles from "./SignIn.module.scss";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/actions/button/Button";
 import TextField from "@/components/ui/forms/textField/TextField";
 import Logo from "@/components/logo/Logo";
-import { Eye, EyeSlash, ArrowLeft2 } from "iconsax-react";
+import { Eye, EyeSlash } from "iconsax-react";
 import { useLogin } from "@/components/auth/useLogin";
 
 export default function Signin() {

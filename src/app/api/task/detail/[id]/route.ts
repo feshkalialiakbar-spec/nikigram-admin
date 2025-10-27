@@ -1,6 +1,5 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -13,7 +12,6 @@ export async function GET(
     if (!baseUrl) {
       throw new Error('NEXT_PUBLIC_API_URL is not defined');
     }
- 
     console.log(`Fetching task redirect: ${baseUrl}/api/admin/task/detail/${taskId}/`);
     // Get task redirect information using proxy
     const redirectResponse = await fetch(

@@ -34,58 +34,40 @@
     gap: 8px;
   }
 
-  &__actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-
-  &__icon-view,
-  &__icon-download,
-  &__icon-delete {
+  &__icon {
     background-color: var(--main-white);
     width: 32px;
     height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
+    padding: 4px 4px 0;
+    border-radius: 4px;
+    overflow: hidden;
 
-    &:hover {
-      transform: scale(1.05);
-      
-      svg {
-        transform: scale(1.1);
+    &-import,
+    &-delete {
+      padding: 4px;
+      cursor: pointer;
+      transition: all 0.5s ease;
+
+      &:hover {
+        svg {
+          transform: scale(1.1);
+        }
       }
     }
-  }
-
-  &__icon-view {
-    background-color: var(--primary-50);
-    
-    &:hover {
-      background-color: var(--primary-100);
+    &-import {
+      background-color: var(--primary-50);
+      &:hover {
+        background-color: var(--primary-100);
+      }
     }
-  }
-
-  &__icon-download {
-    background-color: var(--primary-50);
-    
-    &:hover {
-      background-color: var(--primary-100);
-    }
-  }
-
-  &__icon-delete {
-    background-color: var(--error-50);
-    
-    &:hover {
-      background-color: var(--error-100);
+    &-delete {
+      background-color: var(--error-50);
+      &:hover {
+        background-color: var(--error-100);
+      }
     }
   }
 

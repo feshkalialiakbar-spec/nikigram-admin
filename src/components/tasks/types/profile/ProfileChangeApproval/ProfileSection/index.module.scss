@@ -102,9 +102,9 @@
 
 .documentsSection {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  width: 1162px;
+  flex-wrap: wrap;
+  // justify-content: space-around;
+  gap: 20px;
   height: 70px;
 }
 

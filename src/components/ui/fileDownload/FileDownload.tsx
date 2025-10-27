@@ -1,38 +1,34 @@
+import React from "react";
 import styles from "./FileDownload.module.scss";
 import Text, { Colors } from "@/components/ui/text/Text";
-import { Import, Trash, Eye } from "iconsax-react";
+import { Import, Trash } from "iconsax-react";
 import FileStyle from "@/components/global/fileStyle/FileStyle";
-import Link from "next/link";
+
 interface FileDownloadProps {
   title?: string;
   fileName: string;
   fileUrl: string;
   onDownload?: () => void;
-  onView?: () => void;
   showDelete?: boolean;
   onDelete?: () => void;
   bgcColor?: Colors;
   width?: string;
+  openInNewTab?: boolean;
 }
+
 export default function FileDownload({
   title,
   fileName,
   fileUrl,
   onDownload,
-  onView,
   showDelete = false,
   onDelete,
   bgcColor,
   width,
+  openInNewTab = true,
 }: FileDownloadProps) {
   const handleDownload = () => {
     if (onDownload) onDownload();
-  };
-
-  const handleView = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onView) onView();
   };
 
   const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -40,7 +36,9 @@ export default function FileDownload({
     e.stopPropagation();
     if (onDelete) onDelete();
   };
+
   const fakeFile = new File([""], fileName);
+
   return (
     <div
       className={styles["file-download"]}
@@ -48,39 +46,29 @@ export default function FileDownload({
         width: width && width,
       }}
     >
-      <div
+      <a
+        href={fileUrl}
+        download
         className={styles["file-download__button"]}
         style={{ backgroundColor: bgcColor ? `var(--${bgcColor})` : "" }}
+        onClick={handleDownload}
+        target={openInNewTab ? "_blank" : undefined}
+        rel={openInNewTab ? "noopener noreferrer" : undefined}
       >
-        kivigho
         <div className={styles["file-download__top-row"]}>
           <FileStyle file={fakeFile} />
-          <div className={styles["file-download__actions"]}>
-            {onView && (
-              <div
-                className={styles["file-download__icon-view"]}
-                onClick={handleView}
-                title="مشاهده فایل"
-              >
-                <Eye size={20} color="var(--primary-700)" variant="Bulk" />
-              </div>
-            )}
+          <div className={styles["file-download__icon"]}>
             {showDelete ? (
               <div
                 className={styles["file-download__icon-delete"]}
                 onClick={handleDelete}
-                title="حذف فایل"
               >
-                <Trash size={20} color="var(--error-700)" variant="Bulk" />
+                <Trash size={24} color="var(--error-700)" variant="Bulk" />
               </div>
             ) : (
-              <p
-                className={styles["file-download__icon-download"]}
-                onClick={handleDownload}
-                title="دانلود فایل"
-              >
-                <Import size={20} color="var(--primary-700)" variant="Bulk" />
-              </p>
+              <div className={styles["file-download__icon-import"]}>
+                <Import size={24} color="var(--primary-700)" variant="Bulk" />
+              </div>
             )}
           </div>
         </div>
@@ -89,7 +77,7 @@ export default function FileDownload({
             {title || fileName}
           </Text>
         </div>
-      </div>
+      </a>
     </div>
   );
 }

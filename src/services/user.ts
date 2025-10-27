@@ -20,26 +20,15 @@ export const UserLoginAPI = async ({
         credential,
       }),
     })
-    
+
     const data = await response.json()
-    console.log(data)
-    // Check if response is successful (2xx status)
-    if (response.ok) {
-      return { success: true, ...data }
-    } else {
-      // Return error response
-      return { 
-        success: false, 
-        message: data.detail || data.message || 'خطا در ورود',
-        status: response.status 
-      }
-    }
+    return data
   } catch (error) {
     console.error('UserLoginAPI error:', error)
-    return { 
-      success: false, 
+    return {
+      success: false,
       message: 'خطا در اتصال به سرور',
-      error: error 
+      error: error
     }
   }
 }
@@ -84,18 +73,18 @@ export const RequestOTP = async ({ mobile, otptype, }: {
     if (response.ok) {
       return { success: true, ...data }
     } else {
-      return { 
-        success: false, 
+      return {
+        success: false,
         message: data.detail || data.message || 'خطا در ارسال کد',
-        status: response.status 
+        status: response.status
       }
     }
   } catch (error: unknown) {
     console.error('RequestOTP error:', error)
-    return { 
-      success: false, 
+    return {
+      success: false,
       message: 'خطا در اتصال به سرور',
-      error: error 
+      error: error
     }
   }
 }
@@ -126,18 +115,18 @@ export const LoginWithOtpAndMobile = async ({
     if (response.ok) {
       return { success: true, ...data }
     } else {
-      return { 
-        success: false, 
+      return {
+        success: false,
         message: data.detail || data.message || 'کد وارد شده اشتباه است',
-        status: response.status 
+        status: response.status
       }
     }
   } catch (error: unknown) {
     console.error('LoginWithOtpAndMobile error:', error)
-    return { 
-      success: false, 
+    return {
+      success: false,
       message: 'خطا در اتصال به سرور',
-      error: error 
+      error: error
     }
   }
 }

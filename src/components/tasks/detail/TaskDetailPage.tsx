@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import ProfileChangeApproval from '@/components/tasks/types/ProfileChangeApproval';
+import ProfileChangeApproval from '@/components/tasks/types/profile/ProfileChangeApproval';
 import HelpRequestApproval from '@/components/tasks/types/HelpRequestApproval';
 import CooperationRequestApproval from '@/components/tasks/types/CooperationRequestApproval';
 import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApproval';
@@ -33,7 +33,7 @@ const TaskDetailPage: React.FC = () => {
     | ApiTemplateRequestResponse
     | null
   >(null);
-  const [taskType, setTaskType] = useState<'profile' | 'help' | 'template' | 'cooperation' | null>(null);
+  const [taskType, setTaskType] = useState<'regular-profile' | 'individual-profile' | 'help' | 'template' | 'cooperation' | 'ticket' | null>(null);
 
   // Modal states
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -75,13 +75,17 @@ const TaskDetailPage: React.FC = () => {
 
         // Determine task type based on ref_type
         if (redirectData.ref_type === 1) {
-          setTaskType('profile');
+          setTaskType('individual-profile');
         } else if (redirectData.ref_type === 2) {
           setTaskType('help');
         } else if (redirectData.ref_type === 4) {
           setTaskType('template');
         } else if (redirectData.ref_type === 5) {
           setTaskType('cooperation');
+        } else if (redirectData.ref_type === 6) {
+          setTaskType('ticket');
+        } else if (redirectData.ref_type === 7) {
+          setTaskType('regular-profile');
         } else {
           throw new Error(`Unknown task type: ${redirectData.ref_type}`);
         }
@@ -115,7 +119,7 @@ const TaskDetailPage: React.FC = () => {
     try {
       let response;
 
-      if (taskType === 'profile') {
+      if (taskType === 'individual-profile') {
         response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${pendingRequestId}/verify`, {
           method: 'POST',
           headers: {
@@ -133,18 +137,7 @@ const TaskDetailPage: React.FC = () => {
           return
         }
         if (result.detail) showError('خطا در تایید', result.detail || 'خطا در تایید درخواست');
-        // if (!result) showError('خطا در ارتباط با سرور', 'خطا در تایید درخواست');
 
-        // if (result) {
-        // if (result.status == '1') {
-        //   showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
-        //   router.back();
-        //   } else {
-        //     showError('خطا در تایید', result.detail || 'خطا در تایید درخواست');
-        //   }
-        // } else {
-        //   showError('خطا در ارتباط با سرور', 'خطا در تایید درخواست');
-        // }
       } else if (taskType === 'help') {
         response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${pendingRequestId}/approve/`, {
           method: 'POST',
@@ -161,18 +154,13 @@ const TaskDetailPage: React.FC = () => {
           headers: { 'Content-Type': 'application/json' }
         });
       }
+      else if (taskType === 'ticket') {
+        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/ticket/${pendingRequestId}/approve/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
 
-      // if (response) {
-      //   const result = await response.json();
-      //   if (result.success) {
-      //     showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
-      //     router.back();
-      //   } else {
-      //     showError('خطا در تایید', result.message || 'خطا در تایید درخواست');
-      //   }
-      // } else {
-      //   showError('خطا در تایید', 'خطا در ارتباط با سرور');
-      // }
     } catch (error) {
       console.error('Error approving request:', error);
       showError('خطا در تایید', 'خطا در ارتباط با سرور');
@@ -227,7 +215,7 @@ const TaskDetailPage: React.FC = () => {
   }
 
   // Render appropriate component based on task type
-  if (taskType === 'profile' && taskData) {
+  if (taskType === 'individual-profile' && taskData) {
     const profileRequest = mapProfileChangeRequestToComponent(
       taskData as ApiProfileChangeRequestResponse
     );
