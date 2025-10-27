@@ -32,8 +32,8 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
                     src={request.userAvatar}
                     alt={request.userName}
                     className={styles.userAvatar}
-                    width={24}
-                    height={24}
+                    width={44}
+                    height={44}
                   />
                 )}
                 <span className={styles.userName}>{request.userName}</span>

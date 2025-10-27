@@ -119,6 +119,7 @@
 
 .userInfo {
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 
@@ -136,14 +137,13 @@
 }
 
 .userName {
-  font-size: 14px;
-  color: #334558;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .userAvatar {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #E5E7EB;
