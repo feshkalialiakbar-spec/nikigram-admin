@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileChangeApproval from '@/components/tasks/types/profile/ProfileChangeApproval';
+import IndividualProfileApproval from '@/components/tasks/types/profile/Individual';
 import HelpRequestApproval from '@/components/tasks/types/HelpRequestApproval';
 import CooperationRequestApproval from '@/components/tasks/types/CooperationRequestApproval';
 import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApproval';
@@ -216,6 +217,48 @@ const TaskDetailPage: React.FC = () => {
 
   // Render appropriate component based on task type
   if (taskType === 'individual-profile' && taskData) {
+    const profileRequest = mapProfileChangeRequestToComponent(
+      taskData as ApiProfileChangeRequestResponse
+    );
+    return (
+      <>
+        <TaskLayout>
+          <IndividualProfileApproval
+            request={profileRequest}
+            rawApiData={taskData as ApiProfileChangeRequestResponse}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            onSelectPrimary={handleSelectPrimary}
+          />
+        </TaskLayout>
+
+        {/* Confirmation Modals */}
+        <ConfirmationModal
+          isOpen={showApproveModal}
+          onClose={() => setShowApproveModal(false)}
+          onConfirm={() => confirmApprove(true)}
+          title="تایید درخواست"
+          message="آیا از تایید این درخواست اطمینان دارید؟"
+          confirmText="تایید"
+          type="approve"
+          loading={actionLoading}
+        />
+
+        <ConfirmationModal
+          isOpen={showRejectModal}
+          onClose={() => setShowRejectModal(false)}
+          onConfirm={() => confirmApprove(false)}
+          title="رد درخواست"
+          message="آیا از رد این درخواست اطمینان دارید؟"
+          confirmText="رد"
+          type="reject"
+          loading={actionLoading}
+        />
+      </>
+    );
+  }
+
+  if (taskType === 'regular-profile' && taskData) {
     const profileRequest = mapProfileChangeRequestToComponent(
       taskData as ApiProfileChangeRequestResponse
     );
