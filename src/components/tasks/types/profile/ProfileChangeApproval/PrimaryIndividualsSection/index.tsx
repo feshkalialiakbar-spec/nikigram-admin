@@ -65,9 +65,9 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
 
             <div className={styles.individualDocument}>
               <FileDownload
-                fileUrl={individual.document.url as string}
-                fileName={individual.document.filename}
-                title={individual.document.filename}
+                fileUrl={(individual.document.url || '') as string}
+                fileName={individual.document.filename || 'document'}
+                title={individual.document.filename || 'document'}
                 onDownload={() => handleDocumentDownload(individual.document)}
               />
             </div>

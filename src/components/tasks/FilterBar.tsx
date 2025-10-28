@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchNormal, SearchNormal1 } from 'iconsax-react';
+import { SearchNormal } from 'iconsax-react';
 import { FilterBarProps } from './types';
 import {
   PROCESS_OPTIONS,

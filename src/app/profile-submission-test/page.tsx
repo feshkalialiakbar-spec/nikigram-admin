@@ -20,11 +20,15 @@ const ProfileSubmissionTestPage: React.FC = () => {
       firstName: 'محمد حسین',
       documents: [
         {
-          id: '1',
-          filename: 'کارت ملی.jpg',
-          fileType: 'jpg',
-          uploadDate: 'امروز',
-          fileSize: '۴ MB'
+          document_id: 1,
+          document_type: 1,
+          file_uid: 'file1',
+          upload_date: 'امروز',
+          is_verified: 1,
+          status_id: 1,
+          version: 1,
+          url: '/api/files/file1',
+          filename: 'کارت ملی.jpg'
         }
       ]
     },
@@ -36,25 +40,37 @@ const ProfileSubmissionTestPage: React.FC = () => {
       companyName: 'پی تکست',
       documents: [
         {
-          id: '2',
-          filename: 'مدرک آگهی تاسیس.pdf',
-          fileType: 'pdf',
-          uploadDate: 'امروز',
-          fileSize: '۴ MB'
+          document_id: 2,
+          document_type: 2,
+          file_uid: 'file2',
+          upload_date: 'امروز',
+          is_verified: 1,
+          status_id: 1,
+          version: 1,
+          url: '/api/files/file2',
+          filename: 'مدرک آگهی تاسیس.pdf'
         },
         {
-          id: '3',
-          filename: 'مدرک آگهی آخرین تغییرات.pdf',
-          fileType: 'pdf',
-          uploadDate: 'امروز',
-          fileSize: '۴ MB'
+          document_id: 3,
+          document_type: 2,
+          file_uid: 'file3',
+          upload_date: 'امروز',
+          is_verified: 1,
+          status_id: 1,
+          version: 1,
+          url: '/api/files/file3',
+          filename: 'مدرک آگهی آخرین تغییرات.pdf'
         },
         {
-          id: '4',
-          filename: 'مدرک روزنامه رسمی.pdf',
-          fileType: 'pdf',
-          uploadDate: 'امروز',
-          fileSize: '۴ MB'
+          document_id: 4,
+          document_type: 2,
+          file_uid: 'file4',
+          upload_date: 'امروز',
+          is_verified: 1,
+          status_id: 1,
+          version: 1,
+          url: '/api/files/file4',
+          filename: 'مدرک روزنامه رسمی.pdf'
         }
       ]
     },
@@ -65,11 +81,15 @@ const ProfileSubmissionTestPage: React.FC = () => {
         role: 'مدیر عامل',
         avatar: '/api/placeholder/32/32',
         document: {
-          id: '5',
-          filename: 'مدرک روزنامه رسمی.pdf',
-          fileType: 'pdf',
-          uploadDate: 'امروز',
-          fileSize: '۴ MB'
+          document_id: 5,
+          document_type: 2,
+          file_uid: 'file5',
+          upload_date: 'امروز',
+          is_verified: 1,
+          status_id: 1,
+          version: 1,
+          url: '/api/files/file5',
+          filename: 'مدرک روزنامه رسمی.pdf'
         }
       },
       {
@@ -78,11 +98,15 @@ const ProfileSubmissionTestPage: React.FC = () => {
         role: 'مدیر عامل',
         avatar: '/api/placeholder/32/32',
         document: {
-          id: '6',
-          filename: 'مدرک روزنامه رسمی.pdf',
-          fileType: 'pdf',
-          uploadDate: 'امروز',
-          fileSize: '۴ MB'
+          document_id: 6,
+          document_type: 2,
+          file_uid: 'file6',
+          upload_date: 'امروز',
+          is_verified: 1,
+          status_id: 1,
+          version: 1,
+          url: '/api/files/file6',
+          filename: 'مدرک روزنامه رسمی.pdf'
         }
       }
     ],

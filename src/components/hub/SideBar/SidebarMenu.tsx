@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect,  useCallback, } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { CloseSquare, SearchNormal, ArrowLeft2, Menu } from 'iconsax-react'
 import styles from './SidebarMenu.module.scss'

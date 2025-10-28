@@ -115,13 +115,20 @@ export type TaskType = typeof TASK_TYPES[keyof typeof TASK_TYPES];
 
 // Profile Change Request Types
 export interface ProfileDocument {
-  document_id: number;
-  document_type: number;
-  file_uid: string;
-  upload_date: string;
-  is_verified: number;
-  status_id: number;
-  version: number;
+  document_id?: number;
+  document_type?: number;
+  file_uid?: string;
+  upload_date?: string;
+  is_verified?: number;
+  status_id?: number;
+  version?: number;
+  url?: string;
+  filename?: string;
+  // Additional properties for mapper compatibility
+  id?: string;
+  fileType?: 'jpg' | 'pdf' | 'png';
+  uploadDate?: string;
+  fileSize?: string;
 }
 
 export interface RealProfile {

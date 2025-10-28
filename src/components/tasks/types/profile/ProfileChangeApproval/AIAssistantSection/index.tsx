@@ -10,7 +10,6 @@ interface AIAssistantSectionProps {
 }
 
 const AIAssistantSection: React.FC<AIAssistantSectionProps> = ({
-  comment,
   className
 }) => {
   return (

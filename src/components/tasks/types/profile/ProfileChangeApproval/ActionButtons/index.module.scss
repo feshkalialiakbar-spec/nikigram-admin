@@ -3,9 +3,9 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  gap: 24px;
-  width: 418px;
-  height: 52px;
+  gap: 16px;
+  width: 100%;
+  min-height: 52px;
 }
 
 .approveButton {
@@ -14,7 +14,7 @@
   justify-content: center;
   align-items: center;
   padding: 12px 24px;
-  width: 197px;
+  min-width: 160px;
   height: 48px;
   background: #007BFF;
   border-radius: 24px;
@@ -31,7 +31,7 @@
   justify-content: center;
   align-items: center;
   padding: 12px 24px;
-  width: 197px;
+  min-width: 160px;
   height: 48px;
   border: 2px solid #E70218;
   border-radius: 24px;
@@ -40,4 +40,18 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .actionButtons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .approveButton,
+  .rejectButton {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
 }

@@ -6,11 +6,29 @@ import ImageFrame from "@/assets/images/global/imageFrame.svg";
 import styles from "./FileStyle.module.scss";
 
 interface FileStyleProps {
-  file: File | null;
+  file?: File | null;
+  fileName?: string;
+  fileUrl?: string;
 }
 
-export default function FileStyle({ file }: FileStyleProps) {
-  const extension = file?.name.split(".").pop()?.toLowerCase().slice(0, 3);
+export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
+  const deriveExtension = (): string | undefined => {
+    if (fileName) {
+      return fileName.split(".").pop()?.toLowerCase().slice(0, 3);
+    }
+    if (fileUrl) {
+      try {
+        const path = new URL(fileUrl, typeof window !== 'undefined' ? window.location.origin : 'http://localhost').pathname;
+        return path.split(".").pop()?.toLowerCase().slice(0, 3);
+      } catch {
+        const fallback = fileUrl.split("?")[0];
+        return fallback.split(".").pop()?.toLowerCase().slice(0, 3);
+      }
+    }
+    return file?.name.split(".").pop()?.toLowerCase().slice(0, 3);
+  };
+
+  const extension = deriveExtension();
 
   const bgColor = (() => {
     switch (extension) {
@@ -25,7 +43,7 @@ export default function FileStyle({ file }: FileStyleProps) {
 
       // Image
       case "jpg":
-      case "jpeg":
+      case "jpe": // handles jpeg (sliced to 3 chars)
         return "var(--primary-600)";
       case "png":
         return "var(--primary-700)";
@@ -35,7 +53,7 @@ export default function FileStyle({ file }: FileStyleProps) {
         return "var(--primary-300)";
       case "bmp":
         return "var(--primary-900)";
-      case "webp":
+      case "web": // handles webp (sliced to 3 chars)
         return "var(--primary-500)";
 
       // Compressed
@@ -51,7 +69,7 @@ export default function FileStyle({ file }: FileStyleProps) {
       case "mov":
       case "avi":
       case "mkv":
-      case "webm":
+      case "web":
         return "var(--secondary2-500)";
 
       // Audio
@@ -65,14 +83,14 @@ export default function FileStyle({ file }: FileStyleProps) {
       case "xls":
       case "xlsx":
         return "var(--secondary1-700)";
-      case "json":
+      case "jso": // handles json
       case "xml":
         return "var(--secondary1-800)";
 
       // Non-editable Docs
       case "pdf":
         return "var(--error-500)";
-      case "epub":
+      case "epu": // handles epub
         return "var(--error-400)";
 
       // Editable Docs

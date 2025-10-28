@@ -1,81 +1,162 @@
 .file-download {
-  width: fit-content;
-  height: fit-content;
+  width: 100%;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
 
   &__button {
-    background-color: var(--gray-100);
+    background-color: #FFFFFF;
     width: 100%;
-    min-width: 180px;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-    border-radius: 12px;
-    padding: 8px;
-    transition: all 0.3s ease;
-    border: 1px solid var(--gray-100);
+    max-width: 376.67px;
+    height: 69px;
+    display: grid;
+    grid-template-columns: 48px 1fr 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+    border: 1px solid #FFFFFF;
+    box-sizing: border-box;
 
     &:hover {
-      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     }
   }
 
-  &__top-row {
-    width: 100%;
-    height: fit-content;
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__doc {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #DEE9F4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  &__left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__icon-import,
+  &__icon-view,
+  &__icon-delete {
+    background: #FFFFFF;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #F1F5F9;
+    }
+  }
+
+  /* Modal */
+  &__modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+  }
+
+  &__modal {
+    background: #FFFFFF;
+    width: 90vw;
+    max-width: 900px;
+    max-height: 85vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  &__modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #E5E7EB;
+  }
+
+  &__modal-actions {
+    display: flex;
     gap: 8px;
+    align-items: center;
   }
 
-  &__icon {
-    background-color: var(--main-white);
-    width: 32px;
-    height: 32px;
+  &__modal-download {
+    color: #007BFF;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  &__modal-close {
+    background: #F3F4F6;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  &__modal-body {
+    padding: 0;
+    overflow: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 4px 0;
-    border-radius: 4px;
-    overflow: hidden;
-
-    &-import,
-    &-delete {
-      padding: 4px;
-      cursor: pointer;
-      transition: all 0.5s ease;
-
-      &:hover {
-        svg {
-          transform: scale(1.1);
-        }
-      }
-    }
-    &-import {
-      background-color: var(--primary-50);
-      &:hover {
-        background-color: var(--primary-100);
-      }
-    }
-    &-delete {
-      background-color: var(--error-50);
-      &:hover {
-        background-color: var(--error-100);
-      }
-    }
+    background: #F8FAFC;
   }
 
-  &__content {
-    flex-grow: 1;
-    text-align: center;
+  &__preview {
+    width: 100%;
+    height: 80vh;
+    max-height: 75vh;
+    border: none;
+    object-fit: contain;
+    background: #fff;
+  }
+
+  &__unsupported {
+    padding: 24px;
     display: flex;
+    flex-direction: column;
+    gap: 8px;
     align-items: center;
     justify-content: center;
+  }
+
+  @media (max-width: 640px) {
+    height: auto;
+    &__button {
+      max-width: 100%;
+      grid-template-columns: 40px 1fr 40px;
+      padding: 8px 10px;
+    }
   }
 }

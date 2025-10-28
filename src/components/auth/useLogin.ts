@@ -111,7 +111,7 @@ export const useLogin = (): UseLoginReturn => {
           showSuccess('ورود با موفقیت انجام شد');
           setUserData(response);
 
-          location.href = '/dashboard'
+          location.href = '/dashboard/my-tasks'
 
         } else {
           setErrors({

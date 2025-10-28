@@ -17,6 +17,36 @@
   border-radius: 16px 16px 0 0;
   display: flex;
   justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .profileHeader {
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 15px;
+  }
+
+  .userSection {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .actionButtons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+  }
 }
 
 .rightSideHeader {

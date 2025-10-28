@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ArrowRotateRight, ExportSquare, Eye } from 'iconsax-react';
 import { convertToPersianDate } from '@/utils/dateUtils';
 import { TaskTableProps } from './types';
@@ -8,11 +8,9 @@ import styles from './TaskTable.module.scss';
 
 const TaskTable: React.FC<TaskTableProps> = ({
   tasks,
-  onOperationClick,
   className
 }) => {
   const router = useRouter();
-  const pathname = usePathname();
 
   const getOperationIcon = React.useCallback((operation: string) => {
     switch (operation) {

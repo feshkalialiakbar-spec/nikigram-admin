@@ -1,570 +1,147 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 40px 24px;
-  gap: 10px;
-  width: 100%;
-  max-width: 1258px;
-  background: #FFFFFF;
-  border-radius: 24px;
-  direction: rtl;
-}
-
-.mainWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 60px;
-  width: 100%;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.headerSection {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 24px;
-  width: 100%;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.headerContent {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px;
-  gap: 8px;
-  width: 100%;
-  height: 24px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.requestDate {
-  width: 171px;
-  height: 24px;
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: right;
-  color: #334558;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-.title {
-  width: 155px;
-  height: 24px;
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
-  text-align: right;
-  color: #131D28;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-  margin: 0;
-}
-
-.operationsSection {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  gap: 24px;
-  width: 100%;
-  background: #DEE9F4;
-  border-radius: 20px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.tableContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 24px;
-  width: 100%;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.operationRow {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px;
-  width: 100%;
-  border: 1px solid #DEE9F4;
-  border-radius: 8px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-  overflow: hidden;
-}
-
-.operationColumn {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  flex: 1;
-  min-width: 0;
-  flex-grow: 1;
-}
-
-.columnHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  width: 100%;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-  
-  &:first-child {
-    border-radius: 16px 0px 0px 0px;
-  }
-}
-
-.operationColumn:first-child .columnHeader .headerCell {
-  border-radius: 16px 0px 0px 0px;
-}
-
-.operationColumn:last-child .columnHeader .headerCell {
-  border-radius: 0px 16px 0px 0px;
-}
-
-.headerCell {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 24px;
-  gap: 12px;
-  width: 100%;
-  background: #EBF1F8;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 1;
-}
-
-.headerLabel {
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: center;
-  color: #5E758E;
-}
-
-.separator {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px;
-  width: 100%;
-  height: 1px;
-  background: #D1E1F2;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.contentRow {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  width: 100%;
-  border-radius: 0px;
-  flex: none;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.contentCell {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 24px;
-  gap: 12px;
-  width: 100%;
-  min-height: 48px;
-  background: #EBF1F8;
-  border-radius: 0px;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 1;
-}
-
-.cellValue {
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: center;
-  color: #5E758E;
-}
-
-.actionButtons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0px;
-  gap: 12px;
-  justify-content: center;
-  width: 220px;
-  height: 32px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-.approveBtn {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 20px 4px 24px;
-  width: 112px;
-  height: 32px;
-  border-radius: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  .buttonText {
-    font-family: 'IRANSansXFaNum', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    text-align: center;
-    color: #007BFF;
-    padding: 0px 8px;
-  }
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.rejectBtn {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 20px 4px 24px;
-  width: 96px;
-  height: 32px;
-  border-radius: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  .buttonText {
-    font-family: 'IRANSansXFaNum', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    text-align: center;
-    color: #E70218;
-    padding: 0px 8px;
-  }
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.aiAssistantSection {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 0px;
-  gap: 4px;
-  isolation: isolate;
-  width: 100%;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-}
-
-.aiHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0px;
-  gap: 8px;
-  width: 168px;
-  height: 40px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  z-index: 0;
-}
-
-.aiTitleContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  padding: 0px;
-  gap: 4px;
-  width: 128px;
-  height: 40px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-.aiTitle {
-  width: 88px;
-  height: 21px;
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 21px;
-  text-align: right;
-  color: #334558;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-.aiSubtitle {
-  width: 128px;
-  height: 15px;
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 10px;
-  line-height: 15px;
-  text-align: right;
-  color: #5E758E;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-}
-
-.aiIcon {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px;
-  gap: 5.4px;
-  width: 32px;
-  height: 32px;
-  background: rgba(173, 90, 90, 0.01);
-  box-shadow: 
-    inset 0px 0px 8.37374px rgba(227, 222, 255, 0.2), 
-    inset 0px -6.74962px 20.9343px rgba(0, 123, 255, 0.3), 
-    inset 0px 6.74962px 20.9343px rgba(0, 123, 255, 0.6), 
-    inset 0px 1.03655px 2.30278px #FFFFFF, 
-    inset 0px 8.29239px 11.7233px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5.23359px);
-  border-radius: 67495.5px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-
-  svg {
-    margin: auto;
-  }
-}
-
-.aiContentBox {
-  width: 100%;
-  min-height: 65px;
-  background: #EBF1F8;
+  background: #fff;
   border-radius: 16px;
-  position: relative;
-  padding: 20px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-  z-index: 1;
-}
-
-.aiTriangle {
-  position: absolute;
-  width: 22.13px;
-  height: 17.02px;
-  right: 22px;
-  top: -10px;
-  background: #1888FE;
-  transform: matrix(0.86, -0.52, -0.52, -0.85, 0, 0);
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-
-.aiComment {
-  width: 100%;
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: right;
-  color: #000000;
-  margin: 0;
-  padding-top: 10px;
-}
-
-.actionButtons {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0px;
-  gap: 24px;
-  width: 100%;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-}
-
-.approveButton {
+  padding: 24px;
+  direction: rtl;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-  width: 197px;
-  height: 52px;
-  background: #9EB8D5;
-  border-radius: 24px;
-  flex: none;
-  order: 0;
-  flex-grow: 1;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 4px;
-    background: #B7CFE8;
-    border-radius: 24px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 12px 24px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    background: #8AA8C5;
-  }
-
-  &:hover::before {
-    background: #A7BFD8;
-  }
-
-  span {
-    position: relative;
-    z-index: 1;
-    margin: auto;
-    font-family: 'IRANSansXFaNum', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    text-align: center;
-    color: #FFFFFF;
-  }
+  gap: 24px;
 }
 
-.rejectButton {
+.header {
+  background: #dee9f4;
+  border-radius: 12px;
+  padding: 16px 24px;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  width: 197px;
-  height: 48px;
-  border: 2px solid #E70218;
-  border-radius: 24px;
-  background: transparent;
-  flex: none;
-  order: 1;
-  flex-grow: 1;
-  cursor: pointer;
-  transition: all 0.2s ease;
 
-  font-family: 'IRANSansXFaNum', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 21px;
-  text-align: center;
-  color: #E70218;
+  h1 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
 
-  &:hover {
-    background: #E70218;
-    color: #FFFFFF;
-    transform: translateY(-2px);
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+
+  .avatar {
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+  }
+
+  .date {
+    font-size: 14px;
+    color: #334558;
   }
 }
 
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 14px;
+  background: #ebf1f8;
+  border-radius: 8px;
+  overflow: hidden;
+
+  th {
+    background: #cfdff2;
+    color: #334558;
+    padding: 12px;
+  }
+
+  td {
+    padding: 10px;
+    border-top: 1px solid #d1e1f2;
+  }
+
+  button {
+    border: none;
+    border-radius: 16px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .approveBtn {
+    background: rgba(0, 123, 255, 0.15);
+    color: #007bff;
+
+    &:hover {
+      background: rgba(0, 123, 255, 0.25);
+    }
+  }
+
+  .rejectBtn {
+    background: rgba(231, 2, 24, 0.15);
+    color: #e70218;
+
+    &:hover {
+      background: rgba(231, 2, 24, 0.25);
+    }
+  }
+}
+
+.aiBox {
+  background: #ebf1f8;
+  border-radius: 12px;
+  padding: 16px;
+
+  .aiHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: #334558;
+
+    small {
+      color: #5e758e;
+      font-size: 12px;
+    }
+  }
+
+  p {
+    margin-top: 8px;
+    color: #000;
+    font-size: 14px;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 24px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .finalApprove {
+    background: #9eb8d5;
+    color: #fff;
+
+    &:hover {
+      background: #8aa8c5;
+    }
+  }
+
+  .finalReject {
+    border: 2px solid #e70218;
+    color: #e70218;
+    background: transparent;
+
+    &:hover {
+      background: #e70218;
+      color: #fff;
+    }
+  }
+}

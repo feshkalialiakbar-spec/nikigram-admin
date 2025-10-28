@@ -10,7 +10,6 @@ import styles from './index.module.scss';
 
 const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
   request,
-  rawApiData,
   onApprove,
   onReject,
   onSelectPrimary,
@@ -18,7 +17,7 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
 }) => {
 
   return (
-    <div className={`${styles.container} ${className}`}>
+    <div className={`${styles.container} ${className || ''}`}>
       {/* Header Section */}
       <div className={styles.profileHeader}>
         <div className={styles.rightSideHeader}>
@@ -57,11 +56,11 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
           profile={request.realProfile}
           className={styles.profileSection}
         />
-        <LegalProfileSection
+        {/* <LegalProfileSection
           title="پروفایل حقوقی"
           profile={request.legalProfile}
           className={styles.profileSection}
-        />
+        /> */}
         <PrimaryIndividualsSection
           individuals={request.primaryIndividuals}
           onSelectPrimary={onSelectPrimary}

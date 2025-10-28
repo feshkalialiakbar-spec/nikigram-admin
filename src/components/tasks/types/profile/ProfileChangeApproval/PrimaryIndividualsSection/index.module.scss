@@ -4,13 +4,13 @@
   justify-content: center;
   align-items: flex-end;
   gap: 16px;
-  width: 1162px;
-  height: 183px;
+  width: 100%;
+  min-height: 183px;
 }
 
 .primaryTitle {
-  width: 700px;
-  height: 24px;
+  width: 100%;
+  min-height: 24px;
   font-size: 16px;
   color: #131D28;
   font-weight: 500;
@@ -23,10 +23,10 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  align-items: center;
+  align-items: stretch;
+  flex-wrap: wrap;
   gap: 16px;
-  width: 1162px;
-  height: 143px;
+  width: 100%;
 }
 
 .individualCard {
@@ -36,8 +36,9 @@
   align-items: flex-end;
   padding: 16px 12px;
   gap: 8px;
-  width: 376.67px;
-  height: 143px;
+  width: 100%;
+  max-width: 376.67px;
+  min-height: 143px;
   background: #EDFAFF;
   border: 1px solid #007BFF;
   border-radius: 8px;
@@ -49,8 +50,8 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  width: 352.67px;
-  height: 49px;
+  width: 100%;
+  min-height: 49px;
 }
 
 .selectButton {
@@ -59,7 +60,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 12px;
-  width: 187px;
+  min-width: 187px;
   height: 37px;
   border: 2px solid #007BFF;
   border-radius: 24px;
@@ -75,8 +76,8 @@
   flex-direction: row;
   align-items: center;
   gap: 8px;
-  width: 115px;
-  height: 49px;
+  width: auto;
+  min-height: 49px;
 }
 
 .individualInfo {
@@ -85,13 +86,13 @@
   justify-content: center;
   align-items: flex-end;
   gap: 4px;
-  width: 75px;
-  height: 49px;
+  width: auto;
+  min-height: 49px;
 }
 
 .individualName {
-  width: 75px;
-  height: 21px;
+  width: auto;
+  min-height: 21px;
   font-size: 14px;
   color: #000000;
   font-weight: 500;
@@ -100,8 +101,8 @@
 }
 
 .individualRole {
-  width: 54px;
-  height: 24px;
+  width: auto;
+  min-height: 24px;
   font-size: 14px;
   color: #334558;
   font-weight: 400;
@@ -135,6 +136,28 @@
 }
 
 .individualDocument {
-  width: 352.67px;
-  height: 54px;
+  width: 100%;
+  min-height: 54px;
+}
+
+@media (max-width: 1024px) {
+  .individualCard {
+    flex: 1 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
+  }
+}
+
+@media (max-width: 640px) {
+  .individualsContainer {
+    gap: 12px;
+  }
+
+  .selectButton {
+    min-width: 160px;
+  }
+
+  .individualCard {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 }

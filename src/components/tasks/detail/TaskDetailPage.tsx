@@ -76,7 +76,7 @@ const TaskDetailPage: React.FC = () => {
 
         // Determine task type based on ref_type
         if (redirectData.ref_type === 1) {
-          setTaskType('individual-profile');
+          setTaskType('regular-profile');
         } else if (redirectData.ref_type === 2) {
           setTaskType('help');
         } else if (redirectData.ref_type === 4) {

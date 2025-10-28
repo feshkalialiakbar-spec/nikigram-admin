@@ -8,14 +8,6 @@ interface BaseProps {
   className?: string;
 }
 
-const handleDocumentView = (document: ProfileDocument) => {
-  if (!document.url) return;
-  const absoluteUrl = document.url.startsWith('http')
-    ? document.url
-    : `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${document.url}`;
-  window.open(absoluteUrl, '_blank', 'noopener,noreferrer');
-};
-
 const handleDocumentDownload = async (fileDoc: ProfileDocument) => {
   if (!fileDoc.url) return;
   const absoluteUrl = fileDoc.url.startsWith('http')
@@ -126,10 +118,10 @@ const RealProfileSection: React.FC<BaseProps & { profile: RealProfile }> = ({ ti
 
 
         <FileDownload
-          key={document.id}
-          fileUrl={document.url as string}
-          fileName={document.filename}
-          title={document.filename}
+          key={document.document_id || document.id}
+          fileUrl={(document.url || '') as string}
+          fileName={document.filename || 'document'}
+          title={document.filename || 'document'}
           // onView={() => handleDocumentView(document)}
           onDownload={() => handleDocumentDownload(document)}
         />
@@ -212,10 +204,10 @@ const LegalProfileSection: React.FC<BaseProps & { profile: LegalProfile }> = ({ 
     <div className={styles.documentsSection}>
       {profile.documents.map((document) => (
         <FileDownload
-          key={document.id}
-          fileUrl={document.url as string}
-          fileName={document.filename}
-          title={document.filename}
+          key={document.document_id || document.id}
+          fileUrl={(document.url || '') as string}
+          fileName={document.filename || 'document'}
+          title={document.filename || 'document'}
           // onView={() => handleDocumentView(document)}
           // onDownload={() => handleDocumentDownload(document)}
         />

@@ -4,6 +4,7 @@ import React from 'react';
 import { CloseCircle } from 'iconsax-react';
 import styles from './FileViewerModal.module.scss';
 import Text from '@/components/ui/text/Text';
+import Image from 'next/image';
 
 interface FileViewerModalProps {
   isOpen: boolean;
@@ -25,9 +26,9 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
   // Determine file type from filename if not provided
   const getFileType = (filename: string, providedType?: string): string => {
     if (providedType) return providedType;
-    
+
     const extension = filename.split('.').pop()?.toLowerCase();
-    
+
     switch (extension) {
       case 'jpg':
       case 'jpeg':
@@ -73,8 +74,8 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       case 'image':
         return (
           <div className={styles.imageContainer}>
-            <img 
-              src={fileUrl} 
+            <Image
+              src={fileUrl}
               alt={fileName}
               className={styles.imageContent}
               onError={(e) => {
@@ -83,7 +84,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
               }}
             />
             <div className={`${styles.errorMessage} ${styles.hidden}`}>
-              <Text textStyle="14R4" textColor="gray-600">
+              <Text textStyle="14S5" textColor="gray-600">
                 خطا در بارگذاری تصویر
               </Text>
             </div>
@@ -93,9 +94,9 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       case 'video':
         return (
           <div className={styles.videoContainer}>
-            <video 
-              src={fileUrl} 
-              controls 
+            <video
+              src={fileUrl}
+              controls
               className={styles.videoContent}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -105,7 +106,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
               مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
             </video>
             <div className={`${styles.errorMessage} ${styles.hidden}`}>
-              <Text textStyle="14R4" textColor="gray-600">
+              <Text textStyle="14S4" textColor="gray-600">
                 خطا در بارگذاری ویدیو
               </Text>
             </div>
@@ -115,9 +116,9 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       case 'audio':
         return (
           <div className={styles.audioContainer}>
-            <audio 
-              src={fileUrl} 
-              controls 
+            <audio
+              src={fileUrl}
+              controls
               className={styles.audioContent}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -127,7 +128,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
               مرورگر شما از پخش صوت پشتیبانی نمی‌کند.
             </audio>
             <div className={`${styles.errorMessage} ${styles.hidden}`}>
-              <Text textStyle="14R4" textColor="gray-600">
+              <Text textStyle="14S4" textColor="gray-600">
                 خطا در بارگذاری فایل صوتی
               </Text>
             </div>
@@ -137,7 +138,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       case 'pdf':
         return (
           <div className={styles.pdfContainer}>
-            <iframe 
+            <iframe
               src={`${fileUrl}#toolbar=1&navpanes=1&scrollbar=1`}
               className={styles.pdfContent}
               onError={(e) => {
@@ -146,12 +147,12 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
               }}
             />
             <div className={`${styles.errorMessage} ${styles.hidden}`}>
-              <Text textStyle="14R4" textColor="gray-600">
+              <Text textStyle="14S4" textColor="gray-600">
                 خطا در بارگذاری فایل PDF
               </Text>
-              <a 
-                href={fileUrl} 
-                target="_blank" 
+              <a
+                href={fileUrl}
+                target="_blank"
                 rel="noopener noreferrer"
                 className={styles.downloadLink}
               >
@@ -166,7 +167,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       case 'text':
         return (
           <div className={styles.textContainer}>
-            <iframe 
+            <iframe
               src={fileUrl}
               className={styles.textContent}
               onError={(e) => {
@@ -175,7 +176,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
               }}
             />
             <div className={`${styles.errorMessage} ${styles.hidden}`}>
-              <Text textStyle="14R4" textColor="gray-600">
+              <Text textStyle="14S4" textColor="gray-600">
                 خطا در بارگذاری فایل متنی
               </Text>
             </div>
@@ -185,7 +186,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       case 'office':
         return (
           <div className={styles.officeContainer}>
-            <iframe 
+            <iframe
               src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`}
               className={styles.officeContent}
               onError={(e) => {
@@ -194,12 +195,12 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
               }}
             />
             <div className={`${styles.errorMessage} ${styles.hidden}`}>
-              <Text textStyle="14R4" textColor="gray-600">
+              <Text textStyle="14S4" textColor="gray-600">
                 خطا در بارگذاری فایل آفیس
               </Text>
-              <a 
-                href={fileUrl} 
-                target="_blank" 
+              <a
+                href={fileUrl}
+                target="_blank"
                 rel="noopener noreferrer"
                 className={styles.downloadLink}
               >
@@ -214,15 +215,15 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
       default:
         return (
           <div className={styles.unsupportedContainer}>
-            <Text textStyle="16R4" textColor="gray-700">
+            <Text textStyle="16S4" textColor="gray-700">
               نوع فایل پشتیبانی نمی‌شود
             </Text>
-            <Text textStyle="14R4" textColor="gray-500">
+            <Text textStyle="14S4" textColor="gray-500">
               برای مشاهده فایل، آن را دانلود کنید
             </Text>
-            <a 
-              href={fileUrl} 
-              target="_blank" 
+            <a
+              href={fileUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className={styles.downloadLink}
             >
@@ -237,7 +238,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
-      <div 
+      <div
         className={styles.modalContainer}
         onClick={(e) => e.stopPropagation()}
       >
@@ -254,7 +255,7 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
             <CloseCircle size={24} variant="Outline" color="var(--gray-500)" />
           </button>
         </div>
-        
+
         <div className={styles.modalContent}>
           {renderFileContent()}
         </div>

@@ -3,8 +3,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 16px;
-  width: 1162px;
-  height: 207px;
+  width: 100%;
+  min-height: 207px;
 }
 
 .sectionTitle {
@@ -23,19 +23,21 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  width: 1162px;
-  height: 81px;
+  width: 100%;
+  min-height: 81px;
   background: #FFFFFF;
   border: 1px solid #DEE9F4;
   border-radius: 8px;
+  flex-wrap: wrap;
 }
 
 .tableColumn {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
-  height: 81px;
+  flex: 1 1 220px;
+  min-width: 220px;
+  min-height: 81px;
   background: #EBF1F8;
 }
 
@@ -43,8 +45,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 193.67px;
-  height: 41px;
+  width: 100%;
+  min-height: 41px;
 }
 
 .tableHeaderContent {
@@ -53,14 +55,14 @@
   align-items: center;
   padding: 8px 24px;
   gap: 12px;
-  width: 193.67px;
-  height: 40px;
+  width: 100%;
+  min-height: 40px;
   background: #EBF1F8;
 }
 
 .tableHeaderText {
-  width: 145.67px;
-  height: 24px;
+  width: 100%;
+  min-height: 24px;
   font-size: 14px;
   color: #334558;
   font-weight: 400;
@@ -68,7 +70,7 @@
 }
 
 .tableSeparator {
-  width: 193.67px;
+  width: 100%;
   height: 1px;
   background: #D1E1F2;
 }
@@ -77,8 +79,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 193.67px;
-  height: 40px;
+  width: 100%;
+  min-height: 40px;
 }
 
 .tableRowContent {
@@ -86,14 +88,14 @@
   flex-direction: row;
   align-items: center;
   padding: 8px 24px;
-  width: 193.67px;
-  height: 40px;
+  width: 100%;
+  min-height: 40px;
   background: #EBF1F8;
 }
 
 .tableRowText {
-  width: 145.67px;
-  height: 24px;
+  width: 100%;
+  min-height: 24px;
   font-size: 14px;
   color: #5E758E;
   font-weight: 400;
@@ -101,11 +103,10 @@
 }
 
 .documentsSection {
-  display: flex;
-  flex-wrap: wrap;
-  // justify-content: space-around;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(333px, 0fr)); 
   gap: 20px;
-  height: 70px;
+  min-height: 70px;
 }
 
 .documentItem {
@@ -115,11 +116,36 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0px 8px 12px;
-  gap: 24px;
-  width: 376.67px;
-  height: 70px;
+  max-width: 376.67px;
+  min-height: 70px;
   background: #FFFFFF;
   border: 1px solid #FFFFFF;
-  border-radius: 8px;
-  flex: 1;
+  border-radius: 8px; 
+}
+
+@media (max-width: 1024px) {
+  .profileTable {
+    gap: 8px;
+  }
+
+  .tableColumn {
+    flex: 1 1 45%;
+    min-width: 45%;
+  }
+}
+
+@media (max-width: 640px) {
+  .profileSection {
+    gap: 12px;
+  }
+
+  .tableColumn {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .tableHeaderContent,
+  .tableRowContent {
+    padding: 8px 16px;
+  }
 }

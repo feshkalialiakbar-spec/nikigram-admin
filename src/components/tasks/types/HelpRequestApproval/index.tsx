@@ -11,8 +11,24 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   onReject,
   className
 }) => {
+  const containerClassName = `${styles.container}${className ? ` ${className}` : ''}`;
+
+  const handleDownload = () => {
+    if (!request.attachedFile?.url) return;
+    const link = document.createElement('a');
+    link.href = request.attachedFile.url;
+    link.download = request.attachedFile.filename || 'attachment';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePreview = () => {
+    if (!request.attachedFile?.url) return;
+    window.open(request.attachedFile.url, '_blank');
+  };
   return (
-    <div className={`${styles.container} ${className}`}>
+    <div className={containerClassName}>
       {/* Main Content */}
       <div className={styles.mainContent}>
         <div className={styles.contentWrapper}>
@@ -87,12 +103,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                             </div>
                           </div>
                           <div className={styles.attachmentActions}>
-                            <button className={styles.actionButton} title="دانلود">
+                            <button className={styles.actionButton} onClick={handleDownload} title="دانلود">
                               <svg className={styles.actionIcon} fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
                               </svg>
                             </button>
-                            <button className={styles.actionButton} title="مشاهده">
+                            <button className={styles.actionButton} onClick={handlePreview} title="مشاهده">
                               <svg className={styles.actionIcon} fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                 <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />

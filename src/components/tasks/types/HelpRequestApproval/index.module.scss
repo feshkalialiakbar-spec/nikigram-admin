@@ -1,43 +1,35 @@
 .container {
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background: #F0F4FA;
   direction: rtl;
+  padding: 24px;
 }
 
 .mainContent {
-  width: 1258px;
-  height: 1182px;
+  max-width: 1258px;
+  margin: 0 auto;
   background: #FFFFFF;
   border-radius: 24px;
-  padding: 0 24px 40px 24px;
+  padding: 24px;
 }
 
 .contentWrapper {
   display: flex;
   flex-direction: column;
-  width: 1210px;
-  height: 1102px;
+  gap: 24px;
 }
 
 .requestContainer {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 1210px;
-  height: 990px;
 }
 
 .requestCard {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0;
-  gap: 0;
-  width: 1210px;
-  height: 857px;
   background: #DEE9F4;
   border-radius: 16px;
   overflow: hidden;
@@ -47,17 +39,14 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%;
-  height: 100%;
 }
 
 .requestHeader {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 1162px;
-  height: 60px;
+  width: 100%;
+  min-height: 60px;
   background: #F0F4FA;
   padding: 0 32px;
   border-radius: 16px 16px 0 0;
@@ -96,155 +85,85 @@
 
 .contentArea {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: flex-start;
   padding: 24px 32px;
   gap: 24px;
-  width: 1162px;
-  height: 719px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
+  width: 100%;
 }
 
 .valuesColumn {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 0px;
   gap: 24px;
-  width: 1014px;
-  height: 719px;
-  flex: none;
-  order: 0;
-  flex-grow: 1;
+  flex: 1 1 auto;
 }
 
 .valueItem {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 0px;
   gap: 8px;
-  width: auto;
-  height: 40px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
+  min-height: 40px;
 }
 
 .userInfo {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 0px;
   gap: 8px;
-  width: 132px;
-  height: 40px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .userName {
-  width: 84px;
-  height: 24px;
-  font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
   text-align: right;
   color: #000000;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .userAvatar {
   width: 40px;
   height: 40px;
   border: 2px solid #FFFFFF;
-  border-radius: 63px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
+  border-radius: 9999px;
 }
 
 .shebaInfo {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 0px;
-  gap: 16px;
-  width: 281px;
-  height: 33px;
-  flex: none;
-  order: 9;
-  flex-grow: 0;
+  gap: 12px;
 }
 
 .shebaNumber {
-  width: 184px;
-  height: 24px;
-  font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
   text-align: right;
   color: #000000;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 }
 
 .verifiedBadge {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 6px 12px;
-  gap: 4px;
-  width: 81px;
-  height: 33px;
   background: #F1FCF2;
   border-radius: 16px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-.verifiedBadge::after {
-  content: "تایید شده";
-  width: 57px;
-  height: 21px;
-  font-style: normal;
+  color: #28A745;
   font-weight: 500;
   font-size: 14px;
-  line-height: 21px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #28A745;
-  flex: none;
-  order: 2;
-  flex-grow: 0;
 }
 
+/* text comes from DOM; no ::after to avoid duplication */
+
 .description {
-  width: 1014px;
-  height: 120px;
-  font-style: normal;
+  width: 100%;
+  min-height: 120px;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
   text-align: right;
   color: #000000;
-  flex: none;
-  order: 10;
-  align-self: stretch;
-  flex-grow: 0;
   overflow-y: auto;
   padding: 8px;
   background: #FFFFFF;
@@ -255,59 +174,39 @@
 .attachmentCard {
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0px;
+  padding: 8px 12px;
   gap: 24px;
-  width: 376.67px;
-  height: 70px;
+  width: 100%;
+  max-width: 380px;
+  min-height: 70px;
   background: #FFFFFF;
   border: 1px solid #FFFFFF;
   border-radius: 8px;
-  flex: none;
-  order: 11;
-  flex-grow: 0;
 }
 
 .attachmentInfo {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px 0px 0px 8px;
-  gap: 24px;
-  margin: 0 auto;
-  width: 72px;
-  height: 20px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
+  align-items: center;
+  gap: 12px;
 }
 
 .fileIcon {
   width: 54px;
   height: 54px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 }
 
 .fileTypeIcon {
-  position: absolute;
+  position: relative;
   width: 29.33px;
   height: 32px;
-  left: 1.33px;
-  top: 0px;
 }
 
 .fileTypeIcon::before {
   content: "";
   position: absolute;
-  left: 8.33%;
-  right: 8.33%;
-  top: 0%;
-  bottom: 0%;
+  inset: 0;
   background: #DEE9F4;
 }
 
@@ -324,81 +223,46 @@
 
 .fileTypeText {
   position: absolute;
-  width: 25px;
-  height: 10px;
   left: 4.17%;
   right: 4.17%;
   top: calc(50% - 10px/2 + 3px);
+  width: 25px;
+  height: 10px;
   background: #007BFF;
   border-radius: 1px;
-  font-style: normal;
   font-weight: 600;
   font-size: 8px;
   line-height: 10px;
   display: flex;
   align-items: center;
-  text-align: center;
+  justify-content: center;
   color: #FFFFFF;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .fileDetails {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 0px;
   gap: 10px;
-  margin: 0 auto;
-  width: 146px;
-  height: 54px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 }
 
 .fileName {
-  width: 82px;
-  height: 24px;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
   text-align: right;
   color: #000000;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
 .fileMeta {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0px;
   gap: 8px;
-  width: 82px;
-  height: 24px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
 }
 
 .fileDate {
-  width: 27px;
-  height: 24px;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
   color: #5E758E;
-  flex: none;
-  order: 2;
-  flex-grow: 0;
+  font-size: 14px;
 }
 
 .fileSeparator {
@@ -406,50 +270,26 @@
   height: 3px;
   background: #5E758E;
   border-radius: 11px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 }
 
 .fileSize {
-  width: 36px;
-  height: 24px;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
   color: #5E758E;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
+  font-size: 14px;
 }
 
 .attachmentActions {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0px;
   gap: 4px;
-  width: 20px;
-  height: 20px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .actionButton {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+  display: inline-flex;
+  justify-content: center;
   align-items: center;
-  padding: 0px;
-  gap: 4px;
   width: 20px;
   height: 20px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
   background: none;
   border: none;
   cursor: pointer;
@@ -465,18 +305,11 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 0px;
   gap: 24px;
-  width: 124px;
-  height: 719px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
+  width: 140px;
 }
 
 .labelItem {
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -484,94 +317,57 @@
   align-items: center;
   text-align: right;
   color: #334558;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .aiSection {
-  width: 1210px;
-  height: 109px;
+  width: 100%;
 }
 
 .aiHeader {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0px;
   gap: 8px;
   width: 168px;
-  height: 40px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  z-index: 0;
 }
 
 .aiTitle {
-  width: 88px;
-  height: 21px;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 21px;
   text-align: right;
   color: #334558;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .aiIcon {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 0px;
-  gap: 5.4px;
   width: 32px;
   height: 32px;
-  background: rgba(173, 90, 90, 0.01);
-  box-shadow: inset 0px 0px 8.37374px rgba(227, 222, 255, 0.2), inset 0px -6.74962px 20.9343px rgba(0, 123, 255, 0.3), inset 0px 6.74962px 20.9343px rgba(0, 123, 255, 0.6), inset 0px 1.03655px 2.30278px #FFFFFF, inset 0px 8.29239px 11.7233px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5.23359px);
-  border-radius: 67495.5px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
+  box-shadow: inset 0 0 8px rgba(0, 123, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 9999px;
 }
 
 .aiIconSvg {
   margin: 0 auto;
   width: 16px;
   height: 16px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .aiSubtitle {
-  width: 128px;
-  height: 15px;
-  font-style: normal;
   font-weight: 400;
   font-size: 10px;
   line-height: 15px;
   text-align: right;
   color: #5E758E;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 }
 
 .aiComment {
-  width: 1210px;
-  height: 65px;
+  width: 100%;
+  min-height: 65px;
   background: #EBF1F8;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-  z-index: 1;
   position: relative;
   overflow-y: auto;
   border-radius: 16px;
@@ -589,17 +385,14 @@
 
 .actionButtons {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   gap: 24px;
-  width: 418px;
-  height: 52px;
+  width: 100%;
 }
 
 .approveButton {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 12px 24px;
@@ -615,8 +408,7 @@
 }
 
 .rejectButton {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 12px 24px;
@@ -635,40 +427,31 @@
 @media (max-width: 768px) {
   .container {
     width: 100%;
-    height: auto;
-    position: relative;
-    left: auto;
-    top: auto;
     padding: 20px 16px;
   }
 
   .mainContent {
     width: 100%;
-    height: auto;
   }
 
   .contentWrapper {
     width: 100%;
-    height: auto;
   }
 
   .requestContainer {
     width: 100%;
-    height: auto;
     padding: 16px;
   }
 
   .contentArea {
     flex-direction: column;
     width: 100%;
-    height: auto;
     gap: 16px;
   }
 
   .valuesColumn,
   .labelsColumn {
     width: 100%;
-    height: auto;
   }
 
   .requestHeader {
@@ -679,7 +462,6 @@
 
   .actionButtons {
     flex-direction: column;
-    width: 100%;
     gap: 12px;
   }
 

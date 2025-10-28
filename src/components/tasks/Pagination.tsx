@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft2, ArrowRight2, ArrowSquareLeft, ArrowSquareRight } from 'iconsax-react';
+import { ArrowSquareLeft, ArrowSquareRight } from 'iconsax-react';
 import { PaginationProps } from './types';
 import styles from './Pagination.module.scss';
 
