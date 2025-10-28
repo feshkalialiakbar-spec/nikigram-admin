@@ -6,12 +6,13 @@
 
 .mainContent {
   padding: 0;
-  background: transparent;
-  border-radius: 12px;
-  border: 1px solid #E5E7EB;
+  background: #EBF1F8;
+  border-radius: 16px;
+  border: none;
   overflow: visible;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 8px 24px rgba(17, 24, 39, 0.06);
   max-height: calc(100vh - 150px);
 }
 
@@ -19,10 +20,10 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px 20px 16px 20px;
-  background: #EBF1F8;
+  padding: 20px 20px 12px 20px;
+  background: transparent;
   border-bottom: 1px solid #E5E7EB;
-  border-radius: 12px 12px 0 0;
+  border-radius: 16px 16px 0 0;
 }
 
 .headerLeft {
@@ -58,7 +59,7 @@
 }
 
 .tableContainer {
-  background: #ffffff;
+  background: transparent;
   border-radius: 0;
   overflow-y: auto;
   overflow-x: auto;
@@ -76,8 +77,10 @@
   font-size: 14px;
 }
 
+.table thead { display: none; }
+
 .table th {
-  background: #EBF1F8;
+  background: transparent;
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
@@ -88,10 +91,11 @@
 
 .table td {
   padding: 16px 12px;
-  border-bottom: 1px solid #F3F4F6;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
   text-align: right;
   vertical-align: middle;
   color: #374151;
+  background: transparent;
 }
 
 .table tbody tr {
@@ -111,8 +115,7 @@
     
     &:hover {
       background-color: #EFF6FF;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+      box-shadow: 0 1px 4px rgba(59, 130, 246, 0.12);
     }
   }
 }
@@ -158,7 +161,7 @@
   transition: all 0.2s ease;
 }
 
-.statusBadge.tایید-شده {
+.statusBadge.تایید-شده {
   background-color: #E9FBF1;
   color: #047857;
   border: 1px solid #A7F3D0;
@@ -427,4 +430,123 @@
     font-size: 8px;
     padding: 1px 4px;
   }
+}
+
+/* ===== New layout for Figma spec ===== */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 40px 24px;
+  gap: 60px;
+  background: #FFFFFF;
+  border-radius: 24px;
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.requestDateWrap { display: flex; gap: 6px; align-items: center; }
+.pageTitle { font-size: 16px; font-weight: 700; color: #131D28; margin: 0; }
+.requestDateLabel { font-weight: 400; color: #334558; font-size: 14px; line-height: 24px; }
+.requestDate { font-weight: 400; color: #334558; font-size: 14px; line-height: 24px; }
+
+.detailsSection { width: 100%; }
+.detailsCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  gap: 24px;
+  background: #DEE9F4;
+  border-radius: 20px;
+  width: 100%;
+}
+.detailsContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+}
+.labelsCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+  color: #334558;
+  font-size: 14px;
+}
+.valuesCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+  flex: 1;
+}
+.userRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.categoryRow, .subCategoryRow { display: flex; align-items: center; }
+.valueText { font-size: 16px; font-weight: 500; color: #000; }
+.descriptionBox {
+  width: 100%;
+  max-width: 1083px;
+  min-height: 96px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 16px;
+  line-height: 24px;
+  color: #000;
+}
+
+.aiBlock { position: relative; display: flex; flex-direction: column; gap: 12px; }
+.aiBubble {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgba(0,123,255,0.08);
+  box-shadow: inset 0 0 8px rgba(227,222,255,0.2), inset 0 -6px 20px rgba(0,123,255,0.3), inset 0 6px 20px rgba(0,123,255,0.6), inset 1px 1px 2px #fff;
+}
+.aiTitles { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.aiCommentRow { position: relative; background: #FCFDFF; border-radius: 16px; padding: 16px; border: 1px solid #bae6fd; }
+
+.evaluationSection { display: flex; flex-direction: column; gap: 24px; }
+.evaluateHeader { display: flex; flex-direction: row; align-items: center; gap: 8px; justify-content: flex-end; }
+.evaluateTitle { font-size: 16px; font-weight: 500; color: #131D28; }
+.evaluateHint { font-size: 14px; font-weight: 500; color: #131D28; text-align: right; }
+.sliderWrap { width: 100%; display: flex; justify-content: center; }
+.sliderTrack { position: relative; width: 350px; height: 25px; }
+.trackRed { position: absolute; left: 0; right: 175px; top: 3px; height: 6px; background: #FFDDE0; border-radius: 3px; }
+.trackGray { position: absolute; left: 175px; right: 105px; top: 3px; height: 6px; background: #334558; border-radius: 3px; }
+.trackGreen { position: absolute; left: calc(350px - 175px); right: 0; top: 3px; height: 6px; background: #DFF9E4; border-radius: 3px; }
+.knob { position: absolute; left: calc(50% + 70px); top: 0; width: 12px; height: 12px; transform: translate(-50%, -6px); }
+.knob::after { content: ""; width: 12px; height: 12px; display: block; background: #334558; border: 1px solid #fff; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.tooltip { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: #334558; color: #fff; border-radius: 4px; padding: 0 6px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.marks { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 12px; color: #000; }
+
+.actionsRow { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 24px; }
+.primaryBtn { display: flex; align-items: center; justify-content: center; padding: 12px 24px; background: #007BFF; color: #fff; border: none; border-radius: 24px; width: 197px; height: 48px; }
+.outlineDangerBtn { display: flex; align-items: center; justify-content: center; padding: 12px 24px; border: 2px solid #E70218; color: #E70218; background: transparent; border-radius: 24px; width: 197px; height: 48px; }
+
+@media (max-width: 1024px) {
+  .card { margin: 75px 15px 15px 15px; }
+}
+
+@media (max-width: 768px) {
+  .card { margin: 70px 15px 15px 15px; }
 }
