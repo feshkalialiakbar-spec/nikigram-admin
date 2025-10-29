@@ -2,84 +2,116 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 1rem 0;
+  align-items: center;
 }
 
 .sliderTrack {
   position: relative;
-  width: 350px;
+  width: 360px;
   height: 10px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #ffbaba, #ffe8e8 33%, #d0d0d0 50%, #e1ffe1 75%, #baffba);
+  border-radius: 10px;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.4);
-  }
-
-  &.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 }
 
-.trackGradient {
+.trackNegative,
+.trackZero,
+.trackPositive {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #ff5e6c, #ffe78f, #6cf576);
-  opacity: 0.3;
+  top: 0;
+  height: 6px;
+  border-radius: 10px;
+}
+
+.trackNegative {
+  left: 0;
+  width: 33%;
+  background: #eb0a0a;
+}
+
+.trackZero {
+  left: 33%;
+  width: 34%;
+  background: #334558;
+}
+
+.trackPositive {
+  right: 0;
+  width: 33%;
+  background: #e0fbe3;
+}
+
+.trackFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  background: #334558;
+  border-radius: 10px;
+  transition: width 0.25s ease-out;
+  z-index: 2;
 }
 
 .knob {
   position: absolute;
   top: 50%;
-  width: 22px;
-  height: 22px;
   transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: #334558;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: left 0.25s ease-out, transform 0.2s ease;
-  z-index: 2;
+  z-index: 3;
 
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: #334558;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  &.hover::after,
-  &.dragging::after {
-    transform: scale(1.25);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.15);
   }
 }
 
 .tooltip {
   position: absolute;
-  bottom: 32px;
+  bottom: 24px;
   left: 50%;
-  transform: translateX(-50%) scale(0.8);
+  transform: translateX(-50%) translateY(10px);
   background: #334558;
   color: #fff;
+  padding: 2px 8px;
   border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   opacity: 0;
   pointer-events: none;
   transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.tooltipVisible {
+.knob:hover .tooltip {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: #334558 transparent transparent transparent;
+}
+
+.marks {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  right: 0;
+  display: flex;
+  direction: ltr;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #888;
+  user-select: none;
 }
 
 @media (max-width: 480px) {

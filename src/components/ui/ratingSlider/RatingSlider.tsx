@@ -32,7 +32,6 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
 
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
-  const [hover, setHover] = useState(false);
 
   const percent = ((current - min) / (max - min)) * 100;
 
@@ -76,22 +75,10 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
     (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (disabled) return;
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      setValue(current - step);
-    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      setValue(current + step);
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      setValue(min);
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      setValue(max);
-    }
-  };
+  const steps = useMemo(
+    () => Array.from({ length: max - min + 1 }, (_, i) => min + i),
+    [min, max]
+  );
 
   useEffect(() => {
     if (isControlled) setInternal(value as number);
@@ -101,7 +88,7 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
     <div className={`${styles.sliderWrap} ${className || ''}`}>
       <div
         ref={trackRef}
-        className={`${styles.sliderTrack} ${disabled ? styles.disabled : ''}`}
+        className={styles.sliderTrack}
         role="slider"
         aria-valuemin={min}
         aria-valuemax={max}
@@ -110,18 +97,30 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onKeyDown={onKeyDown}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
       >
-        <div className={styles.trackGradient} />
+        {/* Track segments */}
+        <div className={styles.trackNegative} />
+        <div className={styles.trackZero} />
+        <div className={styles.trackPositive} />
+
+        {/* Filled portion */}
         <div
-          className={`${styles.knob} ${dragging ? styles.dragging : ''} ${hover ? styles.hover : ''}`}
-          style={{ left: `calc(${percent}% )` }}
-        >
-          <div className={`${styles.tooltip} ${hover || dragging ? styles.tooltipVisible : ''}`}>
-            {current}
+          className={styles.trackFill}
+          style={{ width: `calc(${percent}% )` }}
+        />
+
+        {/* Knob */}
+        <div className={styles.knob} style={{ left: `calc(${percent}% )` }}>
+          <div className={styles.tooltip}>
+            <span>{current}</span>
           </div>
+        </div>
+
+        {/* Marks */}
+        <div className={styles.marks}>
+          {steps.map((s) => (
+            <span key={s}>{s}</span>
+          ))}
         </div>
       </div>
     </div>
