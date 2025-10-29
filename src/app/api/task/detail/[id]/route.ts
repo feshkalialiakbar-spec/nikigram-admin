@@ -25,12 +25,6 @@ export async function GET(
       }
     );
 
-
-    if (!redirectResponse.ok) {
-      console.error('Redirect response failed:', redirectResponse.status, redirectResponse.statusText);
-      throw new Error(`Failed to fetch task redirect information: ${redirectResponse.status}`);
-    }
-
     const redirectData = await redirectResponse.json();
     console.log('Redirect data:', redirectData);
 

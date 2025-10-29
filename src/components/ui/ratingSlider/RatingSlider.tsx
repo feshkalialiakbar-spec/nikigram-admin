@@ -4,11 +4,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './RatingSlider.module.scss';
 
 export type RatingSliderProps = {
-  min?: number; // default -5
-  max?: number; // default 5
-  step?: number; // default 1
-  value?: number; // controlled value
-  defaultValue?: number; // uncontrolled initial value
+  min?: number;
+  max?: number;
+  step?: number;
+  value?: number;
+  defaultValue?: number;
   onChange?: (value: number) => void;
   className?: string;
   disabled?: boolean;
@@ -30,13 +30,11 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
   const [internal, setInternal] = useState<number>(clamp(defaultValue, min, max));
   const current = isControlled ? (value as number) : internal;
 
-  const range = max - min;
-  const steps = useMemo(() => Array.from({ length: range + 1 }, (_, i) => min + i), [min, range]);
-
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [hover, setHover] = useState(false);
 
-  const percent = ((current - min) / (max - min)) * 100; // 0..100
+  const percent = ((current - min) / (max - min)) * 100;
 
   const setValue = useCallback(
     (newVal: number) => {
@@ -53,7 +51,7 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
       if (!track) return current;
       const rect = track.getBoundingClientRect();
       const x = clamp(clientX - rect.left, 0, rect.width);
-      const ratio = x / rect.width; // 0..1 LTR
+      const ratio = x / rect.width;
       const raw = min + ratio * (max - min);
       return Math.round(raw / step) * step;
     },
@@ -78,7 +76,6 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
     (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
   };
 
-  // keyboard
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (disabled) return;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
@@ -96,18 +93,15 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
     }
   };
 
-  // keep internal in sync if controlled changes
   useEffect(() => {
     if (isControlled) setInternal(value as number);
   }, [isControlled, value]);
-
-  const tooltip = String(current);
 
   return (
     <div className={`${styles.sliderWrap} ${className || ''}`}>
       <div
         ref={trackRef}
-        className={styles.sliderTrack}
+        className={`${styles.sliderTrack} ${disabled ? styles.disabled : ''}`}
         role="slider"
         aria-valuemin={min}
         aria-valuemax={max}
@@ -117,17 +111,17 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onKeyDown={onKeyDown}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
       >
-        <div className={styles.trackRed} />
-        <div className={styles.trackGray} />
-        <div className={styles.trackGreen} />
-        <div className={styles.knob} style={{ left: `calc(${percent}% )` }}>
-          <div className={styles.tooltip}><span>{tooltip}</span></div>
-        </div>
-        <div className={styles.marks}>
-          {steps.map((s) => (
-            <span key={s}>{s}</span>
-          ))}
+        <div className={styles.trackGradient} />
+        <div
+          className={`${styles.knob} ${dragging ? styles.dragging : ''} ${hover ? styles.hover : ''}`}
+          style={{ left: `calc(${percent}% )` }}
+        >
+          <div className={`${styles.tooltip} ${hover || dragging ? styles.tooltipVisible : ''}`}>
+            {current}
+          </div>
         </div>
       </div>
     </div>
@@ -135,5 +129,3 @@ const RatingSlider: React.FC<RatingSliderProps> = ({
 };
 
 export default RatingSlider;
-
-

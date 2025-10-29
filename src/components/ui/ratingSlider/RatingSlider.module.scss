@@ -1,16 +1,89 @@
-.sliderWrap { width: 100%; display: flex; justify-content: center; }
-.sliderTrack { position: relative; width: 350px; height: 25px; }
-.trackRed { position: absolute; left: 0; right: 175px; top: 3px; height: 6px; background: #FFDDE0; border-radius: 3px; }
-.trackGray { position: absolute; left: 175px; right: 105px; top: 3px; height: 6px; background: #334558; border-radius: 3px; }
-.trackGreen { position: absolute; left: calc(350px - 175px); right: 0; top: 3px; height: 6px; background: #DFF9E4; border-radius: 3px; }
-.knob { position: absolute; top: 0; width: 12px; height: 12px; transform: translate(-50%, -6px); }
-.knob::after { content: ""; width: 12px; height: 12px; display: block; background: #334558; border: 1px solid #fff; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.tooltip { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: #334558; color: #fff; border-radius: 4px; padding: 0 6px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-.marks { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 12px; color: #000; }
-
-@media (max-width: 480px) {
-  .sliderTrack { width: 280px; }
-  .trackGreen { left: calc(280px - 175px); }
+.sliderWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
 }
 
+.sliderTrack {
+  position: relative;
+  width: 350px;
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #ffbaba, #ffe8e8 33%, #d0d0d0 50%, #e1ffe1 75%, #baffba);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.4);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.trackGradient {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff5e6c, #ffe78f, #6cf576);
+  opacity: 0.3;
+}
+
+.knob {
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  transition: left 0.25s ease-out, transform 0.2s ease;
+  z-index: 2;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #334558;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  &.hover::after,
+  &.dragging::after {
+    transform: scale(1.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: #334558;
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tooltipVisible {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+@media (max-width: 480px) {
+  .sliderTrack {
+    width: 280px;
+  }
+}
