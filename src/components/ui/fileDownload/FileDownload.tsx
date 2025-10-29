@@ -44,7 +44,9 @@ export default function FileDownload({
       window.URL.revokeObjectURL(objectUrl);
     } catch {
       // Fallback: try opening in a new tab/window (may allow manual saving)
-      window.open(url, '_blank', 'noopener,noreferrer');
+      if (openInNewTab) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
     }
   };
 

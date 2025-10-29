@@ -278,7 +278,7 @@ export function mapApiProfileChangeToProps(api: ApiProfileChangeRequestResponse)
 export interface HelpRequestDocument {
   id: string;
   filename: string;
-  fileType: 'jpg' | 'pdf' | 'png';
+  fileType: string;
   uploadDate: string;
   fileSize: string;
   url?: string;
@@ -304,7 +304,7 @@ export interface HelpRequestDetails {
   shebaNumber: string;
   isShebaVerified: boolean;
   description: string;
-  attachedFile?: HelpRequestDocument;
+  attachedDocuments: HelpRequestDocument[];
   user: HelpRequestUser;
   aiComment?: string;
 }
@@ -331,29 +331,56 @@ export interface ApiHelpRequestResponse {
     source_template_id: number | null;
     parent_task_id: number | null;
   };
+  staff_id?: number;
   project_request_details: {
-    project_request_id: number;
+    request_id: number;
+    request_type: number;
+    category_id: number;
+    title: string;
+    description: string;
+    max_amount_monthly: number;
+    ibn: string;
+    time_period: number;
+    amount_in_period: number;
+    mobile: string;
+    status: number;
+    created_at: string;
+    updated_at: string | null;
+    category_name: string;
+    parent_category_name: string;
     user_id: number;
-    customer_id: number;
-    customer_uid: string;
+    cust_id: number;
     first_name: string;
     last_name: string;
-    profile_image: string;
-    user_level: number;
-    request_type: number;
-    request_title: string;
-    category_id: number;
-    category_name: string;
-    subcategory_id: number;
-    subcategory_name: string;
-    timeframe: string;
-    required_amount: number;
-    contact_info: string;
-    sheba_number: string;
-    is_sheba_verified: boolean;
-    description: string;
-    created_at: string;
+    profile_image: string | null;
+    party_mobile: string;
+    is_verified: number;
+    verified_by: number | null;
+    verified_at: string | null;
+    // Optional fields for backward compatibility
+    user_level?: number;
+    request_title?: string;
+    subcategory_id?: number;
+    subcategory_name?: string;
+    timeframe?: string;
+    required_amount?: number;
+    contact_info?: string;
+    sheba_number?: string;
+    is_sheba_verified?: boolean;
+    project_request_id?: number;
+    customer_id?: number;
+    customer_uid?: string;
   };
+  project_request_documents?: {
+    document_id: number;
+    document_name: string;
+    document_type: string;
+    file_uid: string;
+    upload_date: string;
+    version: number | null;
+    status_id: number;
+  }[];
+  // Keep old name for backward compatibility
   project_docs_data?: {
     document_id: number;
     file_uid: string;

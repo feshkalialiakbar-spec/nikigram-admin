@@ -1,62 +1,64 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { CooperationRequestApprovalProps } from '@/components/tasks/types';
-import styles from './index.module.scss';
 import RatingSlider from '@/components/ui/ratingSlider/RatingSlider';
+import styles from './index.module.scss';
 
 const CooperationRequestApproval: React.FC<CooperationRequestApprovalProps> = ({
   request,
   onApprove,
   onReject,
-  className
+  className,
 }) => {
+  const { id, requestDate, userAvatar, userName, notes, specializations } = request;
+  const specialization = specializations?.[0] || {};
+
   return (
     <div className={`${styles.dashboard} ${className || ''}`}>
       <div className={styles.card}>
-        <div className={styles.headerRow}>
-          <div className={styles.requestDateWrap}>
-            <span className={styles.requestDateLabel}>تاریخ درخواست :</span>
-            <span className={styles.requestDate}>{request.requestDate}</span>
+        {/* --- Header --- */}
+        <div className={styles.detailsCard}>
+          <div className={styles.headerRow}>
+            <div className={styles.requestDateWrap}>
+              <span className={styles.requestDateLabel}>تاریخ درخواست :</span>
+              <span className={styles.requestDate}>{requestDate}</span>
+            </div>
+            <h1 className={styles.pageTitle}>درخواست همکاری دست نیکی</h1>
           </div>
-          <h1 className={styles.pageTitle}>درخواست همکاری دست نیکی</h1>
-        </div>
 
-        <div className={styles.detailsSection}>
-          <div className={styles.detailsCard}>
-            <div className={styles.detailsContent}>
-              <div className={styles.valuesCol}>
-                <div className={styles.userRow}>
-                  {request.userAvatar && (
-                    <Image
-                      src={request.userAvatar}
-                      alt={request.userName}
-                      className={styles.userAvatar}
-                      width={40}
-                      height={40}
-                    />
-                  )}
-                  <span className={styles.userNameText}>{request.userName}</span>
-                </div>
-                <div className={styles.categoryRow}>
-                  <span className={styles.valueText}>{request.specializations?.[0]?.category_name || '-'}</span>
-                </div>
-                <div className={styles.subCategoryRow}>
-                  <span className={styles.valueText}>{request.specializations?.[0]?.specialization_name || '-'}</span>
-                </div>
-                <div className={styles.descriptionBox}>{request.notes}</div>
+          {/* --- Details --- */}
+          <div className={styles.detailsContent}>
+            <div className={styles.valuesCol}>
+              <div className={styles.userRow}>
+                {userAvatar && (
+                  <Image
+                    src={userAvatar}
+                    alt={userName}
+                    width={40}
+                    height={40}
+                    className={styles.userAvatar}
+                  />
+                )}
+                <span className={styles.userNameText}>{userName}</span>
               </div>
-              <div className={styles.labelsCol}>
-                <span className={styles.labelText}>نام کاربر</span>
-                <span className={styles.labelText}>طبقه</span>
-                <span className={styles.labelText}>زیرطبقه</span>
-                <span className={styles.labelText}>توضیحات</span>
-              </div>
+
+              <span className={styles.valueText}>{specialization.category_name || '-'}</span>
+              <span className={styles.valueText}>{specialization.specialization_name || '-'}</span>
+              <div className={styles.descriptionBox}>{notes || '-'}</div>
+            </div>
+
+            <div className={styles.labelsCol}>
+              <span className={styles.labelText}>نام کاربر</span>
+              <span className={styles.labelText}>طبقه</span>
+              <span className={styles.labelText}>زیرطبقه</span>
+              <span className={styles.labelText}>توضیحات</span>
             </div>
           </div>
         </div>
 
+        {/* --- AI Section --- */}
         <div className={styles.aiBlock}>
           <div className={styles.aiHeader}>
             <div className={styles.aiBubble}>
@@ -71,25 +73,37 @@ const CooperationRequestApproval: React.FC<CooperationRequestApprovalProps> = ({
               <div className={styles.aiSubtitle}>تولید شده توسط هوش‌مصنوعی</div>
             </div>
           </div>
-          <div className={styles.aiCommentRow}>
-            این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.
-          </div>
+          <p className={styles.aiCommentRow}>
+            این بخش شامل نظر AI است که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.
+          </p>
         </div>
 
+        {/* --- Evaluation Section --- */}
         <div className={styles.evaluationSection}>
           <div className={styles.evaluateHeader}>
             <svg viewBox="0 0 20 20" width={20} height={20} aria-hidden>
-              <path d="M10 2a5 5 0 00-5 5v2H3v9h14v-9h-2V7a5 5 0 00-5-5z" fill="#131D28" fillOpacity="0.4" />
+              <path
+                d="M10 2a5 5 0 00-5 5v2H3v9h14v-9h-2V7a5 5 0 00-5-5z"
+                fill="#131D28"
+                fillOpacity="0.4"
+              />
             </svg>
             <span className={styles.evaluateTitle}>تایید درخواست همکاری داوطلبانه - دست نیکی</span>
           </div>
-          <div className={styles.evaluateHint}>کاربر درخواست دهنده را با توجه به اطلاعات پر شده ارزیابی کنید و امتیاز دهید</div>
+          <p className={styles.evaluateHint}>
+            کاربر درخواست دهنده را با توجه به اطلاعات پر شده ارزیابی کنید و امتیاز دهید
+          </p>
           <RatingSlider min={-5} max={5} defaultValue={2} />
         </div>
 
+        {/* --- Action Buttons --- */}
         <div className={styles.actionsRow}>
-          <button onClick={() => onApprove(request.id)} className={styles.primaryBtn}>تایید</button>
-          <button onClick={() => onReject(request.id)} className={styles.outlineDangerBtn}>رد</button>
+          <button onClick={() => onApprove(id)} className={styles.primaryBtn}>
+            تایید
+          </button>
+          <button onClick={() => onReject(id)} className={styles.outlineDangerBtn}>
+            رد
+          </button>
         </div>
       </div>
     </div>

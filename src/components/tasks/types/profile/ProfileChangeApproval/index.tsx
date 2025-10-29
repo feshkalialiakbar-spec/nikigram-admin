@@ -2,7 +2,7 @@
 
 import { ProfileChangeApprovalProps } from '@/components/tasks/types';
 import Image from 'next/image';
-import { RealProfileSection, LegalProfileSection } from './ProfileSection';
+import { RealProfileSection } from './ProfileSection';
 import { PrimaryIndividualsSection } from './PrimaryIndividualsSection';
 import { ActionButtons } from './ActionButtons';
 import { AIAssistantSection } from './AIAssistantSection';

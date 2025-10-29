@@ -1,0 +1,106 @@
+@keyframes slideInFromRight {
+  0% {
+    width: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    width: 100%;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  0% {
+    width: 100%;
+    transform: translateX(0);
+  }
+  100% {
+    width: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.drawer-modal {
+  width: 100vw;
+  height: 100vh;
+  z-index: 30;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__cover {
+    background-color: var(--drawer-modal-cover);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: fadeIn 0.3s ease-in-out;
+    z-index: 0;
+
+    &.closing {
+      animation: fadeOut 0.3s ease-in-out;
+    }
+  }
+
+  &__body {
+    background-color: var(--main-white);
+    width: 100%;
+    height: calc(100% - 64px);
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    animation: slideInFromRight 0.3s ease-in-out;
+    z-index: 1;
+    padding: 24px;
+    box-sizing: border-box;
+display: flex;
+    &.closing {
+      animation: slideOutToRight 0.3s ease-in-out;
+    }
+
+    &-close-btn {
+      background-color: var(--main-white);
+      border-radius: 50%;
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      cursor: pointer;
+      z-index: 1;
+      &:hover {
+        stroke: var(--error-700);
+      }
+    }
+  }
+}
+
+@media (width >= 1280px) {
+  .drawer-modal {
+    &__body {
+      max-width: 628px;
+      height: 100%;
+    }
+  }
+}

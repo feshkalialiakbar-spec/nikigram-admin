@@ -10,7 +10,7 @@ import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApp
 import TaskLayout from '@/components/tasks/detail/TaskLayout';
 import { ConfirmationModal, useToast } from '@/components/ui';
 import TaskDetailSkeleton from '@/components/tasks/detail/TaskDetailSkeleton';
-import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent } from '@/utils/taskMappers';
+import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent, mapHelpRequestToComponent } from '@/utils/taskMappers';
 import {
   ApiProfileChangeRequestResponse,
   ApiHelpRequestResponse,
@@ -301,30 +301,7 @@ const TaskDetailPage: React.FC = () => {
   }
 
   if (taskType === 'help' && taskData) {
-    // Create a simple help request object based on the actual API response structure
-    const helpRequest = {
-      id: (taskData as ApiHelpRequestResponse).task_details.task_id.toString(),
-      requestDate: (taskData as ApiHelpRequestResponse).task_details.created_at,
-      requestType: (taskData as ApiHelpRequestResponse).project_request_details.request_type === 1 ? 'درخواست کمک برای خود' : 'درخواست کمک برای دیگران',
-      requestTitle: (taskData as ApiHelpRequestResponse).project_request_details.request_title,
-      category: (taskData as ApiHelpRequestResponse).project_request_details.category_name,
-      subcategory: (taskData as ApiHelpRequestResponse).project_request_details.subcategory_name,
-      timeframe: (taskData as ApiHelpRequestResponse).project_request_details.timeframe,
-      requiredAmount: new Intl.NumberFormat('fa-IR').format((taskData as ApiHelpRequestResponse).project_request_details.required_amount) + ' تومان',
-      contactInfo: (taskData as ApiHelpRequestResponse).project_request_details.contact_info,
-      shebaNumber: (taskData as ApiHelpRequestResponse).project_request_details.sheba_number,
-      isShebaVerified: (taskData as ApiHelpRequestResponse).project_request_details.is_sheba_verified,
-      description: (taskData as ApiHelpRequestResponse).project_request_details.description,
-      user: {
-        id: (taskData as ApiHelpRequestResponse).project_request_details.user_id.toString(),
-        name: `${(taskData as ApiHelpRequestResponse).project_request_details.first_name} ${(taskData as ApiHelpRequestResponse).project_request_details.last_name}`,
-        level: `سطح ${(taskData as ApiHelpRequestResponse).project_request_details.user_level}`,
-        avatar: (taskData as ApiHelpRequestResponse).project_request_details.profile_image
-          ? `${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/download/${(taskData as ApiHelpRequestResponse).project_request_details.profile_image}`
-          : undefined,
-      },
-      aiComment: 'این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین میدهد.',
-    };
+    const helpRequest = mapHelpRequestToComponent(taskData as ApiHelpRequestResponse);
 
     return (
       <>

@@ -5,18 +5,15 @@ import { useRouter } from 'next/navigation';
 import { UserLoginAPI, RequestOTP, LoginWithOtpAndMobile } from '@/services/user';
 import { useToast } from '../ui';
 import { IAccessTokenResponse, setTokenIntoCookie } from '@/actions/cookieToken';
-
 interface LoginFormData {
   phone: string;
   password: string;
 }
-
 interface LoginErrors {
   phone?: string;
   password?: string;
   general?: string;
 }
-
 interface UseLoginReturn {
   values: LoginFormData;
   errors: LoginErrors;
@@ -80,53 +77,66 @@ export const useLogin = (): UseLoginReturn => {
       setIsLoading(true);
       setErrors({});
 
-      // Validate phone
+      // ✅ Validate phone
       const phoneError = validatePhone(values.phone);
       if (phoneError) {
         setErrors({ phone: phoneError });
         return;
       }
 
-      // Validate password
-      if (!values.password) {
+      // ✅ Validate password
+      if (!values.password.trim()) {
         setErrors({ password: 'رمز عبور الزامی است' });
         return;
       }
 
+      // ✅ Call API (assumes it already returns JSON)
       const response = await UserLoginAPI({
         mobile: values.phone,
         credential: values.password,
         auth: 'username_password'
       });
 
-      // Check if login is successful
-      // Check multiple success conditions: success === true, status === '1', or response has token
-      const isSuccess = response.success === true || response.status === '1' || response.status === 1 || !!(response.token || response.access_token);
+      console.log('Login API response:', response);
 
-      if (isSuccess) {
-        // Verify token exists before proceeding
-        const hasToken = !!(response.token || response.access_token);
+      const isSuccess =
+        response?.success === true ||
+        response?.status === '1' ||
+        !!response?.access_token;
 
-        if (hasToken) {
-          showSuccess('ورود با موفقیت انجام شد');
-          setUserData(response);
-
-          location.href = '/dashboard/my-tasks'
-
-        } else {
-          setErrors({
-            general: 'خطا در دریافت اطلاعات ورود. لطفاً مجدداً تلاش کنید.'
-          });
-        }
-      } else {
-        // Show error message from API
+      if (!isSuccess) {
         setErrors({
-          general: response?.message || response?.detail || 'خطا در ورود. لطفاً مجدداً تلاش کنید.'
+          general:
+            response?.message ||
+            response?.detail ||
+            'نام کاربری یا رمز عبور اشتباه است.'
         });
+        return;
       }
+
+      // ✅ Verify token
+      const hasToken = !!(response.access_token || response.token);
+      if (!hasToken) {
+        setErrors({
+          general: 'توکن ورود یافت نشد. لطفاً مجدداً تلاش کنید.'
+        });
+        return;
+      }
+
+      // ✅ Save cookie
+      await setUserData(response);
+
+      showSuccess('ورود با موفقیت انجام شد 🎉');
+
+      // ✅ Redirect
+      router.push('/dashboard/my-tasks');
+      router.refresh();
+
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: 'خطا در اتصال به سرور. لطفاً مجدداً تلاش کنید.' });
+      setErrors({
+        general: 'خطا در اتصال به سرور. لطفاً مجدداً تلاش کنید.'
+      });
     } finally {
       setIsLoading(false);
     }
@@ -175,7 +185,7 @@ export const useLogin = (): UseLoginReturn => {
               setUserData(loginResponse);
               // Wait a moment for cookies to be set, then redirect
               setTimeout(() => {
-                router.push('/dashboard');
+                router.push('/dashboard/my-tasks');
                 router.refresh(); // Force refresh to update the UI
               }, 100);
             } else {
@@ -200,12 +210,6 @@ export const useLogin = (): UseLoginReturn => {
     setErrors({});
   };
 
-  const validatePhone = (value: string): string => {
-    if (!value) return 'شماره موبایل الزامی است';
-    if (!/^09\d{9}$/.test(value))
-      return 'شماره موبایل باید با 09 شروع شود و 11 رقم باشد';
-    return '';
-  };
 
   return {
     values,
@@ -219,4 +223,10 @@ export const useLogin = (): UseLoginReturn => {
     handleLoginWithOtp,
     clearErrors
   };
+};
+export const validatePhone = (phone: string) => {
+  if (!phone) return 'شماره موبایل الزامی است';
+  if (!/^09\d{9}$/.test(phone))
+    return 'شماره موبایل باید با 09 شروع شود و 11 رقم باشد';
+  return '';
 };

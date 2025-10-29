@@ -178,58 +178,110 @@ const getUserLevelLabel = (level: number): string => {
 
 /**
  * Map project documents to HelpRequestDocument format
+ * Supports both new (project_request_documents) and old (project_docs_data) formats
  */
 const mapProjectDocsToHelpDocuments = (
-  docs?: ApiHelpRequestResponse['project_docs_data']
-): HelpRequestDocument | undefined => {
-  if (!docs || docs.length === 0) return undefined;
-  
-  const doc = docs[0]; // Take the first document
-  const fileExtension = getFileExtension(doc.filename);
-  
-  return {
-    id: doc.document_id.toString(),
-    filename: doc.filename,
-    fileType: fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png' 
-      ? (fileExtension as 'jpg' | 'png')
-      : 'pdf',
-    uploadDate: 'امروز', // Using static value as in the image
-    fileSize: formatFileSize(doc.file_size),
-    url: `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`,
-  };
+  apiResponse: ApiHelpRequestResponse
+): HelpRequestDocument[] => {
+  // Check for new format first
+  if (apiResponse.project_request_documents && apiResponse.project_request_documents.length > 0) {
+    return apiResponse.project_request_documents.map((doc, index) => {
+      const fileExtension = getFileExtension(doc.document_name || '');
+      const fileUrl = doc.file_uid
+        ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`
+        : '';
+      return {
+        id: doc.document_id.toString(),
+        filename: doc.document_name || `مدرک ${index + 1}`,
+        fileType: fileExtension || 'file',
+        uploadDate: doc.upload_date ? formatDate(doc.upload_date) : '—',
+        fileSize: '—', // Size not provided in new format
+        url: fileUrl,
+      };
+    });
+  }
+
+  // Fall back to old format
+  const docs = apiResponse.project_docs_data;
+  if (!docs || docs.length === 0) return [];
+
+  return docs.map((doc, index) => {
+    const fileExtension = getFileExtension(doc.filename);
+    const fileSize = typeof doc.file_size === 'number' ? formatFileSize(doc.file_size) : '—';
+    const fileUrl = doc.file_uid
+      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`
+      : '';
+    return {
+      id: doc.document_id.toString(),
+      filename: doc.filename || `مدرک ${index + 1}`,
+      fileType: fileExtension || 'file',
+      uploadDate: doc.upload_date ? formatDate(doc.upload_date) : '—',
+      fileSize,
+      url: fileUrl,
+    };
+  });
 };
 
 /**
  * Map help request API response to HelpRequestDetails component props
+ * Supports both new and old API response formats
  */
 export const mapHelpRequestToComponent = (
   apiResponse: ApiHelpRequestResponse
 ): HelpRequestDetails => {
-  const { task_details, project_request_details, project_docs_data } = apiResponse;
+  const { task_details, project_request_details } = apiResponse;
+
+  // Handle user level - use provided level or default
+  const userLevel = project_request_details.user_level ?? 1;
+
+  // Handle request title - use title or request_title
+  const requestTitle = project_request_details.title || project_request_details.request_title || '';
+
+  // Handle subcategory - use subcategory_name or parent_category_name, or default
+  const subcategory = project_request_details.subcategory_name || project_request_details.parent_category_name || '—';
+
+  // Handle timeframe - use timeframe or time_period
+  const timeframe = project_request_details.timeframe || 
+    (project_request_details.time_period ? `${project_request_details.time_period} ماه` : '—');
+
+  // Handle required amount - use required_amount or amount_in_period
+  const requiredAmount = project_request_details.required_amount || project_request_details.amount_in_period || 0;
+
+  // Handle contact info - use contact_info or mobile
+  const contactInfo = project_request_details.contact_info || project_request_details.mobile || '—';
+
+  // Handle sheba number - use sheba_number or ibn
+  const shebaNumber = project_request_details.sheba_number || project_request_details.ibn || '—';
+  
+  // Handle sheba verification - use is_sheba_verified or check is_verified
+  const isShebaVerified = project_request_details.is_sheba_verified ?? (project_request_details.is_verified === 1);
+
+  // Handle profile image
+  const profileImage = project_request_details.profile_image 
+    ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${project_request_details.profile_image}`
+    : undefined;
 
   const user: HelpRequestUser = {
     id: project_request_details.user_id.toString(),
     name: `${project_request_details.first_name} ${project_request_details.last_name}`,
-    level: getUserLevelLabel(project_request_details.user_level),
-    avatar: project_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${project_request_details.profile_image}`
-      : undefined,
+    level: getUserLevelLabel(userLevel),
+    avatar: profileImage,
   };
 
   const request: HelpRequestDetails = {
     id: task_details.task_id.toString(),
     requestDate: formatDate(task_details.created_at),
     requestType: getRequestTypeLabel(project_request_details.request_type),
-    requestTitle: project_request_details.request_title,
-    category: project_request_details.category_name,
-    subcategory: project_request_details.subcategory_name,
-    timeframe: project_request_details.timeframe,
-    requiredAmount: formatAmount(project_request_details.required_amount),
-    contactInfo: project_request_details.contact_info,
-    shebaNumber: project_request_details.sheba_number,
-    isShebaVerified: project_request_details.is_sheba_verified,
-    description: project_request_details.description,
-    attachedFile: mapProjectDocsToHelpDocuments(project_docs_data),
+    requestTitle,
+    category: project_request_details.category_name || '—',
+    subcategory,
+    timeframe,
+    requiredAmount: formatAmount(requiredAmount),
+    contactInfo,
+    shebaNumber,
+    isShebaVerified,
+    description: project_request_details.description || '—',
+    attachedDocuments: mapProjectDocsToHelpDocuments(apiResponse),
     user,
     aiComment: 'این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین میدهد.',
   };
