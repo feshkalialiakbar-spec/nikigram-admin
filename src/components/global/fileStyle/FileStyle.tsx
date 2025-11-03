@@ -117,9 +117,9 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
         <Image alt="upload-icon" src={'/images/imageFrame.svg'} width={'50'} height="50" />
       </div>
       <div className={styles['file-style__name']}>
-        <Text textStyle="14S4" textColor="main-black">
+        {/* <Text textStyle="14S4" textColor="main-black">
           {fileName}
-        </Text>
+        </Text> */}
       </div>
     </div>
   );
