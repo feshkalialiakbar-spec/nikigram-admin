@@ -1,16 +1,12 @@
-// components/ui/file/FileStyle.tsx
-import React from "react";
 import Text from "@/components/ui/text/Text";
 import ParsehImage from "@/components/ui/image/ParsehImage";
-import ImageFrame from "@/assets/images/global/imageFrame.svg";
 import styles from "./FileStyle.module.scss";
-
+import Image from "next/image";
 interface FileStyleProps {
   file?: File | null;
   fileName?: string;
   fileUrl?: string;
 }
-
 export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
   const deriveExtension = (): string | undefined => {
     if (fileName) {
@@ -27,34 +23,32 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
     }
     return file?.name.split(".").pop()?.toLowerCase().slice(0, 3);
   };
-
   const extension = deriveExtension();
-
   const bgColor = (() => {
     switch (extension) {
       // Text
       case "txt":
       case "log":
-        return "var(--secondary1-500)";
+        return "red";
       case "md":
-        return "var(--secondary1-400)";
+        return "red";
       case "csv":
-        return "var(--secondary1-600)";
+        return "red";
 
       // Image
       case "jpg":
       case "jpe": // handles jpeg (sliced to 3 chars)
-        return "var(--primary-600)";
+        return "red";
       case "png":
-        return "var(--primary-700)";
+        return "red";
       case "gif":
-        return "var(--primary-400)";
+        return "red";
       case "svg":
-        return "var(--primary-300)";
+        return "red";
       case "bmp":
-        return "var(--primary-900)";
+        return "red";
       case "web": // handles webp (sliced to 3 chars)
-        return "var(--primary-500)";
+        return "red";
 
       // Compressed
       case "zip":
@@ -62,7 +56,7 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
       case "tar":
       case "gz":
       case "7z":
-        return "var(--gray-700)";
+        return "red";
 
       // Video
       case "mp4":
@@ -70,46 +64,42 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
       case "avi":
       case "mkv":
       case "web":
-        return "var(--secondary2-500)";
+        return "red";
 
       // Audio
       case "mp3":
       case "wav":
       case "ogg":
       case "m4a":
-        return "var(--secondary2-700)";
-
+        return "red";
       // Data / Spreadsheet
       case "xls":
       case "xlsx":
-        return "var(--secondary1-700)";
+        return "red";
       case "jso": // handles json
       case "xml":
-        return "var(--secondary1-800)";
-
+        return "red";
       // Non-editable Docs
       case "pdf":
-        return "var(--error-500)";
+        return "red";
       case "epu": // handles epub
-        return "var(--error-400)";
-
+        return "red";
       // Editable Docs
       case "doc":
       case "docx":
-        return "var(--secondary2-600)";
+        return "red";
       case "odt":
       case "rtf":
-        return "var(--secondary2-400)";
-
+        return "red";
       // Slides
       case "ppt":
       case "pptx":
       case "odp":
-        return "var(--primary-950)";
+        return "red";
 
       // Default
       default:
-        return "var(--gray-100)";
+        return "red";
     }
   })();
   return (
@@ -122,8 +112,14 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
           {extension}
         </Text>
       </div>
+
       <div className={styles["file-style__image"]}>
-        <ParsehImage imgAlt="upload-icon" imgSrc={ImageFrame} width={'40'} />
+        <Image alt="upload-icon" src={'/images/imageFrame.svg'} width={'50'} height="50" />
+      </div>
+      <div className={styles['file-style__name']}>
+        <Text textStyle="14S4" textColor="main-black">
+          {fileName}
+        </Text>
       </div>
     </div>
   );

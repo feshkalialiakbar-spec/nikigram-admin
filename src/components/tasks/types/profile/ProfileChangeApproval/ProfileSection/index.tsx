@@ -115,12 +115,10 @@ const RealProfileSection: React.FC<BaseProps & { profile: RealProfile }> = ({ ti
 
     <div className={styles.documentsSection}>
       {profile.documents.map((document) => (
-
-
         <FileDownload
           key={document.document_id || document.id}
           fileUrl={(document.url || '') as string}
-          fileName={document.filename || 'document'}
+          fileName={document.fileType || 'document'}
           title={document.filename || 'document'}
           // onView={() => handleDocumentView(document)}
           onDownload={() => handleDocumentDownload(document)}

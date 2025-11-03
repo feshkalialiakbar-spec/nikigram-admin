@@ -68,15 +68,12 @@ export const useLogin = (): UseLoginReturn => {
     if (token) {
       await setTokenIntoCookie({ data: userData, mobile: values.phone }); // 30 minutes
     }
-
-
   };
 
   const handleLogin = async () => {
     try {
       setIsLoading(true);
       setErrors({});
-
       // ✅ Validate phone
       const phoneError = validatePhone(values.phone);
       if (phoneError) {

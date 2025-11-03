@@ -56,12 +56,6 @@ const TaskDetailPage: React.FC = () => {
           },
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('API Error Response:', response.status, response.statusText, errorText);
-          throw new Error(`Failed to fetch task data: ${response.status} ${response.statusText}`);
-        }
-
         const result: {
           taskData:
           | ApiProfileChangeRequestResponse

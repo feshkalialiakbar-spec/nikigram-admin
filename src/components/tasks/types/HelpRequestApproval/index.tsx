@@ -1,13 +1,11 @@
 'use client';
-
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { HelpRequestApprovalProps } from '@/components/tasks/types';
 import DrawerModal from '@/components/ui/modal/drawerModal/DrawerModal';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
 import { Add, Trash, DocumentUpload } from 'iconsax-react';
 import styles from './index.module.scss';
-
 interface UploadedFile {
   id: string;
   file: File;
@@ -15,13 +13,11 @@ interface UploadedFile {
   size: number;
   uploadDate: string;
 }
-
 interface FileUploadField {
   id: string;
   documentName: string;
   uploadedFile: UploadedFile | null;
 }
-
 const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
@@ -69,7 +65,6 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   ];
 
   const handleApproveClick = () => {
-    // Reset form when opening drawer
     setFileUploadFields([{ id: '1', documentName: '', uploadedFile: null }]);
     setDescription('');
     setIsDrawerOpen(true);
@@ -175,7 +170,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     };
 
     console.log('Final Data:', finalData);
-    
+
     // Close drawer and call onApprove
     setIsDrawerOpen(false);
     onApprove(request.id);
@@ -252,10 +247,10 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
       <DrawerModal isOpen={isDrawerOpen} setIsOpen={handleDrawerClose}>
         <div className={styles.drawerContent}>
           <h2 className={styles.drawerTitle}>تایید درخواست کمک</h2>
-          
+
           <div className={styles.uploadSection}>
             <h3 className={styles.uploadSectionTitle}>آپلود مدارک</h3>
-            
+
             {fileUploadFields.map((field) => (
               <div key={field.id} className={styles.uploadField}>
                 {field.uploadedFile ? (

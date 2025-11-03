@@ -1,74 +1,81 @@
 .file-download {
-  width: 100%;
-  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 376px;
+  height: 70px;
 
   &__button {
-    background-color: #FFFFFF;
+    background-color: white;
     width: 100%;
-    max-width: 376.67px;
-    height: 69px;
-    display: grid;
-    grid-template-columns: 48px 1fr 44px;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    border-radius: 8px;
-    padding: 8px 12px;
-    transition: all 0.2s ease;
-    border: 1px solid #FFFFFF;
-    box-sizing: border-box;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    border-radius: 12px;
+    padding: 1px 8px;
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-100);
 
     &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      opacity: 0.9;
     }
   }
 
-  &__right {
+  &__top-row {
+    height: fit-content;
     display: flex;
     align-items: center;
-    justify-content: center;
-  }
-  &__doc {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #DEE9F4;
-    position: relative;
-    overflow: hidden;
+    justify-content: space-between;
+    gap: 118px;
   }
 
-  &__middle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  &__left {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  &__icon-import,
-  &__icon-view,
-  &__icon-delete {
-    background: #FFFFFF;
-    width: 32px;
+  &__icon {
+    background-color: var(--main-white);
+    width: 20%;
     height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 4px 0;
+    gap: 10px;
     border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    transition: all 0.2s ease;
+    overflow: hidden;
 
-    &:hover {
-      background: #F1F5F9;
+    &-import,
+    &-delete,
+    &-view {
+      padding: 4px;
+      cursor: pointer;
+      transition: all 0.5s ease;
+
+      &:hover {
+        cursor: pointer;
+
+        svg {
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    &-import {
+      background-color: var(--primary-50);
+
+      &:hover {
+        background-color: var(--primary-100);
+      }
+    }
+
+    &-delete {
+      background-color: var(--error-50);
+
+      &:hover {
+        background-color: var(--error-100);
+      }
     }
   }
+
 
   /* Modal */
   &__modal-overlay {
@@ -91,7 +98,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   }
 
   &__modal-header {
@@ -152,7 +159,6 @@
   }
 
   @media (max-width: 640px) {
-    height: auto;
     &__button {
       max-width: 100%;
       grid-template-columns: 40px 1fr 40px;

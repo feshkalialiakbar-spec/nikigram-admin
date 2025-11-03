@@ -15,7 +15,6 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
   onSelectPrimary,
   className
 }) => {
-
   return (
     <div className={`${styles.container} ${className || ''}`}>
       {/* Header Section */}
@@ -48,7 +47,6 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
             <span className={styles.requestDateValue}>{request.requestDate}</span>
           </div>
         </div>
-
       </div>
       <div className={styles.userSection}>
         <RealProfileSection

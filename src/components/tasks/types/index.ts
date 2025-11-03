@@ -124,7 +124,9 @@ export interface ProfileDocument {
   version?: number;
   url?: string;
   filename?: string;
-  // Additional properties for mapper compatibility
+  file_extension: string
+  file_size: number
+
   id?: string;
   fileType?: 'jpg' | 'pdf' | 'png';
   uploadDate?: string;
@@ -222,6 +224,8 @@ export interface ApiProfileChangeRequestResponse {
     is_verified: number;
     status_id: number;
     version: number;
+    file_extension: string;
+    file_size: number;
   }[];
   party_platforms_data: {
     account_id: number;
