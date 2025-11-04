@@ -1,11 +1,13 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { HelpRequestApprovalProps } from '@/components/tasks/types';
 import DrawerModal from '@/components/ui/modal/drawerModal/DrawerModal';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
-import { Add, Trash, DocumentUpload } from 'iconsax-react';
+import { Add, Trash } from 'iconsax-react';
 import styles from './index.module.scss';
+import { AIAssistantSection } from '../profile/ProfileChangeApproval/AIAssistantSection';
+import FileUpload from '@/components/ui/fileUpload/FileUpload';
 interface UploadedFile {
   id: string;
   file: File;
@@ -29,7 +31,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     { id: '1', documentName: '', uploadedFile: null }
   ]);
   const [description, setDescription] = useState('');
-  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  const [focusedFieldId, setFocusedFieldId] = useState<string | null>(null);
 
   const containerClassName = `${styles.container}${className ? ` ${className}` : ''}`;
   const safeText = (value?: string | number | null) =>
@@ -84,21 +86,13 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     setFileUploadFields([...fileUploadFields, { id: newId, documentName: '', uploadedFile: null }]);
   };
 
-  const handleFileSelect = (fieldId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'application/pdf'];
-    if (!allowedTypes.some(type => file.type === type || file.type === 'image/jpg')) {
-      alert('نوع فایل مجاز نیست. فقط SVG, PNG, JPG, GIF, PDF مجاز است.');
-      return;
-    }
-
-    // Validate file size (10MB = 10 * 1024 * 1024 bytes)
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      alert('حجم فایل نباید بیشتر از 10 مگابایت باشد.');
+  const handleFileChange = (fieldId: string, file: File | null) => {
+    if (!file) {
+      setFileUploadFields(fileUploadFields.map(field =>
+        field.id === fieldId
+          ? { ...field, uploadedFile: null }
+          : field
+      ));
       return;
     }
 
@@ -131,16 +125,14 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         ? { ...field, uploadedFile: null }
         : field
     ));
-    // Reset file input
-    if (fileInputRefs.current[fieldId]) {
-      fileInputRefs.current[fieldId]!.value = '';
-    }
   };
 
   const handleRemoveField = (fieldId: string) => {
     if (fileUploadFields.length > 1) {
       setFileUploadFields(fileUploadFields.filter(field => field.id !== fieldId));
-      delete fileInputRefs.current[fieldId];
+      if (focusedFieldId === fieldId) {
+        setFocusedFieldId(null);
+      }
     }
   };
 
@@ -209,6 +201,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                       title={doc.filename}
                       fileName={doc.filename}
                       fileUrl={doc.url || ''}
+
                     />
                     <div className={styles.documentMeta}>
                       <span>{doc.fileSize || '—'}</span>
@@ -222,22 +215,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
             </section>
           )}
         </section>
-
-        <section className={styles.aiPanel}>
-          <div className={styles.aiHeader}>
-            <div className={styles.aiInfo}>
-              <h3 className={styles.aiTitle}>دستیار هوشمند</h3>
-              <span className={styles.aiSubtitle}>تولید شده توسط هوش‌مصنوعی</span>
-            </div>
-            <div className={styles.aiAvatar}>
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-              </svg>
-            </div>
-          </div>
-          <p className={styles.aiComment}>{request.aiComment || 'این بخش شامل نظر AI هست که در مورد درخواست توضیحات لازم را ارائه می‌دهد.'}</p>
-        </section>
-
+        <AIAssistantSection comment='این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.'  />
         <div className={styles.actions}>
           <button className={styles.primaryButton} onClick={handleApproveClick}>تایید</button>
           <button className={styles.dangerButton} onClick={() => onReject(request.id)}>رد</button>
@@ -288,7 +266,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                     )}
                   </div>
                 ) : (
-                  <div className={styles.uploadInputWrapper}>
+                  <div className={styles.fileUploadWrapper}>
                     <input
                       type="text"
                       className={styles.documentNameInput}
@@ -296,38 +274,33 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                       value={field.documentName}
                       onChange={(e) => handleDocumentNameChange(field.id, e.target.value)}
                     />
-                    <input
-                      type="file"
-                      ref={(el) => {
-                        fileInputRefs.current[field.id] = el;
+                    <FileUpload
+                      value={null}
+                      onChange={(file) => handleFileChange(field.id, file)}
+                      onFocus={() => setFocusedFieldId(field.id)}
+                      onBlur={() => setFocusedFieldId(null)}
+                      isFocused={focusedFieldId === field.id}
+                      isEditing={true}
+                      accept="image/svg+xml,image/png,image/jpeg,image/jpg,image/gif,application/pdf"
+                      allowedExtensions={['.svg', '.png', '.jpg', '.jpeg', '.gif', '.pdf']}
+                      maxFileSize={10 * 1024 * 1024}
+                      showException={{
+                        row1: {
+                          importIcon: true,
+                          importImage: false,
+                        },
+                        row2: {
+                          text1: 'بارگذاری کنید',
+                          text2: '',
+                        },
+                        row3: {
+                          beforeAddFile: 'SVG, PNG, JPG, GIF | 10MB max.',
+                          afterAddFile: false,
+                          showLoadingAddFile: false,
+                          percentLoadingAddFile: -1,
+                        },
                       }}
-                      onChange={(e) => handleFileSelect(field.id, e)}
-                      accept=".svg,.png,.jpg,.jpeg,.gif,.pdf"
-                      style={{ display: 'none' }}
-                      id={`file-input-${field.id}`}
                     />
-                    <button
-                      className={styles.uploadButton}
-                      onClick={() => fileInputRefs.current[field.id]?.click()}
-                    >
-                      <DocumentUpload size={20} />
-                      بارگذاری
-                    </button>
-                    <div className={styles.uploadInstructions}>
-                      <span>بارگذاری کنید</span>
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 13l-4-4h3V4h2v5h3l-4 4z" />
-                      </svg>
-                      <span>SVG, PNG, JPG, GIF | 10MB max.</span>
-                    </div>
-                    {fileUploadFields.length > 1 && (
-                      <button
-                        className={styles.removeFieldBtn}
-                        onClick={() => handleRemoveField(field.id)}
-                      >
-                        حذف فیلد
-                      </button>
-                    )}
                   </div>
                 )}
               </div>

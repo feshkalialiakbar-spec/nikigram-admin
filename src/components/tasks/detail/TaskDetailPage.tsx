@@ -114,7 +114,7 @@ const TaskDetailPage: React.FC = () => {
     try {
       let response;
 
-      if (taskType === 'individual-profile') {
+      if (taskType === 'regular-profile') {
         response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${pendingRequestId}/verify`, {
           method: 'POST',
           headers: {

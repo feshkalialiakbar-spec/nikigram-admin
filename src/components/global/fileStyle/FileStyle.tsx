@@ -102,6 +102,7 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
         return "red";
     }
   })();
+  
   return (
     <div className={styles["file-style__wrapper"]}>
       <div

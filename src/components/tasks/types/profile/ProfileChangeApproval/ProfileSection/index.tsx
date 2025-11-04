@@ -120,7 +120,8 @@ const RealProfileSection: React.FC<BaseProps & { profile: RealProfile }> = ({ ti
           fileUrl={(document.url || '') as string}
           fileName={document.fileType || 'document'}
           title={document.filename || 'document'}
-          // onView={() => handleDocumentView(document)}
+          date={document.upload_date}
+          size={document.fileSize}
           onDownload={() => handleDocumentDownload(document)}
         />
       ))}
@@ -206,8 +207,8 @@ const LegalProfileSection: React.FC<BaseProps & { profile: LegalProfile }> = ({ 
           fileUrl={(document.url || '') as string}
           fileName={document.filename || 'document'}
           title={document.filename || 'document'}
-          // onView={() => handleDocumentView(document)}
-          // onDownload={() => handleDocumentDownload(document)}
+        // onView={() => handleDocumentView(document)}
+        // onDownload={() => handleDocumentDownload(document)}
         />
       ))}
     </div>
