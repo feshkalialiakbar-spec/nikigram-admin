@@ -3,6 +3,7 @@
     width: 0;
     transform: translateX(100%);
   }
+
   100% {
     width: 100%;
     transform: translateX(0);
@@ -14,6 +15,7 @@
     width: 100%;
     transform: translateX(0);
   }
+
   100% {
     width: 0;
     transform: translateX(100%);
@@ -24,6 +26,7 @@
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -33,6 +36,7 @@
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
   }
@@ -41,7 +45,7 @@
 .drawer-modal {
   width: 100vw;
   height: 100vh;
-  z-index: 30;
+  z-index: 90;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -76,7 +80,8 @@
     z-index: 1;
     padding: 24px;
     box-sizing: border-box;
-display: flex;
+    display: flex;
+
     &.closing {
       animation: slideOutToRight 0.3s ease-in-out;
     }
@@ -89,6 +94,7 @@ display: flex;
       left: 24px;
       cursor: pointer;
       z-index: 1;
+
       &:hover {
         stroke: var(--error-700);
       }
@@ -96,7 +102,7 @@ display: flex;
   }
 }
 
-@media (width >= 1280px) {
+@media (width >=1280px) {
   .drawer-modal {
     &__body {
       max-width: 628px;

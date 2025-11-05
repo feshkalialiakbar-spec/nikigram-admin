@@ -299,6 +299,7 @@
 
   // Enhanced Buttons
   &__buttons {
+    width: 100%;
     cursor: pointer;
     margin-top: 40px;
     animation: fadeInUp 0.8s ease-out 0.4s both;
@@ -616,6 +617,7 @@
     }
 
     &__buttons {
+      width: 100%;
       margin-top: 32px;
     }
 

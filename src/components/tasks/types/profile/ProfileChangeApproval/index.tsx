@@ -4,8 +4,8 @@ import { ProfileChangeApprovalProps } from '@/components/tasks/types';
 import Image from 'next/image';
 import { RealProfileSection } from './ProfileSection';
 import { PrimaryIndividualsSection } from './PrimaryIndividualsSection';
-import { ActionButtons } from './ActionButtons';
-import { AIAssistantSection } from './AIAssistantSection';
+import { ActionButtons } from '@/components/tasks/shared/ActionButtons';
+import { AIAssistantSection } from '@/components/tasks/shared/AIAssistantSection';
 import styles from './index.module.scss';
 
 const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({

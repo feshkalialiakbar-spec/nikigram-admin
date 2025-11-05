@@ -95,9 +95,7 @@ export default function FileDownload({
   };
 
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
-
-
-  const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
+ const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (onDelete) onDelete();

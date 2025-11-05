@@ -169,6 +169,8 @@ export default function Signin() {
                     isLoading ||
                     !values.password
                   }
+                  bgColor="primary-900"
+                  fullScreen
                   buttonClassName={'fill-button'}
                 >
                   {isLoading ? (
@@ -193,6 +195,8 @@ export default function Signin() {
                     isOtpLoading
                   }
                   onClick={handleLoginWithOtp}
+                  borderColor="primary-900"
+                  fullScreen
                   buttonClassName={'border-button'}
                   ariaLabel={isOtpLoading ? "در حال ارسال کد، لطفاً صبر کنید" : "ورود با کد یک بار مصرف"}
                 >

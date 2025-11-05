@@ -1,5 +1,4 @@
 import Text from "@/components/ui/text/Text";
-import ParsehImage from "@/components/ui/image/ParsehImage";
 import styles from "./FileStyle.module.scss";
 import Image from "next/image";
 interface FileStyleProps {
@@ -102,7 +101,6 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
         return "red";
     }
   })();
-  
   return (
     <div className={styles["file-style__wrapper"]}>
       <div
@@ -113,9 +111,8 @@ export default function FileStyle({ file, fileName, fileUrl }: FileStyleProps) {
           {extension}
         </Text>
       </div>
-
       <div className={styles["file-style__image"]}>
-        <Image alt="upload-icon" src={'/images/imageFrame.svg'} width={'50'} height="50" />
+        <Image alt="upload-icon" src={'/images/imageFrame.svg'} width={'27'} height="32" />
       </div>
       <div className={styles['file-style__name']}>
         {/* <Text textStyle="14S4" textColor="main-black">

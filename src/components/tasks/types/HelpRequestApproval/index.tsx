@@ -6,9 +6,11 @@ import DrawerModal from '@/components/ui/modal/drawerModal/DrawerModal';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
 import { Add, Trash } from 'iconsax-react';
 import styles from './index.module.scss';
-import { AIAssistantSection } from '../profile/ProfileChangeApproval/AIAssistantSection';
+import { AIAssistantSection } from '@/components/tasks/shared/AIAssistantSection';
 import FileUpload from '@/components/ui/fileUpload/FileUpload';
 import Button from '@/components/ui/actions/button/Button';
+import { ActionButtons } from '../../shared/ActionButtons';
+import Text from '@/components/ui/text/Text';
 interface UploadedFile {
   id: string;
   file: File;
@@ -216,11 +218,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
             </section>
           )}
         </section>
-        <AIAssistantSection comment='این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.'  />
-        <div className={styles.actions}>
-          <Button buttonClassName={styles.primaryButton} onClick={handleApproveClick}>تایید</Button>
-          <Button buttonClassName={styles.dangerButton} onClick={() => onReject(request.id)}>رد</Button>
-        </div>
+        <AIAssistantSection comment='این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.' />
+        <ActionButtons
+          onApprove={handleApproveClick}
+          onReject={handleApproveClick}
+          className={styles.actionButtons}
+        />
       </div>
 
       <DrawerModal isOpen={isDrawerOpen} setIsOpen={handleDrawerClose}>
@@ -259,10 +262,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                     </div>
                     {fileUploadFields.length > 1 && (
                       <Button
-                        buttonClassName={styles.removeFieldBtn}
+                        bgColor='error-700'
                         onClick={() => handleRemoveField(field.id)}
                       >
-                        حذف فیلد
+                        <Text >
+                          حذف فیلد
+                        </Text>
                       </Button>
                     )}
                   </div>
@@ -307,8 +312,8 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
               </div>
             ))}
 
+            <Add size={18} color='#0E315D' />
             <Button buttonClassName={styles.addFileButton} onClick={handleAddNewFile}>
-              <Add size={18} />
               افزودن مدرک جدید
             </Button>
           </div>
@@ -324,7 +329,9 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
             />
           </div>
 
-          <Button buttonClassName={styles.submitButton} onClick={handleSubmit}>
+          <Button
+            bgColor='primary-900'
+            buttonClassName={styles.submitButton} onClick={handleSubmit}>
             ثبت
           </Button>
         </div>

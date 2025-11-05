@@ -5,11 +5,12 @@ import styles from './index.module.scss';
 import { Bubble } from 'iconsax-react';
 
 interface AIAssistantSectionProps {
-  comment: string;
+  comment?: string;
   className?: string;
 }
 
 const AIAssistantSection: React.FC<AIAssistantSectionProps> = ({
+  comment,
   className
 }) => {
   return (
@@ -22,14 +23,15 @@ const AIAssistantSection: React.FC<AIAssistantSectionProps> = ({
           <span className={styles.aiTitle}>دستیار هوشمند</span>
           <span className={styles.aiSubtitle}>تولید شده توسط هوش مصنوعی</span>
         </div>
-
       </div>
 
       <div className={styles.aiContent}>
-        این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.
+        {comment || 'این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.'}
       </div>
     </div>
   );
 };
 
 export { AIAssistantSection };
+
+
