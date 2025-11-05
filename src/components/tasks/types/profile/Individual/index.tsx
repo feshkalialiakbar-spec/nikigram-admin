@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { ProfileChangeApprovalProps } from '@/components/tasks/types';
 import styles from './index.module.scss';
+import Button from '@/components/ui/actions/button/Button';
 
 const IndividualProfileApproval: React.FC<ProfileChangeApprovalProps> = ({
   request,
@@ -53,8 +54,8 @@ const IndividualProfileApproval: React.FC<ProfileChangeApprovalProps> = ({
               <td>{r.oldValue}</td>
               <td>{r.newValue}</td>
               <td>
-                <button onClick={() => handleApproveRow(r.id)} className={styles.approveBtn}>تایید</button>
-                <button onClick={() => handleRejectRow(r.id)} className={styles.rejectBtn}>رد</button>
+                <Button onClick={() => handleApproveRow(r.id)} buttonClassName={styles.approveBtn}>تایید</Button>
+                <Button onClick={() => handleRejectRow(r.id)} buttonClassName={styles.rejectBtn}>رد</Button>
               </td>
             </tr>
           ))}
@@ -72,8 +73,8 @@ const IndividualProfileApproval: React.FC<ProfileChangeApprovalProps> = ({
       )}
 
       <div className={styles.footer}>
-        <button className={styles.finalApprove} onClick={() => onApprove(request.id)}>تایید نهایی</button>
-        <button className={styles.finalReject} onClick={() => onReject(request.id)}>رد</button>
+        <Button buttonClassName={styles.finalApprove} onClick={() => onApprove(request.id)}>تایید نهایی</Button>
+        <Button buttonClassName={styles.finalReject} onClick={() => onReject(request.id)}>رد</Button>
       </div>
     </div>
   );

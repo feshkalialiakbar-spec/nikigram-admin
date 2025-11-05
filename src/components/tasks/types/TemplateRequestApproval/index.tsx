@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ArrowLeft2 } from 'iconsax-react';
 import { TemplateRequestApprovalProps } from '@/components/tasks/types';
 import styles from './index.module.scss';
+import Button from '@/components/ui/actions/button/Button';
 
 const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
   request,
@@ -23,13 +24,13 @@ const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
               <div className={styles.requestContent}>
                 {/* Header */}
                 <div className={styles.requestHeader}>
-                  <button
-                    className={styles.backButton}
+                  <Button
+                    buttonClassName={styles.backButton}
                     onClick={() => router.back()}
                   >
                     <ArrowLeft2 size={20} />
                     بازگشت
-                  </button>
+                  </Button>
 
                   <div className={styles.headerContent}>
                     <h1 className={styles.title}>ایجاد تمپلیت جدید</h1>
@@ -94,18 +95,18 @@ const TemplateRequestApproval: React.FC<TemplateRequestApprovalProps> = ({
 
           {/* Action Buttons */}
           <div className={styles.actionButtons}>
-            <button
+            <Button
               onClick={() => onReject(request.id)}
-              className={styles.rejectButton}
+              buttonClassName={styles.rejectButton}
             >
               رد
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => onApprove(request.id)}
-              className={styles.approveButton}
+              buttonClassName={styles.approveButton}
             >
               ایجاد تمپلیت
-            </button>
+            </Button>
           </div>
         </div>
       </div>

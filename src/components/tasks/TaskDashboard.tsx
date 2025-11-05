@@ -9,6 +9,7 @@ import TaskTable from './TaskTable';
 import Pagination from './Pagination';
 import styles from './TaskDashboard.module.scss';
 import { TaskTableSkeleton } from '../ui/TaskTableSkeleton';
+import Button from '@/components/ui/actions/button/Button';
 
 const TaskDashboard: React.FC<TaskDashboardProps> = ({
   className,
@@ -89,9 +90,9 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
       <div className={`${styles.dashboard} ${className || ''}`}>
         <div className={styles.error}>
           خطا در بارگذاری داده‌ها: {error}
-          <button onClick={refetch} className={styles.retryButton}>
+          <Button onClick={refetch} buttonClassName={styles.retryButton}>
             تلاش مجدد
-          </button>
+          </Button>
         </div>
       </div>
     );

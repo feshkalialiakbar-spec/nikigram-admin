@@ -8,6 +8,7 @@ import { Add, Trash } from 'iconsax-react';
 import styles from './index.module.scss';
 import { AIAssistantSection } from '../profile/ProfileChangeApproval/AIAssistantSection';
 import FileUpload from '@/components/ui/fileUpload/FileUpload';
+import Button from '@/components/ui/actions/button/Button';
 interface UploadedFile {
   id: string;
   file: File;
@@ -217,8 +218,8 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         </section>
         <AIAssistantSection comment='این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.'  />
         <div className={styles.actions}>
-          <button className={styles.primaryButton} onClick={handleApproveClick}>تایید</button>
-          <button className={styles.dangerButton} onClick={() => onReject(request.id)}>رد</button>
+          <Button buttonClassName={styles.primaryButton} onClick={handleApproveClick}>تایید</Button>
+          <Button buttonClassName={styles.dangerButton} onClick={() => onReject(request.id)}>رد</Button>
         </div>
       </div>
 
@@ -257,12 +258,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                       {field.uploadedFile.name} | {formatFileSize(field.uploadedFile.size)}. {field.uploadedFile.uploadDate}
                     </div>
                     {fileUploadFields.length > 1 && (
-                      <button
-                        className={styles.removeFieldBtn}
+                      <Button
+                        buttonClassName={styles.removeFieldBtn}
                         onClick={() => handleRemoveField(field.id)}
                       >
                         حذف فیلد
-                      </button>
+                      </Button>
                     )}
                   </div>
                 ) : (
@@ -306,10 +307,10 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
               </div>
             ))}
 
-            <button className={styles.addFileButton} onClick={handleAddNewFile}>
+            <Button buttonClassName={styles.addFileButton} onClick={handleAddNewFile}>
               <Add size={18} />
               افزودن مدرک جدید
-            </button>
+            </Button>
           </div>
 
           <div className={styles.descriptionField}>
@@ -323,9 +324,9 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
             />
           </div>
 
-          <button className={styles.submitButton} onClick={handleSubmit}>
+          <Button buttonClassName={styles.submitButton} onClick={handleSubmit}>
             ثبت
-          </button>
+          </Button>
         </div>
       </DrawerModal>
     </div>

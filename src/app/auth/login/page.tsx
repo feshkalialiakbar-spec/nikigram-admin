@@ -6,6 +6,7 @@ import TextField from "@/components/ui/forms/textField/TextField";
 import Logo from "@/components/logo/Logo";
 import { Eye, EyeSlash } from "iconsax-react";
 import { useLogin } from "@/components/auth/useLogin";
+import Button from "@/components/ui/actions/button/Button";
 
 export default function Signin() {
   const router = useRouter();
@@ -141,16 +142,16 @@ export default function Signin() {
                     {errors.password}
                   </div>
                 )}
-                <button
+                <Button
                   type="button"
-                  className={styles["signin__forgot-password"]}
+                  buttonClassName={styles["signin__forgot-password"]}
                   onClick={() => {
                     console.log("Forgot password clicked");
                   }}
-                  aria-label="بازیابی رمز عبور"
+                  ariaLabel="بازیابی رمز عبور"
                 >
                   رمز عبور خود را فراموش کرده‌اید؟
-                </button>
+                </Button>
               </div>
 
               {errors.general && (
@@ -160,8 +161,7 @@ export default function Signin() {
               )}
 
               <div className={styles["signin__buttons"]}>
-                <button
-
+                <Button
                   onClick={handleLogin}
                   disabled={
                     !!errors.phone ||
@@ -169,7 +169,8 @@ export default function Signin() {
                     isLoading ||
                     !values.password
                   }
-                  className={'fill-button'}     >
+                  buttonClassName={'fill-button'}
+                >
                   {isLoading ? (
                     <>
                       <span className={styles["signin__loading-spinner"]} aria-hidden="true"></span>
@@ -178,13 +179,13 @@ export default function Signin() {
                   ) : (
                     "ورود"
                   )}
-                </button>
+                </Button>
 
                 <div className={styles["signin__divider"]} aria-hidden="true">
                   <span>یا</span>
                 </div>
 
-                <button
+                <Button
                   disabled={
                     !!errors.phone ||
                     !values.phone ||
@@ -192,8 +193,8 @@ export default function Signin() {
                     isOtpLoading
                   }
                   onClick={handleLoginWithOtp}
-                  className={'border-button'}
-                  aria-label={isOtpLoading ? "در حال ارسال کد، لطفاً صبر کنید" : "ورود با کد یک بار مصرف"}
+                  buttonClassName={'border-button'}
+                  ariaLabel={isOtpLoading ? "در حال ارسال کد، لطفاً صبر کنید" : "ورود با کد یک بار مصرف"}
                 >
                   {isOtpLoading ? (
                     <>
@@ -203,20 +204,20 @@ export default function Signin() {
                   ) : (
                     "ورود با کد یک بار مصرف"
                   )}
-                </button>
+                </Button>
               </div>
             </form>
 
             <div className={styles["signin__signup-link"]}>
               <span>حساب کاربری ندارید؟</span>
-              <button
-                className={styles["signin__signup-button"]}
+              <Button
+                buttonClassName={styles["signin__signup-button"]}
                 onClick={() => router.push("/auth/signUp")}
-                aria-label="ثبت‌نام در نیکی‌گرام"
+                ariaLabel="ثبت‌نام در نیکی‌گرام"
                 type="button"
               >
                 ثبت‌نام کنید
-              </button>
+              </Button>
             </div>
           </div>
         </div>

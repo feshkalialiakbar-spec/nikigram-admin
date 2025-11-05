@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { CooperationRequestApprovalProps } from '@/components/tasks/types';
 import RatingSlider from '@/components/ui/ratingSlider/RatingSlider';
 import styles from './index.module.scss';
+import Button from '@/components/ui/actions/button/Button';
 
 const CooperationRequestApproval: React.FC<CooperationRequestApprovalProps> = ({
   request,
@@ -98,12 +99,12 @@ const CooperationRequestApproval: React.FC<CooperationRequestApprovalProps> = ({
 
         {/* --- Action Buttons --- */}
         <div className={styles.actionsRow}>
-          <button onClick={() => onApprove(id)} className={styles.primaryBtn}>
+          <Button onClick={() => onApprove(id)} buttonClassName={styles.primaryBtn}>
             تایید
-          </button>
-          <button onClick={() => onReject(id)} className={styles.outlineDangerBtn}>
+          </Button>
+          <Button onClick={() => onReject(id)} buttonClassName={styles.outlineDangerBtn}>
             رد
-          </button>
+          </Button>
         </div>
       </div>
     </div>

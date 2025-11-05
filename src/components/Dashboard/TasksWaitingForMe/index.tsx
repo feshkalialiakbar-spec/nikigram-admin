@@ -6,6 +6,7 @@ import { fetchWaitingForMeTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
+import Button from '@/components/ui/actions/button/Button';
 
 interface TasksWaitingForMeProps {
   className?: string;
@@ -50,9 +51,9 @@ const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
       <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
         <div className={styles.error}>
           <p>خطا در بارگذاری داده‌ها: {error.message}</p>
-          <button onClick={() => refetch()} className={styles.retryButton}>
+          <Button onClick={() => refetch()} buttonClassName={styles.retryButton}>
             تلاش مجدد
-          </button>
+          </Button>
         </div>
       </div>
     );

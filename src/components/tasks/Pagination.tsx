@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowSquareLeft, ArrowSquareRight } from 'iconsax-react';
 import { PaginationProps } from './types';
 import styles from './Pagination.module.scss';
+import Button from '@/components/ui/actions/button/Button';
 
 const Pagination: React.FC<PaginationProps> = ({
   pagination,
@@ -39,16 +40,16 @@ const Pagination: React.FC<PaginationProps> = ({
 
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <button
+        <Button
           key={i}
-          className={`${styles.pageButton} ${i === currentPage ? styles.active : ''}`}
+          buttonClassName={`${styles.pageButton} ${i === currentPage ? styles.active : ''}`}
           onClick={() => handlePageClick(i)}
           type="button"
-          aria-label={`برو به صفحه ${i}`}
-          aria-current={i === currentPage ? 'page' : undefined}
+          ariaLabel={`برو به صفحه ${i}`}
+          title={i === currentPage ? 'page' : undefined}
         >
           {i}
-        </button>
+        </Button>
       );
     }
 
@@ -64,27 +65,27 @@ const Pagination: React.FC<PaginationProps> = ({
       className={`${styles.pagination} ${className || ''}`}
       aria-label="صفحه‌بندی"
     >
-      <button
-        className={`${styles.navButton} ${currentPage === 1 ? styles.disabled : ''}`}
+      <Button
+        buttonClassName={`${styles.navButton} ${currentPage === 1 ? styles.disabled : ''}`}
         onClick={handlePrevious}
         disabled={currentPage === 1}
         type="button"
-        aria-label="صفحه قبلی"
+        ariaLabel="صفحه قبلی"
       >
         <ArrowSquareLeft variant={'Bulk'} size={32} color="#007BFF" />
-      </button>
+      </Button>
 
       {renderPageNumbers}
 
-      <button
-        className={`${styles.navButton} ${currentPage === totalPages ? styles.disabled : ''}`}
+      <Button
+        buttonClassName={`${styles.navButton} ${currentPage === totalPages ? styles.disabled : ''}`}
         onClick={handleNext}
         disabled={currentPage === totalPages}
         type="button"
-        aria-label="صفحه بعدی"
+        ariaLabel="صفحه بعدی"
       >
         <ArrowSquareRight variant={'Bulk'} size={32} color="#007BFF" />
-      </button>
+      </Button>
     </nav>
   );
 };

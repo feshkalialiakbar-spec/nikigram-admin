@@ -1,71 +1,24 @@
-@use "../../../../styles/mixins.scss" as *;
+@use  "../../../../styles/mixins.scss" as *;
 
-.ui-button {
-  width: fit-content;
+.ui-counter-button {
+  width: 151px;
   height: fit-content;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  border-radius: 8px;
-  padding: 8px 16px;
-  cursor: pointer;
+  padding: 8px 20px;
   border: none;
   outline: none;
-  // transition: color 0.35s ease, var(--secondary1-100) 0.35s ease;
-  &.disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-    pointer-events: stroke;
-  }
-  &.padding-style {
-    &-fat {
-      padding: 12px 24px;
-    }
-    &-avg {
-      &-4-12 {
-        padding: 4px 12px;
-      }
-      &-8-12 {
-        padding: 8px 12px;
-      }
-      &-8-24 {
-        padding: 8px 24px;
-      }
-      &-8-32 {
-        padding: 8px 32px;
-      }
-    }
-    &-thin {
-      padding: 4px 32px;
-    }
-    &-none {
-      &.ui-button {
-        padding: 0;
-      }
-      padding: 0;
-    }
-    &-equal {
-      &-12 {
-        padding: 12px;
-      }
-      &-8 {
-        padding: 8px;
-      }
-      &-4 {
-        padding: 4px;
-      }
-    }
-  }
+
   &.mode {
     &-side-rounded {
       width: unset;
       border-radius: 100px;
     }
-    &-full-rounded {
-      width: unset;
-      padding: 0.5rem;
-      border-radius: 50%;
+    &-underline {  
+      padding: 8px 20px;
+      border-radius: 24px 24px 0 0;
     }
     &-simple {
       width: fit-content;
@@ -75,8 +28,17 @@
       gap: 0;
     }
   }
-  &.full-screen {
-    width: 100%;
+
+  &.border-mode {
+    &-full {
+      border: 2px solid;
+    }
+    &-footer {
+      border-bottom: 2px solid;
+    }
+  }
+  & .value {
+    width: 21px;
   }
   &.bgc {
     &-primary {
@@ -267,6 +229,194 @@
     }
     &-transparent {
       background-color: transparent;
+    }
+  }
+  &.border {
+    &-primary {
+      &-950 {
+        border-color: var(--primary-950);
+      }
+      &-900 {
+        border-color: var(--primary-900);
+      }
+      &-800 {
+        border-color: var(--primary-800);
+      }
+      &-700 {
+        border-color: var(--primary-700);
+      }
+      &-600 {
+        border-color: var(--primary-600);
+      }
+      &-500 {
+        border-color: var(--primary-500);
+      }
+      &-400 {
+        border-color: var(--primary-400);
+      }
+      &-300 {
+        border-color: var(--primary-300);
+      }
+      &-200 {
+        border-color: var(--primary-200);
+      }
+      &-100 {
+        border-color: var(--primary-100);
+      }
+      &-50 {
+        border-color: var(--primary-50);
+      }
+    }
+    &-secondary1 {
+      &-950 {
+        border-color: var(--secondary1-950);
+      }
+      &-900 {
+        border-color: var(--secondary1-900);
+      }
+      &-800 {
+        border-color: var(--secondary1-800);
+      }
+      &-700 {
+        border-color: var(--secondary1-700);
+      }
+      &-600 {
+        border-color: var(--secondary1-600);
+      }
+      &-500 {
+        border-color: var(--secondary1-500);
+      }
+      &-400 {
+        border-color: var(--secondary1-400);
+      }
+      &-300 {
+        border-color: var(--secondary1-300);
+      }
+      &-200 {
+        border-color: var(--secondary1-200);
+      }
+      &-100 {
+        border-color: var(--secondary1-100);
+      }
+      &-50 {
+        border-color: var(--secondary1-50);
+      }
+    }
+    &-secondary2 {
+      &-950 {
+        border-color: var(--secondary2-950);
+      }
+      &-900 {
+        border-color: var(--secondary2-900);
+      }
+      &-800 {
+        border-color: var(--secondary2-800);
+      }
+      &-700 {
+        border-color: var(--secondary2-700);
+      }
+      &-600 {
+        border-color: var(--secondary2-600);
+      }
+      &-500 {
+        border-color: var(--secondary2-500);
+      }
+      &-400 {
+        border-color: var(--secondary2-400);
+      }
+      &-300 {
+        border-color: var(--secondary2-300);
+      }
+      &-200 {
+        border-color: var(--secondary2-200);
+      }
+      &-100 {
+        border-color: var(--secondary2-100);
+      }
+      &-50 {
+        border-color: var(--secondary2-50);
+      }
+    }
+    &-error {
+      &-950 {
+        border-color: var(--error-950);
+      }
+      &-900 {
+        border-color: var(--error-900);
+      }
+      &-800 {
+        border-color: var(--error-800);
+      }
+      &-700 {
+        border-color: var(--error-700);
+      }
+      &-600 {
+        border-color: var(--error-600);
+      }
+      &-500 {
+        border-color: var(--error-500);
+      }
+      &-400 {
+        border-color: var(--error-400);
+      }
+      &-300 {
+        border-color: var(--error-300);
+      }
+      &-200 {
+        border-color: var(--error-200);
+      }
+      &-100 {
+        border-color: var(--error-100);
+      }
+      &-50 {
+        border-color: var(--error-50);
+      }
+    }
+    &-gray {
+      &-950 {
+        border-color: var(--gray-950);
+      }
+      &-900 {
+        border-color: var(--gray-900);
+      }
+      &-800 {
+        border-color: var(--gray-800);
+      }
+      &-700 {
+        border-color: var(--gray-700);
+      }
+      &-600 {
+        border-color: var(--gray-600);
+      }
+      &-500 {
+        border-color: var(--gray-500);
+      }
+      &-400 {
+        border-color: var(--gray-400);
+      }
+      &-300 {
+        border-color: var(--gray-300);
+      }
+      &-200 {
+        border-color: var(--gray-200);
+      }
+      &-100 {
+        border-color: var(--gray-100);
+      }
+      &-50 {
+        border-color: var(--gray-50);
+      }
+    }
+    &-main {
+      &-black {
+        border-color: var(--main-black);
+      }
+      &-white {
+        border-color: var(--main-white);
+      }
+      &-bg {
+        border-color: var(--main-bg);
+      }
     }
   }
   &.hover {
@@ -570,6 +720,195 @@
         &:hover {
           background-color: var(--main-bg);
         }
+      }
+    }
+  }
+
+  &.shadow {
+    &-primary {
+      &-950 {
+        @include shadow-color(var(--primary-950));
+      }
+      &-900 {
+        @include shadow-color(var(--primary-900));
+      }
+      &-800 {
+        @include shadow-color(var(--primary-800));
+      }
+      &-700 {
+        @include shadow-color(var(--primary-700));
+      }
+      &-600 {
+        @include shadow-color(var(--primary-600));
+      }
+      &-500 {
+        @include shadow-color(var(--primary-500));
+      }
+      &-400 {
+        @include shadow-color(var(--primary-400));
+      }
+      &-300 {
+        @include shadow-color(var(--primary-300));
+      }
+      &-200 {
+        @include shadow-color(var(--primary-200));
+      }
+      &-100 {
+        @include shadow-color(var(--primary-100));
+      }
+      &-50 {
+        @include shadow-color(var(--primary-50));
+      }
+    }
+    &-secondary1 {
+      &-950 {
+        @include shadow-color(var(--secondary1-950));
+      }
+      &-900 {
+        @include shadow-color(var(--secondary1-900));
+      }
+      &-800 {
+        @include shadow-color(var(--secondary1-800));
+      }
+      &-700 {
+        @include shadow-color(var(--secondary1-700));
+      }
+      &-600 {
+        @include shadow-color(var(--secondary1-600));
+      }
+      &-500 {
+        @include shadow-color(var(--secondary1-500));
+      }
+      &-400 {
+        @include shadow-color(var(--secondary1-400));
+      }
+      &-300 {
+        @include shadow-color(var(--secondary1-300));
+      }
+      &-200 {
+        @include shadow-color(var(--secondary1-200));
+      }
+      &-100 {
+        @include shadow-color(var(--secondary1-100));
+      }
+      &-50 {
+        @include shadow-color(var(--secondary1-50));
+      }
+    }
+    &-secondary2 {
+      &-950 {
+        @include shadow-color(var(--secondary2-950));
+      }
+      &-900 {
+        @include shadow-color(var(--secondary2-900));
+      }
+      &-800 {
+        @include shadow-color(var(--secondary2-800));
+      }
+      &-700 {
+        @include shadow-color(var(--secondary2-700));
+      }
+      &-600 {
+        @include shadow-color(var(--secondary2-600));
+      }
+      &-500 {
+        @include shadow-color(var(--secondary2-500));
+      }
+      &-400 {
+        @include shadow-color(var(--secondary2-400));
+      }
+      &-300 {
+        @include shadow-color(var(--secondary2-300));
+      }
+      &-200 {
+        @include shadow-color(var(--secondary2-200));
+      }
+      &-100 {
+        @include shadow-color(var(--secondary2-100));
+      }
+      &-50 {
+        @include shadow-color(var(--secondary2-50));
+      }
+    }
+    &-error {
+      &-950 {
+        @include shadow-color(var(--error-950));
+      }
+      &-900 {
+        @include shadow-color(var(--error-900));
+      }
+      &-800 {
+        @include shadow-color(var(--error-800));
+      }
+      &-700 {
+        @include shadow-color(var(--error-700));
+      }
+      &-600 {
+        @include shadow-color(var(--error-600));
+      }
+      &-500 {
+        @include shadow-color(var(--error-500));
+      }
+      &-400 {
+        @include shadow-color(var(--error-400));
+      }
+      &-300 {
+        @include shadow-color(var(--error-300));
+      }
+      &-200 {
+        @include shadow-color(var(--error-200));
+      }
+      &-100 {
+        @include shadow-color(var(--error-100));
+      }
+      &-50 {
+        @include shadow-color(var(--error-50));
+      }
+    }
+    &-gray {
+      &-950 {
+        @include shadow-color(var(--gray-950));
+      }
+      &-900 {
+        @include shadow-color(var(--gray-900));
+      }
+      &-800 {
+        @include shadow-color(var(--gray-800));
+      }
+      &-700 {
+        @include shadow-color(var(--gray-700));
+      }
+      &-600 {
+        @include shadow-color(var(--gray-600));
+      }
+      &-500 {
+        @include shadow-color(var(--gray-500));
+      }
+      &-400 {
+        @include shadow-color(var(--gray-400));
+      }
+      &-300 {
+        @include shadow-color(var(--gray-300));
+      }
+      &-200 {
+        @include shadow-color(var(--gray-200));
+      }
+      &-100 {
+        @include shadow-color(var(--gray-100));
+      }
+      &-50 {
+        @include shadow-color(var(--gray-50));
+      }
+    }
+    &-main {
+      &-black {
+        @include shadow-color(var(--main-black));
+      }
+      &-white {
+        @include shadow-color(var(--main-white));
+      }
+      &-bg {
+        @include shadow-color(var(--main-bg));
       }
     }
   }

@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react';
 import { CloseCircle, TickCircle } from 'iconsax-react';
+import Button from '@/components/ui/actions/button/Button';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -181,63 +182,23 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               gap: '0.75rem'
             }}
           >
-            <button
+            <Button
               onClick={onClose}
               disabled={loading}
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-              style={{
-                flex: 1,
-                padding: '0.75rem 1rem',
-                backgroundColor: '#f3f4f6',
-                color: '#374151',
-                borderRadius: '0.5rem',
-                border: 'none',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                opacity: loading ? 0.5 : 1,
-                transition: 'all 0.2s ease',
-                fontSize: '0.875rem',
-                fontWeight: '500'
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.backgroundColor = '#e5e7eb';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.backgroundColor = '#f3f4f6';
-                }
-              }}
+              buttonClassName="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+              bgColor="transparent"
+              mode="side-rounded"
+              paddingStyle="equal-8"
             >
               {cancelText}
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={onConfirm}
               disabled={loading}
-              className={`flex-1 px-4 py-3 rounded-lg transition-colors disabled:opacity-50 ${typeStyles.confirmButton}`}
-              style={{
-                flex: 1,
-                padding: '0.75rem 1rem',
-                borderRadius: '0.5rem',
-                border: 'none',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                opacity: loading ? 0.5 : 1,
-                transition: 'all 0.2s ease',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                backgroundColor: type === 'approve' ? '#10b981' : type === 'reject' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6',
-                color: '#ffffff'
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.backgroundColor = type === 'approve' ? '#059669' : type === 'reject' ? '#dc2626' : type === 'warning' ? '#d97706' : '#2563eb';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.backgroundColor = type === 'approve' ? '#10b981' : type === 'reject' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6';
-                }
-              }}
+              buttonClassName={`flex-1 px-4 py-3 rounded-lg transition-colors disabled:opacity-50 ${typeStyles.confirmButton}`}
+              bgColor={type === 'approve' ? 'primary-700' : type === 'reject' ? 'error-700' : 'transparent'}
+              mode="side-rounded"
+              paddingStyle="equal-8"
             >
               {loading ? (
                 <div 
@@ -265,7 +226,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               ) : (
                 confirmText
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

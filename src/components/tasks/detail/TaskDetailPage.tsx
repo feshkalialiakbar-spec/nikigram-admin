@@ -10,6 +10,7 @@ import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApp
 import TaskLayout from '@/components/tasks/detail/TaskLayout';
 import { ConfirmationModal, useToast } from '@/components/ui';
 import TaskDetailSkeleton from '@/components/tasks/detail/TaskDetailSkeleton';
+import Button from '@/components/ui/actions/button/Button';
 import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent, mapHelpRequestToComponent } from '@/utils/taskMappers';
 import {
   ApiProfileChangeRequestResponse,
@@ -198,12 +199,14 @@ const TaskDetailPage: React.FC = () => {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">خطا در بارگذاری تسک</h1>
           <p className="text-gray-600 mb-8">{error || 'اطلاعات تسک یافت نشد'}</p>
-          <button
+          <Button
             onClick={() => router.back()}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            bgColor="primary-700"
+            mode="side-rounded"
+            paddingStyle="equal-8"
           >
             بازگشت
-          </button>
+          </Button>
         </div>
       </div>
     );

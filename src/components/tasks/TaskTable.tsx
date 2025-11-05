@@ -5,6 +5,7 @@ import { convertToPersianDate } from '@/utils/dateUtils';
 import { TaskTableProps } from './types';
 import { getStatusText, getStatusClass } from './utils';
 import styles from './TaskTable.module.scss';
+import Button from '@/components/ui/actions/button/Button';
 
 const TaskTable: React.FC<TaskTableProps> = ({
   tasks,
@@ -72,18 +73,17 @@ const TaskTable: React.FC<TaskTableProps> = ({
                 </span>
               </td>
               <td className={styles.operations}>
-                <button
-                  className={styles.operationButton}
-                  data-operation="perform"
+                <Button
+                  buttonClassName={styles.operationButton}
                   onClick={() => handleRowClick(task.task_id)}
                   type="button"
-                  aria-label={`انجام عملیات برای وظیفه ${task.task_title}`}
+                  ariaLabel={`انجام عملیات برای وظیفه ${task.task_title}`}
                 >
                   <span className={styles.operationIcon}>
                     {getOperationIcon('perform')}
                   </span>
                   انجام عملیات
-                </button>
+                </Button>
               </td>
             </tr>
           ))}

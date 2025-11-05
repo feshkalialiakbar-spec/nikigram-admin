@@ -4,6 +4,7 @@ import Text, { Colors } from "@/components/ui/text/Text";
 import { Eye, Import, Trash } from "iconsax-react";
 import FileStyle from "@/components/global/fileStyle/FileStyle";
 import Image from "next/image";
+import Button from "@/components/ui/actions/button/Button";
 
 interface FileDownloadProps {
   title?: string;
@@ -172,12 +173,12 @@ export default function FileDownload({
             <div className={styles["file-download__modal-header"]}>
               <Text textStyle="14S4" textColor="secondary2-600">{title || fileName}</Text>
               <div className={styles["file-download__modal-actions"]}>
-                <button type="button" onClick={handleDownload} className={styles["file-download__modal-download"]}>
+                <Button type="button" onClick={handleDownload} buttonClassName={styles["file-download__modal-download"]}>
                   دانلود
-                </button>
-                <button type="button" onClick={() => setIsPreviewOpen(false)} className={styles["file-download__modal-close"]}>
+                </Button>
+                <Button type="button" onClick={() => setIsPreviewOpen(false)} buttonClassName={styles["file-download__modal-close"]}>
                   بستن
-                </button>
+                </Button>
               </div>
             </div>
             <div className={styles["file-download__modal-body"]}>

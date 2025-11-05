@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { TickCircle, CloseCircle, InfoCircle, Warning2 } from 'iconsax-react';
+import Button from '@/components/ui/actions/button/Button';
 
 export interface ToastProps {
   id: string;
@@ -152,31 +153,16 @@ const Toast: React.FC<ToastComponentProps> = ({
               </p>
             )}
           </div>
-          <button
+          <Button
             onClick={() => {
               setIsVisible(false);
               setTimeout(() => onRemove(id), 300);
             }}
-            className="flex-shrink-0 text-gray-400 hover:text-gray-600"
-            style={{
-              flexShrink: 0,
-              backgroundColor: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              color: '#9ca3af',
-              padding: '0.25rem',
-              borderRadius: '0.25rem',
-              transition: 'color 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#4b5563';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#9ca3af';
-            }}
+            bgColor="transparent"
+            buttonClassName="flex-shrink-0 text-gray-400 hover:text-gray-600"
           >
             <CloseCircle size={16} variant="Outline" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

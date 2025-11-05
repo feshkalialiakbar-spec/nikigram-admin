@@ -5,6 +5,7 @@ import { CloseCircle } from 'iconsax-react';
 import styles from './FileViewerModal.module.scss';
 import Text from '@/components/ui/text/Text';
 import Image from 'next/image';
+import Button from '@/components/ui/actions/button/Button';
 
 interface FileViewerModalProps {
   isOpen: boolean;
@@ -246,14 +247,14 @@ const FileViewerModal: React.FC<FileViewerModalProps> = ({
           <Text textStyle="18S7" textColor="gray-950" textTag="h2">
             {fileName}
           </Text>
-          <button
-            className={styles.modalCloseButton}
+          <Button
+            buttonClassName={styles.modalCloseButton}
             onClick={onClose}
             type="button"
-            aria-label="بستن"
+            ariaLabel="بستن"
           >
             <CloseCircle size={24} variant="Outline" color="var(--gray-500)" />
-          </button>
+          </Button>
         </div>
 
         <div className={styles.modalContent}>

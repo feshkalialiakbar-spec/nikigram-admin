@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { ApiProfileChangeRequestResponse } from '@/components/tasks/types';
 import styles from './index.module.scss';
+import Button from '@/components/ui/actions/button/Button';
 
 interface DetailsModalProps {
   isOpen: boolean;
@@ -219,14 +220,14 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
             <div className={styles.documentHeader}>
               <h4>مدرک {index + 1}</h4>
               <div className={styles.documentActions}>
-                <button
-                  className={styles.viewButton}
+                <Button
+                  buttonClassName={styles.viewButton}
                   onClick={() => window.open(getImageUrl(doc.file_uid), '_blank')}
                 >
                   مشاهده
-                </button>
-                <button
-                  className={styles.downloadButton}
+                </Button>
+                <Button
+                  buttonClassName={styles.downloadButton}
                   onClick={async () => {
                     try {
                       const response = await fetch(getImageUrl(doc.file_uid));
@@ -245,7 +246,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
                   }}
                 >
                   دانلود
-                </button>
+                </Button>
               </div>
             </div>
             <div className={styles.documentDetails}>
@@ -357,36 +358,36 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2>جزئیات کامل درخواست</h2>
-          <button className={styles.closeButton} onClick={onClose}>
+          <Button buttonClassName={styles.closeButton} onClick={onClose}>
             ×
-          </button>
+          </Button>
         </div>
         
         <div className={styles.tabNavigation}>
-          <button
-            className={`${styles.tabButton} ${activeTab === 'task' ? styles.active : ''}`}
+          <Button
+            buttonClassName={`${styles.tabButton} ${activeTab === 'task' ? styles.active : ''}`}
             onClick={() => setActiveTab('task')}
           >
             جزئیات تسک
-          </button>
-          <button
-            className={`${styles.tabButton} ${activeTab === 'party' ? styles.active : ''}`}
+          </Button>
+          <Button
+            buttonClassName={`${styles.tabButton} ${activeTab === 'party' ? styles.active : ''}`}
             onClick={() => setActiveTab('party')}
           >
             اطلاعات درخواست کننده
-          </button>
-          <button
-            className={`${styles.tabButton} ${activeTab === 'docs' ? styles.active : ''}`}
+          </Button>
+          <Button
+            buttonClassName={`${styles.tabButton} ${activeTab === 'docs' ? styles.active : ''}`}
             onClick={() => setActiveTab('docs')}
           >
             مدارک
-          </button>
-          <button
-            className={`${styles.tabButton} ${activeTab === 'platforms' ? styles.active : ''}`}
+          </Button>
+          <Button
+            buttonClassName={`${styles.tabButton} ${activeTab === 'platforms' ? styles.active : ''}`}
             onClick={() => setActiveTab('platforms')}
           >
             پلتفرم‌ها
-          </button>
+          </Button>
         </div>
 
         <div className={styles.modalBody}>

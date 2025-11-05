@@ -7,6 +7,7 @@ import { quickActions, TaskMenuItem } from './items'
  
 import Link from 'next/link'
 import { SidebarSkeleton } from '@/components/ui/SidebarSkeleton'
+import Button from '@/components/ui/actions/button/Button'
 interface SidebarMenuProps {
   isOpen: boolean
   onClose: () => void
@@ -172,24 +173,24 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         <>
           <div className={`${styles.rail} ${isOpen ? styles.railOpen : ''} ${isCollapsed ? styles.railCollapsed : ''}`} style={{ scrollbarWidth: 'none' }}>
             {isOpen && !isDesktop && (
-              <button className={styles.closeButton} onClick={onClose}>
+              <Button buttonClassName={styles.closeButton} onClick={onClose}>
                 <CloseSquare
                   size={18}
                   variant="Outline"
                   color="currentColor"
                   className={styles.icon}
                 />
-              </button>
+              </Button>
             )}
             {isOpen && isDesktop && onToggleCollapse && (
-              <button className={styles.collapseButton} onClick={onToggleCollapse}>
+              <Button buttonClassName={styles.collapseButton} onClick={onToggleCollapse}>
                 <Menu
                   size={18}
                   variant="Outline"
                   color="currentColor"
                   className={styles.icon}
                 />
-              </button>
+              </Button>
             )}
             {isOpen && !isCollapsed && selectedParent && selectedParent.children?.length && (
               <div className={styles.searchBox}>
@@ -222,9 +223,8 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                           (!!action.children && action.children.some((c) => c.href === activeItem)) ||
                           (selectedParent && selectedParent.label === action.label)
                         return (
-                          <button
-                            className={`${styles.parentItem} ${isParentActive ? styles.active : ''}`}
-                            aria-expanded={expandedParents.has(action.label)}
+                          <Button
+                            buttonClassName={`${styles.parentItem} ${isParentActive ? styles.active : ''}`}
                             onClick={() => {
                               if (isOpen) {
                                 handleRailClickWhenOpen(action)
@@ -243,7 +243,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                             {isOpen && !isCollapsed && !(selectedParent && selectedParent.children?.length) && (
                               <span className={styles.itemLabel}>{action.label}</span>
                             )}
-                          </button>
+                          </Button>
                         )
                       })()}
                     </div>

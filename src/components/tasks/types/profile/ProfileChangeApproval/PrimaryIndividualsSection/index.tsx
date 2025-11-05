@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { PrimaryIndividual } from '@/components/tasks/types';
 import styles from './index.module.scss';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
+import Button from '@/components/ui/actions/button/Button';
 
 interface PrimaryIndividualsSectionProps {
   individuals: PrimaryIndividual[];
@@ -32,13 +33,13 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
         {individuals.map((individual) => (
           <div key={individual.id} className={styles.individualCard}>
             <div className={styles.individualHeader}>
-              <button
-                className={styles.selectButton}
+              <Button
+                buttonClassName={styles.selectButton}
                 onClick={() => onSelectPrimary(individual.id)}
                 type="button"
               >
                 انتخاب به عنوان فرد اصلی
-              </button>
+              </Button>
 
               <div className={styles.individualDetails}>
                 <div className={styles.individualInfo}>
