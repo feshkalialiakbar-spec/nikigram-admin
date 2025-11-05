@@ -2,17 +2,17 @@
 
 import React, { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
-import { fetchToDoListTasks } from '@/services/taskServices';
+import { fetchSharedPoolTasks } from '@/services/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 import Button from '@/components/ui/actions/button/Button';
 
-interface ToDoListProps {
+interface SharedPoolProps {
   className?: string;
 }
 
-const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
+const SharedPool: React.FC<SharedPoolProps> = ({ className }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
@@ -22,7 +22,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
   };
 
   const { data: tasks, total, isLoading, error, refetch } = useApiList({
-    fetcher: fetchToDoListTasks,
+    fetcher: fetchSharedPoolTasks,
     queryKey: ['tasks', 'to-do-list', paginationParams],
     enabled: true,
     retry: 3,
@@ -35,7 +35,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
 
   if (isLoading) {
     return (
-      <div className={`${styles.toDoList} ${className || ''}`}>
+      <div className={`${styles.SharedPool} ${className || ''}`}>
         <div className={styles.header}>
           <h1 className={styles.title}>در انتظار انجام مشترک</h1>
         </div>
@@ -48,7 +48,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
 
   if (error) {
     return (
-      <div className={`${styles.toDoList} ${className || ''}`}>
+      <div className={`${styles.SharedPool} ${className || ''}`}>
         <div className={styles.header}>
           <h1 className={styles.title}>در انتظار انجام مشترک</h1>
         </div>
@@ -64,7 +64,7 @@ const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
 
   return (
     <WithNavbarLayout>
-      <div className={`${styles.toDoList} ${className || ''}`}>
+      <div className={`${styles.SharedPool} ${className || ''}`}>
         <div className={styles.content}>
           <TaskDashboard
             tasks={tasks}
@@ -82,6 +82,6 @@ const ToDoList: React.FC<ToDoListProps> = ({ className }) => {
   );
 };
 
-export default ToDoList;
+export default SharedPool;
 
 

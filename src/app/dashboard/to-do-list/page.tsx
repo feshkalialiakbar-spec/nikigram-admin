@@ -1,5 +1,5 @@
 
-import ToDoList from '@/components/Dashboard/ToDoList';
+import ToDoList from '@/components/Dashboard/SharedPool';
 
 const ToDoListPage: React.FC = () => {
     return <ToDoList />;

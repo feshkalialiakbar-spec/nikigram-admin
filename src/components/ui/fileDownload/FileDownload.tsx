@@ -67,6 +67,23 @@ export default function FileDownload({
     if (!ext) return false;
     return ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"].includes(ext);
   }, [getExtension]);
+
+  const isVideo = React.useMemo(() => {
+    const ext = getExtension();
+    if (!ext) return false;
+    return ["mp4", "webm", "ogg", "avi", "mov", "wmv", "flv", "mkv"].includes(ext);
+  }, [getExtension]);
+
+  const isPdf = React.useMemo(() => {
+    const ext = getExtension();
+    return ext === "pdf";
+  }, [getExtension]);
+
+  const isAudio = React.useMemo(() => {
+    const ext = getExtension();
+    if (!ext) return false;
+    return ["mp3", "wav", "ogg", "aac", "m4a", "flac", "wma"].includes(ext);
+  }, [getExtension]);
   const handleDownload = async () => {
     try {
       // Call proxy via POST so URL is hidden from address bar and prevent navigation
@@ -189,12 +206,68 @@ export default function FileDownload({
                   height={600}
                   style={{ width: '100%', height: 'auto' }}
                 />
-              ) : (
-                <iframe
+              ) : isVideo ? (
+                <video
                   src={fileUrl}
+                  controls
                   className={styles["file-download__preview"]}
-                  title={title || fileName}
+                  style={{ width: '100%', maxHeight: '80vh' }}
+                >
+                  مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+                </video>
+              ) : isPdf ? (
+                <embed
+                  src={fileUrl}
+                  type="application/pdf"
+                  className={styles["file-download__preview"]}
+                  style={{ width: '100%', height: '80vh', minHeight: '500px' }}
                 />
+              ) : isAudio ? (
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  padding: '2rem',
+                  minHeight: '300px'
+                }}>
+                  <FileStyle fileName={fileName} fileUrl={fileUrl} />
+                  <audio
+                    src={fileUrl}
+                    controls
+                    style={{ width: '100%', maxWidth: '500px', marginTop: '1rem' }}
+                  >
+                    مرورگر شما از پخش صدا پشتیبانی نمی‌کند.
+                  </audio>
+                </div>
+              ) : (
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  padding: '2rem',
+                  minHeight: '300px',
+                  textAlign: 'center'
+                }}>
+                  <FileStyle fileName={fileName} fileUrl={fileUrl} />
+                  <div style={{ marginTop: '1rem' }}>
+                    <Text 
+                      textStyle="14S5" 
+                      textColor="gray-600"
+                    >
+                      این نوع فایل قابل پیش‌نمایش نیست
+                    </Text>
+                  </div>
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <Text 
+                      textStyle="12S4" 
+                      textColor="gray-500"
+                    >
+                      برای مشاهده فایل، آن را دانلود کنید
+                    </Text>
+                  </div>
+                </div>
               )}
             </div>
           </div>

@@ -45,7 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({
           onClick={() => handlePageClick(i)}
           type="button"
           aria-label={`برو به صفحه ${i}`}
-          aria-current={i === currentPage ? 'page' : undefined}
+          // aria-current={i === currentPage ? 'page' : undefined}
         >
           {i}
         </button>

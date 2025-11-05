@@ -20,6 +20,7 @@ interface FileUploadProps {
   errorIcon?: IconProps;
   minFileSize?: number; // بایت - پیش‌فرض 5KB
   maxFileSize?: number; // بایت - پیش‌فرض 5MB
+  entityType?: string; // نوع انتیتی برای آپلود
   showException?: {
     row1?: {
       importIcon?: boolean;
@@ -49,6 +50,7 @@ export default function FileUpload({
   allowedExtensions,
   minFileSize = 5 * 1024, // پیش‌فرض: 5KB
   maxFileSize = 5 * 1024 * 1024, // پیش‌فرض: 5MB
+  entityType = "project-request",
   showException = {
     row1: {
       importIcon: true,
@@ -75,6 +77,79 @@ export default function FileUpload({
   const inputRef = useRef<HTMLInputElement>(null);
   const [sizeError, setSizeError] = useState<string>("");
   const [isDragging, setIsDragging] = useState(false);
+
+  // خواندن مقدار یک کوکی از مرورگر
+  const getCookie = (name: string): string | null => {
+    if (typeof document === "undefined") return null;
+    const match = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"));
+    return match ? decodeURIComponent(match[1]) : null;
+  };
+
+  // ست کردن کوکی در مرورگر
+  const setCookie = (name: string, value: string, options: { path?: string; maxAge?: number } = {}) => {
+    if (typeof document === "undefined") return;
+    const opts = { path: "/", ...options };
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    if (opts.maxAge && Number.isFinite(opts.maxAge)) {
+      updatedCookie += "; max-age=" + String(opts.maxAge);
+    }
+    if (opts.path) {
+      updatedCookie += "; path=" + opts.path;
+    }
+    document.cookie = updatedCookie;
+  };
+
+  // فراخوانی API آپلود و ذخیره‌سازی اطلاعات در کوکی
+  const uploadFileToServer = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("is_featured", "false");
+      formData.append("is_private", "false");
+      formData.append("attachment_type", "");
+      formData.append("entity_type", entityType || "project-request");
+      formData.append("title", "");
+      formData.append("description", "");
+      formData.append("file", file, file.name);
+
+      // خواندن توکن از کوکی‌های کلاینت
+      const accessToken = getCookie("access_token");
+
+      const response = await fetch("https://nikicity.com/api/sys/files/upload", {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+        body: formData,
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      // در هر صورت، کوکی ثبت شود. اگر file_uid برگشت، آن را ذخیره می‌کنیم
+      const fileUid = result?.file_uid ?? undefined;
+      const meta = {
+        file_uid: fileUid,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+      } as { file_uid?: string; name: string; size: number; type: string };
+
+      const cookieKey = "uploaded_files";
+      const existing = getCookie(cookieKey);
+      let items: Array<{ file_uid?: string; name: string; size: number; type: string }> = [];
+      if (existing) {
+        try {
+          const parsed = JSON.parse(existing);
+          if (Array.isArray(parsed)) items = parsed;
+        } catch {}
+      }
+      items = [...items, meta];
+      setCookie(cookieKey, JSON.stringify(items), { path: "/", maxAge: 60 * 60 * 24 * 30 }); // 30 روز
+    } catch (e) {
+      // در خطا هم رفتار اپ پابرجا می‌ماند و فقط آپلود شکست می‌خورد
+      // عمداً لاگ نهایی در کلاینت زده نمی‌شود تا UI بهم نخورد
+    }
+  };
 
   // تبدیل بایت به فرمت قابل خواندن
   const formatFileSize = (bytes: number): string => {
@@ -138,6 +213,8 @@ export default function FileUpload({
     // فایل معتبر است
     setSizeError("");
     onChange(file);
+    // آپلود خودکار به محض انتخاب فایل
+    uploadFileToServer(file);
     resetInput();
   };
 

@@ -196,8 +196,42 @@ export const fetchWaitingForMeTasks = async (params?: PaginationParams): Promise
   return fetchTasksByStatus(37, params);
 };
 
-export const fetchToDoListTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(37, params);
+export const fetchSharedPoolTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+  try {
+    const limit = params?.limit ?? DEFAULT_LIMIT;
+    const offset = params?.offset ?? 0;
+    const accessToken = await getCookieByKey('access_token');
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return {
+        tasks: [],
+        total: 0,
+        limit,
+        offset,
+      };
+    }
+
+    const result = await response.json();
+    return {
+      tasks: result?.tasks || [],
+      total: (result?.total_count ?? result?.total) || 0,
+      limit,
+      offset,
+    };
+  } catch (error) {
+    console.error('Error fetching task:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch task');
+  }
 };
 
 export const fetchTaskById = async (id: string | number) => {

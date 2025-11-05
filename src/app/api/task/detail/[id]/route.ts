@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 export async function GET(
   request: NextRequest,
@@ -23,11 +22,9 @@ export async function GET(
           'accept': 'application/json'
         },
       }
-    );
-
+    )
     const redirectData = await redirectResponse.json();
     console.log('Redirect data:', redirectData);
-
     // Use the redirect_url from the response and combine with base URL
     const apiUrl = `${baseUrl}${redirectData.redirect_url}/`;
     console.log('Fetching task details from:', apiUrl);
@@ -39,7 +36,7 @@ export async function GET(
         Authorization: `Bearer ${token}`,
         'accept': 'application/json'
       },
-    });
+    })
 
     if (!response.ok) {
       console.error('Task details response failed:', response.status, response.statusText);

@@ -1,8 +1,8 @@
 
-import TasksUnassigned from '@/components/Dashboard/TasksUnassigned';
+import SharedPool from '@/components/Dashboard/SharedPool';
 
 const TasksUnassignedPage: React.FC = () => {
-    return <TasksUnassigned />;
+    return <SharedPool />;
 };
 
 export default TasksUnassignedPage;
