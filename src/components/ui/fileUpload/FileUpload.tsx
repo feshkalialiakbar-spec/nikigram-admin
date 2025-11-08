@@ -6,10 +6,17 @@ import { IconProps } from "../forms/textField/TextField";
 import styles from "./FileUpload.module.scss";
 import FileStyle from "@/components/global/fileStyle/FileStyle";
 
+export interface FileUploadResult {
+  file_uid: string;
+  name: string;
+  size: number;
+  type: string;
+}
+
 interface FileUploadProps {
   label?: string;
   value: File | null;
-  onChange: (file: File | null) => void;
+  onChange: (file: File | null, meta?: FileUploadResult) => void;
   onFocus: () => void;
   onBlur: () => void;
   error?: string;
@@ -100,7 +107,7 @@ export default function FileUpload({
   };
 
   // فراخوانی API آپلود و ذخیره‌سازی اطلاعات در کوکی
-  const uploadFileToServer = async (file: File) => {
+  const uploadFileToServer = async (file: File): Promise<FileUploadResult | undefined> => {
     try {
       const formData = new FormData();
       formData.append("is_featured", "false");
@@ -114,7 +121,7 @@ export default function FileUpload({
       // خواندن توکن از کوکی‌های کلاینت
       const accessToken = getCookie("access_token");
 
-      const response = await fetch("https://nikicity.com/api/sys/files/upload", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/upload`, {
         method: "POST",
         headers: {
           accept: "application/json",
@@ -123,16 +130,14 @@ export default function FileUpload({
         body: formData,
       });
 
-      const result = await response.json().catch(() => ({}));
+      const result = await response.json()
 
-      // در هر صورت، کوکی ثبت شود. اگر file_uid برگشت، آن را ذخیره می‌کنیم
-      const fileUid = result?.file_uid ?? undefined;
-      const meta = {
-        file_uid: fileUid,
+      const meta: FileUploadResult = {
+        file_uid: result.file_uid,
         name: file.name,
         size: file.size,
         type: file.type,
-      } as { file_uid?: string; name: string; size: number; type: string };
+      };
 
       const cookieKey = "uploaded_files";
       const existing = getCookie(cookieKey);
@@ -141,13 +146,15 @@ export default function FileUpload({
         try {
           const parsed = JSON.parse(existing);
           if (Array.isArray(parsed)) items = parsed;
-        } catch {}
+        } catch { }
       }
       items = [...items, meta];
       setCookie(cookieKey, JSON.stringify(items), { path: "/", maxAge: 60 * 60 * 24 * 30 }); // 30 روز
+      return meta;
     } catch (e) {
       // در خطا هم رفتار اپ پابرجا می‌ماند و فقط آپلود شکست می‌خورد
       // عمداً لاگ نهایی در کلاینت زده نمی‌شود تا UI بهم نخورد
+      return undefined;
     }
   };
 
@@ -172,7 +179,7 @@ export default function FileUpload({
   // چک کردن پسوند فایل
   const isValidExtension = (fileName: string): boolean => {
     if (!allowedExtensions || allowedExtensions.length === 0) return true;
-    
+
     const fileExt = getFileExtension(fileName);
     return allowedExtensions.some(ext => {
       const normalizedExt = ext.toLowerCase().startsWith('.') ? ext.toLowerCase() : `.${ext.toLowerCase()}`;
@@ -184,7 +191,7 @@ export default function FileUpload({
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  const validateAndSetFile = (file: File) => {
+  const validateAndSetFile = async (file: File) => {
     // چک کردن پسوند فایل
     if (allowedExtensions && !isValidExtension(file.name)) {
       const extensionsList = allowedExtensions.map(ext => ext.toUpperCase()).join(", ");
@@ -212,16 +219,16 @@ export default function FileUpload({
 
     // فایل معتبر است
     setSizeError("");
-    onChange(file);
     // آپلود خودکار به محض انتخاب فایل
-    uploadFileToServer(file);
+    const meta = await uploadFileToServer(file);
+    onChange(file, meta);
     resetInput();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    validateAndSetFile(file);
+    void validateAndSetFile(file);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -238,7 +245,7 @@ export default function FileUpload({
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
-    validateAndSetFile(file);
+    void validateAndSetFile(file);
   };
 
   return (
@@ -305,69 +312,69 @@ export default function FileUpload({
         {(showException?.row3?.beforeAddFile ||
           showException?.row3?.afterAddFile ||
           showException?.row3?.showLoadingAddFile) && (
-          <div className={styles["file-upload__actions-row3-wrapper"]}>
-            {showException?.row3?.beforeAddFile ||
-            showException?.row3?.afterAddFile ? (
-              <Text
-                textTag="span"
-                textStyle="12S4"
-                textColor={value ? "gray-950" : "gray-400"}
-              >
-                {value
-                  ? value.name
-                  : showException?.row3?.beforeAddFile === true &&
+            <div className={styles["file-upload__actions-row3-wrapper"]}>
+              {showException?.row3?.beforeAddFile ||
+                showException?.row3?.afterAddFile ? (
+                <Text
+                  textTag="span"
+                  textStyle="12S4"
+                  textColor={value ? "gray-950" : "gray-400"}
+                >
+                  {value
+                    ? value.name
+                    : showException?.row3?.beforeAddFile === true &&
                     "PDF, DOC, DOCX | 2MB max."}
-                {showException?.row3?.afterAddFile}
-              </Text>
-            ) : (
-              showException?.row3?.showLoadingAddFile && (
-                <div className={styles["file-upload__actions-row3-loading-wrapper"]}>
-                  <div className={styles["file-upload__actions-row3-loading-full-width"]}>
-                    {showException?.row3?.percentLoadingAddFile &&
-                      showException?.row3?.percentLoadingAddFile > -1 && (
-                        <div
-                          className={styles["file-upload__actions-row3-loading-loaded-width"]}
-                          style={{
-                            width:
-                              showException?.row3?.percentLoadingAddFile >= 0 &&
-                              showException?.row3?.percentLoadingAddFile <= 100
-                                ? `${showException?.row3?.percentLoadingAddFile}%`
-                                : "0%",
-                          }}
-                        />
-                      )}
+                  {showException?.row3?.afterAddFile}
+                </Text>
+              ) : (
+                showException?.row3?.showLoadingAddFile && (
+                  <div className={styles["file-upload__actions-row3-loading-wrapper"]}>
+                    <div className={styles["file-upload__actions-row3-loading-full-width"]}>
+                      {showException?.row3?.percentLoadingAddFile &&
+                        showException?.row3?.percentLoadingAddFile > -1 && (
+                          <div
+                            className={styles["file-upload__actions-row3-loading-loaded-width"]}
+                            style={{
+                              width:
+                                showException?.row3?.percentLoadingAddFile >= 0 &&
+                                  showException?.row3?.percentLoadingAddFile <= 100
+                                  ? `${showException?.row3?.percentLoadingAddFile}%`
+                                  : "0%",
+                            }}
+                          />
+                        )}
+                    </div>
                   </div>
-                </div>
-              )
-            )}
-          </div>
-        )}
+                )
+              )}
+            </div>
+          )}
 
         {/* Row 4 */}
         {(showException?.row3?.afterAddFile ||
           (showException?.row3?.percentLoadingAddFile &&
             showException?.row3?.percentLoadingAddFile >= 0)) && (
-          <div className={styles["file-upload__actions-row4-wrapper"]}>
-            {showException?.row3?.percentLoadingAddFile &&
-              showException?.row3?.percentLoadingAddFile >= 0 && (
-                <div className={styles["file-upload__actions-row4-loading-add"]}>
-                  <Text textStyle="12S4" textColor="gray-950">
-                    {showException?.row3?.percentLoadingAddFile}% تکمیل شده است
-                  </Text>
-                </div>
+            <div className={styles["file-upload__actions-row4-wrapper"]}>
+              {showException?.row3?.percentLoadingAddFile &&
+                showException?.row3?.percentLoadingAddFile >= 0 && (
+                  <div className={styles["file-upload__actions-row4-loading-add"]}>
+                    <Text textStyle="12S4" textColor="gray-950">
+                      {showException?.row3?.percentLoadingAddFile}% تکمیل شده است
+                    </Text>
+                  </div>
+                )}
+              {showException?.row3?.afterAddFile && (
+                <Button>
+                  <div className={styles["file-upload__actions-row4-after-add"]}>
+                    <Trash color="var(--error-700)" size={20} variant="Bulk" />
+                    <Text textStyle="10S5" textColor="error-700">
+                      پاک کردن فایل
+                    </Text>
+                  </div>
+                </Button>
               )}
-            {showException?.row3?.afterAddFile && (
-              <Button>
-                <div className={styles["file-upload__actions-row4-after-add"]}>
-                  <Trash color="var(--error-700)" size={20} variant="Bulk" />
-                  <Text textStyle="10S5" textColor="error-700">
-                    پاک کردن فایل
-                  </Text>
-                </div>
-              </Button>
-            )}
-          </div>
-        )}
+            </div>
+          )}
       </div>
       {/* Error */}
       {(error || sizeError) && (

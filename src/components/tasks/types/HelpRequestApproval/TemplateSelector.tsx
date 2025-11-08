@@ -128,7 +128,12 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   return (
     <div className={styles.fullScreen}>
       <div className={styles.topBar}>
-        <button type="button" className={styles.backButton} onClick={onClose}>
+        <button
+          type="button"
+          className={styles.backButton}
+          onClick={onClose}
+          disabled={isProcessing || isRejecting}
+        >
           <ArrowLeft2 size={20} color="#0E315D" variant="Bold" />
           <span>بازگشت</span>
         </button>

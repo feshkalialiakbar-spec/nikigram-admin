@@ -7,7 +7,7 @@ import FileDownload from '@/components/ui/fileDownload/FileDownload';
 import { Add, Trash } from 'iconsax-react';
 import styles from './index.module.scss';
 import { AIAssistantSection } from '@/components/tasks/shared/AIAssistantSection';
-import FileUpload from '@/components/ui/fileUpload/FileUpload';
+import FileUpload, { FileUploadResult } from '@/components/ui/fileUpload/FileUpload';
 import Button from '@/components/ui/actions/button/Button';
 import { ActionButtons } from '../../shared/ActionButtons';
 import Text from '@/components/ui/text/Text';
@@ -26,6 +26,7 @@ interface UploadedFile {
   name: string;
   size: number;
   uploadDate: string;
+  fileUid?: string;
 }
 
 interface DocumentPayload {
@@ -140,13 +141,11 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     resetFormState();
     setIsDrawerOpen(true);
     setIsApproved(true);
-    setIsTemplateSelectorOpen(true);
   };
   const handleRejectClick = () => {
     resetFormState();
     setIsDrawerOpen(true);
     setIsApproved(false);
-    setIsTemplateSelectorOpen(true);
   };
   const handleDrawerClose = (isOpen: boolean) => {
     if (!isOpen) {
@@ -164,7 +163,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     ]);
   };
 
-  const handleFileChange = (fieldId: string, file: File | null) => {
+const handleFileChange = (fieldId: string, file: File | null, meta?: FileUploadResult) => {
     if (!file) {
       setFileUploadFields(prev => {
         const updatedFields = prev.map(field =>
@@ -180,12 +179,18 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
       return;
     }
 
+    if (!meta?.file_uid) {
+      showError('شناسه فایل از سرور دریافت نشد. لطفاً دوباره تلاش کنید.');
+      return;
+    }
+
     const uploadedFile: UploadedFile = {
       id: String(Date.now()),
       file,
       name: file.name,
       size: file.size,
-      uploadDate: new Date().toLocaleDateString('fa-IR')
+      uploadDate: new Date().toLocaleDateString('fa-IR'),
+      fileUid: meta.file_uid
     };
 
     setFileUploadFields(prev => {
@@ -194,7 +199,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
           ? {
             ...field,
             documentType: getFileExtension(file.name),
-            fileUid: uploadedFile.id,
+            fileUid: meta.file_uid ?? '',
             uploadedFile
           }
           : field
@@ -349,6 +354,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     if (Object.keys(currentErrors).length > 0) {
       setValidationErrors(prev => ({ ...prev, ...currentErrors }));
       showError('لطفاً نام مدرک را برای تمامی فایل‌ها وارد کنید.');
+      return;
+    }
+
+    const invalidFile = fieldsWithFiles.find(field => !field.fileUid || field.fileUid.trim() === '');
+    if (invalidFile) {
+      showError('شناسه فایل معتبر نیست. لطفاً فایل را مجدداً بارگذاری کنید.');
       return;
     }
 
@@ -531,7 +542,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                     )}
                     <FileUpload
                       value={null}
-                      onChange={(file) => handleFileChange(field.id, file)}
+                      onChange={(file, meta) => handleFileChange(field.id, file, meta)}
                       onFocus={() => setFocusedFieldId(field.id)}
                       onBlur={() => setFocusedFieldId(null)}
                       isFocused={focusedFieldId === field.id}
@@ -577,8 +588,8 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
               rows={6}
             />
           </div>
-
           <Button
+            fullScreen
             bgColor='primary-900'
             buttonClassName={styles.submitButton}
             onClick={handleFinalSubmit}
