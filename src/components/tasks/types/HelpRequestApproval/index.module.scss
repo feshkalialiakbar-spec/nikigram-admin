@@ -1,5 +1,4 @@
-/* Layout */
-.container {
+ .container {
   width: 100%;
   min-height: 100vh;
   background: #f0f4fa;
@@ -344,6 +343,17 @@
     outline: none;
     border-color: #007bff;
   }
+}
+
+.documentNameInputError {
+  border-color: #e70218;
+  background: #fff5f6;
+}
+
+.errorText {
+  font-size: 12px;
+  color: #e70218;
+  text-align: right;
 }
 
 

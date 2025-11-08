@@ -15,3 +15,10 @@ export {
 // Re-export deprecated task service for backward compatibility
 export * from './task';
 
+export {
+  fetchProjectTemplateList,
+  createProjectTemplateRequest,
+  verifyProjectRequest,
+  fetchProjectTemplateDetail,
+} from './projectTemplate';
+

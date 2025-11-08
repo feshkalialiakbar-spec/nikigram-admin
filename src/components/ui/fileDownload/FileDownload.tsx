@@ -5,6 +5,7 @@ import { Eye, Import, Trash } from "iconsax-react";
 import FileStyle from "@/components/global/fileStyle/FileStyle";
 import Image from "next/image";
 import Button from "@/components/ui/actions/button/Button";
+import { buildDocDownloadUrl } from "@/utils/docUrl";
 
 interface FileDownloadProps {
   title?: string;
@@ -84,13 +85,14 @@ export default function FileDownload({
     if (!ext) return false;
     return ["mp3", "wav", "ogg", "aac", "m4a", "flac", "wma"].includes(ext);
   }, [getExtension]);
+  const resolvedFileUrl = React.useMemo(() => buildDocDownloadUrl(fileUrl), [fileUrl]);
   const handleDownload = async () => {
     try {
       // Call proxy via POST so URL is hidden from address bar and prevent navigation
       const response = await fetch('/api/proxy-download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: fileUrl, filename: fileName }),
+        body: JSON.stringify({ url: resolvedFileUrl || fileUrl, filename: fileName }),
       });
       if (!response.ok) {
         throw new Error(`Proxy error: ${response.status}`);
@@ -137,7 +139,7 @@ export default function FileDownload({
           style={{ backgroundColor: bgcColor ? `var(--${bgcColor})` : "" }}
         >
           <div className={styles["file-download__top-row"]}>
-            <FileStyle fileName={fileName} fileUrl={fileUrl} />
+            <FileStyle fileName={fileName} fileUrl={resolvedFileUrl || fileUrl} />
             <div className={styles["file-download__info"]}>
               <div className={styles["file-download__name"]}>
                 <Text textStyle="12S5" textColor="secondary2-700">{title || fileName}</Text>
@@ -199,7 +201,7 @@ export default function FileDownload({
             <div className={styles["file-download__modal-body"]}>
               {isImage ? (
                 <Image
-                  src={fileUrl}
+                  src={resolvedFileUrl || fileUrl}
                   alt={title || fileName}
                   className={styles["file-download__preview"]}
                   width={800}
@@ -208,7 +210,7 @@ export default function FileDownload({
                 />
               ) : isVideo ? (
                 <video
-                  src={fileUrl}
+                  src={resolvedFileUrl || fileUrl}
                   controls
                   className={styles["file-download__preview"]}
                   style={{ width: '100%', maxHeight: '80vh' }}
@@ -217,7 +219,7 @@ export default function FileDownload({
                 </video>
               ) : isPdf ? (
                 <embed
-                  src={fileUrl}
+                  src={resolvedFileUrl || fileUrl}
                   type="application/pdf"
                   className={styles["file-download__preview"]}
                   style={{ width: '100%', height: '80vh', minHeight: '500px' }}
@@ -231,9 +233,9 @@ export default function FileDownload({
                   padding: '2rem',
                   minHeight: '300px'
                 }}>
-                  <FileStyle fileName={fileName} fileUrl={fileUrl} />
+                  <FileStyle fileName={fileName} fileUrl={resolvedFileUrl || fileUrl} />
                   <audio
-                    src={fileUrl}
+                    src={resolvedFileUrl || fileUrl}
                     controls
                     style={{ width: '100%', maxWidth: '500px', marginTop: '1rem' }}
                   >
@@ -250,7 +252,7 @@ export default function FileDownload({
                   minHeight: '300px',
                   textAlign: 'center'
                 }}>
-                  <FileStyle fileName={fileName} fileUrl={fileUrl} />
+                  <FileStyle fileName={fileName} fileUrl={resolvedFileUrl || fileUrl} />
                   <div style={{ marginTop: '1rem' }}>
                     <Text 
                       textStyle="14S5" 

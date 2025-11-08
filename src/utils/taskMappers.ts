@@ -13,6 +13,28 @@ import {
   ApiTemplateRequestResponse,
   TemplateRequestDetails,
 } from '@/components/tasks/types';
+import { buildDocDownloadUrl } from '@/utils/docUrl';
+
+const DOWNLOAD_FALLBACK_BASE = 'https://nikicity.com/api/sys/files/download';
+
+const ensureArray = <T>(value?: T[] | null): T[] => (Array.isArray(value) ? value : []);
+
+const safeBuildDocDownloadUrl = (value?: string | null): string | undefined => {
+  if (!value) return undefined;
+  try {
+    const resolved = buildDocDownloadUrl(value);
+    if (resolved) {
+      return resolved;
+    }
+  } catch (error) {
+    console.warn('[taskMappers] buildDocDownloadUrl failed, fallback in use', {
+      value,
+      error,
+    });
+  }
+  const sanitized = String(value).replace(/^\/+/, '');
+  return `${DOWNLOAD_FALLBACK_BASE}/${sanitized}`;
+};
 
 /**
  * Convert education degree code to Persian label
@@ -43,8 +65,9 @@ const formatDate = (dateString: string): string => {
 /**
  * Convert file size from bytes to human readable format
  */
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '۰ بایت';
+const formatFileSize = (bytes: number | null | undefined): string => {
+  if (!Number.isFinite(bytes)) return '—';
+  if (!bytes) return '۰ بایت';
   const k = 1024;
   const sizes = ['بایت', 'کیلوبایت', 'مگابایت', 'گیگابایت'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -63,15 +86,24 @@ const getFileExtension = (filename: string): string => {
  * Map party documents to ProfileDocument format
  */
 const mapPartyDocsToProfileDocuments = (
-  docs: ApiProfileChangeRequestResponse['party_docs_data']
+  docs?: ApiProfileChangeRequestResponse['party_docs_data'] | null
 ): ProfileDocument[] => {
-  return docs.map((doc, index) => ({
+  return ensureArray(docs).map((doc, index) => ({
+    document_id: doc.document_id,
+    document_type: doc.document_type,
+    file_uid: doc.file_uid,
+    upload_date: doc.upload_date,
+    is_verified: doc.is_verified,
+    status_id: doc.status_id,
+    version: doc.version,
+    file_extension: doc.file_extension,
+    file_size: doc.file_size,
     id: doc.document_id.toString(),
     filename: `مدرک ${index + 1}`,
-    fileType: 'pdf' as 'jpg' | 'pdf', // Default to pdf, can be determined from file_uid if needed
+    fileType: (doc.file_extension?.toLowerCase() === 'jpg' ? 'jpg' : 'pdf'),
     uploadDate: formatDate(doc.upload_date),
-    fileSize: '۴ MB', // Size not provided in API, using default
-    url: `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`,
+    fileSize: formatFileSize(doc.file_size),
+    url: safeBuildDocDownloadUrl(doc.file_uid),
   }));
 };
 
@@ -82,15 +114,39 @@ export const mapProfileChangeRequestToComponent = (
   apiResponse: ApiProfileChangeRequestResponse
 ): ProfileChangeRequest => {
   console.log('Mapping profile change request:', apiResponse);
-  
+
   const { task_details, party_request_details, party_docs_data, changed_fields } = apiResponse;
 
-  if (!task_details) {
-    throw new Error('task_details is missing from API response');
-  }
-  
-  if (!party_request_details) {
-    throw new Error('party_request_details is missing from API response');
+  if (!task_details || !party_request_details) {
+    console.warn('[taskMappers] profile change mapper received incomplete payload', {
+      hasTask: Boolean(task_details),
+      hasPartyDetails: Boolean(party_request_details),
+    });
+    return {
+      id: task_details?.task_id?.toString() || 'unknown',
+      requestDate: task_details?.created_at ? formatDate(task_details.created_at) : '—',
+      userName: 'نامشخص',
+      userAvatar: undefined,
+      realProfile: {
+        profileType: 'حقیقی',
+        gender: 'نامشخص',
+        contactNumber: '—',
+        nationalId: '—',
+        lastName: '—',
+        firstName: '—',
+        documents: [],
+      },
+      legalProfile: {
+        profileType: 'حقوقی',
+        contactNumber: '—',
+        roleInCompany: 'نامشخص',
+        nationalId: '—',
+        companyName: 'نامشخص',
+        documents: [],
+      },
+      primaryIndividuals: [],
+      aiComment: undefined,
+    };
   }
 
   // Create real profile with all available data
@@ -116,15 +172,15 @@ export const mapProfileChangeRequestToComponent = (
 
   // Generate AI comment based on changed fields
   const changedFieldsLabels = getChangedFieldsLabels(changed_fields);
-  const aiComment = `این درخواست شامل تغییر در فیلدهای ${changedFieldsLabels.join('، ')} می‌باشد. لطفاً اطلاعات را بررسی و تایید کنید.`;
+  const aiComment = changedFieldsLabels.length
+    ? `این درخواست شامل تغییر در فیلدهای ${changedFieldsLabels.join('، ')} می‌باشد. لطفاً اطلاعات را بررسی و تایید کنید.`
+    : 'هیچ فیلد تغییریافته‌ای ثبت نشده است.';
 
   return {
     id: task_details.task_id?.toString() || 'unknown',
     requestDate: formatDate(task_details.created_at || new Date().toISOString()),
     userName: `${party_request_details.first_name || ''} ${party_request_details.last_name || ''}`.trim() || 'نامشخص',
-    userAvatar: party_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${party_request_details.profile_image}`
-      : undefined,
+    userAvatar: safeBuildDocDownloadUrl(party_request_details.profile_image),
     realProfile,
     legalProfile,
     primaryIndividuals: [], // Not provided in this API response
@@ -135,7 +191,10 @@ export const mapProfileChangeRequestToComponent = (
 /**
  * Helper function to determine which fields have changed
  */
-export const getChangedFieldsLabels = (changedFields: string[]): string[] => {
+export const getChangedFieldsLabels = (changedFields: string[] | null | undefined): string[] => {
+  if (!Array.isArray(changedFields) || changedFields.length === 0) {
+    return [];
+  }
   const fieldLabels: Record<string, string> = {
     FirstName: 'نام',
     LastName: 'نام خانوادگی',
@@ -154,7 +213,10 @@ export const getChangedFieldsLabels = (changedFields: string[]): string[] => {
 /**
  * Format amount in Tomans
  */
-const formatAmount = (amount: number): string => {
+const formatAmount = (amount?: number): string => {
+  if (typeof amount !== 'number' || Number.isNaN(amount)) {
+    return '—';
+  }
   return new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
 };
 
@@ -184,12 +246,11 @@ const mapProjectDocsToHelpDocuments = (
   apiResponse: ApiHelpRequestResponse
 ): HelpRequestDocument[] => {
   // Check for new format first
-  if (apiResponse.project_request_documents && apiResponse.project_request_documents.length > 0) {
-    return apiResponse.project_request_documents.map((doc, index) => {
+  const projectRequestDocs = ensureArray(apiResponse.project_request_documents);
+  if (projectRequestDocs.length > 0) {
+    return projectRequestDocs.map((doc, index) => {
       const fileExtension = getFileExtension(doc.document_name || '');
-      const fileUrl = doc.file_uid
-        ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`
-        : '';
+      const fileUrl = safeBuildDocDownloadUrl(doc.file_uid);
       return {
         id: doc.document_id.toString(),
         filename: doc.document_name || `مدرک ${index + 1}`,
@@ -202,15 +263,13 @@ const mapProjectDocsToHelpDocuments = (
   }
 
   // Fall back to old format
-  const docs = apiResponse.project_docs_data;
-  if (!docs || docs.length === 0) return [];
+  const docs = ensureArray(apiResponse.project_docs_data);
+  if (docs.length === 0) return [];
 
   return docs.map((doc, index) => {
     const fileExtension = getFileExtension(doc.filename);
     const fileSize = typeof doc.file_size === 'number' ? formatFileSize(doc.file_size) : '—';
-    const fileUrl = doc.file_uid
-      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${doc.file_uid}`
-      : '';
+    const fileUrl = safeBuildDocDownloadUrl(doc.file_uid);
     return {
       id: doc.document_id.toString(),
       filename: doc.filename || `مدرک ${index + 1}`,
@@ -226,44 +285,96 @@ const mapProjectDocsToHelpDocuments = (
  * Map help request API response to HelpRequestDetails component props
  * Supports both new and old API response formats
  */
+const buildFallbackHelpRequest = (
+  taskDetails?: ApiHelpRequestResponse['task_details']
+): HelpRequestDetails => ({
+  id: taskDetails?.task_id?.toString() || 'unknown',
+  requestDate: taskDetails?.created_at ? formatDate(taskDetails.created_at) : '—',
+  requestType: 'نامشخص',
+  requestTitle: '—',
+  category: '—',
+  subcategory: '—',
+  timeframe: '—',
+  requiredAmount: formatAmount(),
+  contactInfo: '—',
+  shebaNumber: '—',
+  isShebaVerified: false,
+  description: '—',
+  attachedDocuments: [],
+  user: {
+    id: taskDetails?.task_id?.toString() || '0',
+    name: 'نامشخص',
+    level: getUserLevelLabel(1),
+    avatar: undefined,
+  },
+  aiComment: undefined,
+});
+
 export const mapHelpRequestToComponent = (
   apiResponse: ApiHelpRequestResponse
 ): HelpRequestDetails => {
   const { task_details, project_request_details } = apiResponse;
 
+  if (!task_details || !project_request_details) {
+    console.warn('[taskMappers] help request mapper received incomplete payload', {
+      hasTask: Boolean(task_details),
+      hasProjectDetails: Boolean(project_request_details),
+    });
+    return buildFallbackHelpRequest(task_details);
+  }
+
   // Handle user level - use provided level or default
-  const userLevel = project_request_details.user_level ?? 1;
+  const userLevel = typeof project_request_details.user_level === 'number'
+    ? project_request_details.user_level
+    : 1;
 
   // Handle request title - use title or request_title
-  const requestTitle = project_request_details.title || project_request_details.request_title || '';
+  const requestTitle =
+    project_request_details.title?.trim() ||
+    project_request_details.request_title?.trim() ||
+    '—';
 
   // Handle subcategory - use subcategory_name or parent_category_name, or default
-  const subcategory = project_request_details.subcategory_name || project_request_details.parent_category_name || '—';
+  const subcategory =
+    project_request_details.subcategory_name ||
+    project_request_details.parent_category_name ||
+    '—';
 
   // Handle timeframe - use timeframe or time_period
-  const timeframe = project_request_details.timeframe || 
+  const timeframe =
+    project_request_details.timeframe?.trim() ||
     (project_request_details.time_period ? `${project_request_details.time_period} ماه` : '—');
 
   // Handle required amount - use required_amount or amount_in_period
-  const requiredAmount = project_request_details.required_amount || project_request_details.amount_in_period || 0;
+  const requiredAmount =
+    typeof project_request_details.required_amount === 'number'
+      ? project_request_details.required_amount
+      : project_request_details.amount_in_period;
 
   // Handle contact info - use contact_info or mobile
-  const contactInfo = project_request_details.contact_info || project_request_details.mobile || '—';
+  const contactInfo =
+    project_request_details.contact_info?.trim() ||
+    project_request_details.mobile?.trim() ||
+    '—';
 
   // Handle sheba number - use sheba_number or ibn
-  const shebaNumber = project_request_details.sheba_number || project_request_details.ibn || '—';
-  
+  const shebaNumber =
+    project_request_details.sheba_number?.trim() ||
+    project_request_details.ibn?.trim() ||
+    '—';
+
   // Handle sheba verification - use is_sheba_verified or check is_verified
-  const isShebaVerified = project_request_details.is_sheba_verified ?? (project_request_details.is_verified === 1);
+  const isShebaVerified =
+    typeof project_request_details.is_sheba_verified === 'boolean'
+      ? project_request_details.is_sheba_verified
+      : project_request_details.is_verified === 1;
 
   // Handle profile image
-  const profileImage = project_request_details.profile_image 
-    ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${project_request_details.profile_image}`
-    : undefined;
+  const profileImage = safeBuildDocDownloadUrl(project_request_details.profile_image);
 
   const user: HelpRequestUser = {
-    id: project_request_details.user_id.toString(),
-    name: `${project_request_details.first_name} ${project_request_details.last_name}`,
+    id: project_request_details.user_id?.toString() || '0',
+    name: `${project_request_details.first_name || ''} ${project_request_details.last_name || ''}`.trim() || 'نامشخص',
     level: getUserLevelLabel(userLevel),
     avatar: profileImage,
   };
@@ -308,13 +419,13 @@ export const mapCooperationRequestToComponent = (
   apiResponse: ApiCooperationRequestResponse
 ): CooperationRequestDetails => {
   console.log('Mapping cooperation request:', apiResponse);
-  
+
   const { task_details, cooperation_request_details, specialization_details } = apiResponse;
 
   if (!task_details) {
     throw new Error('task_details is missing from API response');
   }
-  
+
   if (!cooperation_request_details) {
     throw new Error('cooperation_request_details is missing from API response');
   }
@@ -326,7 +437,7 @@ export const mapCooperationRequestToComponent = (
     status: getStatusLabel(cooperation_request_details.status || 1),
     userName: cooperation_request_details.full_name || 'نامشخص',
     userAvatar: cooperation_request_details.profile_image
-      ? `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${cooperation_request_details.profile_image}`
+      ? buildDocDownloadUrl(cooperation_request_details.profile_image)
       : undefined,
     specializations: specialization_details || [],
   };

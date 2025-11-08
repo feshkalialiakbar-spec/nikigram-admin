@@ -1,13 +1,18 @@
 import type { NextConfig } from "next";
+import { getDocRemotePattern } from "./src/utils/docUrl";
+
+const docPattern = getDocRemotePattern();
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: new URL(process.env.NEXT_PUBLIC_API_URL || 'https://nikicity.com').hostname,
-      },
-    ],
+    remotePatterns: docPattern
+      ? [docPattern]
+      : [
+          {
+            protocol: "https",
+            hostname: "nikicity.com",
+          },
+        ],
   },
 };
 

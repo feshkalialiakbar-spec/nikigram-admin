@@ -11,6 +11,15 @@ import FileUpload from '@/components/ui/fileUpload/FileUpload';
 import Button from '@/components/ui/actions/button/Button';
 import { ActionButtons } from '../../shared/ActionButtons';
 import Text from '@/components/ui/text/Text';
+import { buildDocDownloadUrl } from '@/utils/docUrl';
+import { getCookieByKey } from '@/actions/cookieToken';
+import { useToast } from '@/components/ui';
+import TemplateSelector from './TemplateSelector';
+import {
+  createProjectTemplateRequest,
+  verifyProjectRequest,
+  ProjectTemplateDetailResponse,
+} from '@/services/projectTemplate';
 interface UploadedFile {
   id: string;
   file: File;
@@ -18,35 +27,81 @@ interface UploadedFile {
   size: number;
   uploadDate: string;
 }
+
+interface DocumentPayload {
+  document_name: string;
+  document_type: string;
+  file_uid: string;
+  version: string;
+  status_id: number;
+}
+
 interface FileUploadField {
   id: string;
   documentName: string;
+  documentType: string;
+  fileUid: string;
+  version: string;
+  statusId: number;
   uploadedFile: UploadedFile | null;
 }
+
+const createEmptyFileField = (id: string): FileUploadField => ({
+  id,
+  documentName: '',
+  documentType: '',
+  fileUid: '',
+  version: '1.0',
+  statusId: 0,
+  uploadedFile: null,
+});
 const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
   onReject,
   className
 }) => {
+  const { showSuccess, showError } = useToast();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [fileUploadFields, setFileUploadFields] = useState<FileUploadField[]>([
-    { id: '1', documentName: '', uploadedFile: null }
+    createEmptyFileField('1')
   ]);
+  const [isApproved, setIsApproved] = useState<boolean>(false);
   const [description, setDescription] = useState('');
   const [focusedFieldId, setFocusedFieldId] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
+  const [isRejectingTemplate, setIsRejectingTemplate] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTemplateSelectorOpen, setIsTemplateSelectorOpen] = useState(false);
+  const [isVerifyingTemplate, setIsVerifyingTemplate] = useState(false);
+  const [lastSubmissionDescription, setLastSubmissionDescription] = useState('');
 
   const containerClassName = `${styles.container}${className ? ` ${className}` : ''}`;
   const safeText = (value?: string | number | null) =>
     value === null || value === undefined || String(value).trim() === '' ? '—' : String(value);
 
-  const attachments = request.attachedDocuments || [];
+  const attachments = (request.attachedDocuments || []).map((doc) => ({
+    ...doc,
+    resolvedUrl: buildDocDownloadUrl(doc.url || ''),
+  }));
+
+  const userAvatarUrl = request.user.avatar
+    ? buildDocDownloadUrl(request.user.avatar)
+    : undefined;
 
   const detailItems = [
     {
       key: 'user', label: 'نام کاربر', value: (
         <div className={styles.userValue}>
-          {request.user.avatar && <Image src={request.user.avatar} alt={request.user.name} className={styles.avatar} width={40} height={40} />}
+          {userAvatarUrl && (
+            <Image
+              src={`${request.user.avatar}`}
+              alt={request.user.name}
+              className={styles.avatar}
+              width={40}
+              height={40}
+            />
+          )}
           <span>{safeText(request.user.name)}</span>
         </div>
       )
@@ -69,33 +124,59 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     }
   ];
 
-  const handleApproveClick = () => {
-    setFileUploadFields([{ id: '1', documentName: '', uploadedFile: null }]);
+  const resetFormState = () => {
+    setFileUploadFields([createEmptyFileField('1')]);
     setDescription('');
-    setIsDrawerOpen(true);
+    setValidationErrors({});
+    setIsRejectingTemplate(false);
+    setIsSubmitting(false);
+    setIsVerifyingTemplate(false);
+    setFocusedFieldId(null);
+    setIsTemplateSelectorOpen(false);
+    setLastSubmissionDescription('');
   };
 
+  const handleApproveClick = () => {
+    resetFormState();
+    setIsDrawerOpen(true);
+    setIsApproved(true);
+    setIsTemplateSelectorOpen(true);
+  };
+  const handleRejectClick = () => {
+    resetFormState();
+    setIsDrawerOpen(true);
+    setIsApproved(false);
+    setIsTemplateSelectorOpen(true);
+  };
   const handleDrawerClose = (isOpen: boolean) => {
     if (!isOpen) {
       // Reset form when closing drawer
-      setFileUploadFields([{ id: '1', documentName: '', uploadedFile: null }]);
-      setDescription('');
+      resetFormState();
     }
     setIsDrawerOpen(isOpen);
   };
 
   const handleAddNewFile = () => {
     const newId = String(Date.now());
-    setFileUploadFields([...fileUploadFields, { id: newId, documentName: '', uploadedFile: null }]);
+    setFileUploadFields([
+      ...fileUploadFields,
+      createEmptyFileField(newId)
+    ]);
   };
 
   const handleFileChange = (fieldId: string, file: File | null) => {
     if (!file) {
-      setFileUploadFields(fileUploadFields.map(field =>
-        field.id === fieldId
-          ? { ...field, uploadedFile: null }
-          : field
-      ));
+      setFileUploadFields(prev => {
+        const updatedFields = prev.map(field =>
+          field.id === fieldId ? createEmptyFileField(fieldId) : field
+        );
+        setValidationErrors(current => {
+          const next = { ...current };
+          delete next[fieldId];
+          return next;
+        });
+        return updatedFields;
+      });
       return;
     }
 
@@ -107,35 +188,137 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
       uploadDate: new Date().toLocaleDateString('fa-IR')
     };
 
-    setFileUploadFields(fileUploadFields.map(field =>
-      field.id === fieldId
-        ? { ...field, uploadedFile }
-        : field
-    ));
+    setFileUploadFields(prev => {
+      const updatedFields = prev.map(field =>
+        field.id === fieldId
+          ? {
+            ...field,
+            documentType: getFileExtension(file.name),
+            fileUid: uploadedFile.id,
+            uploadedFile
+          }
+          : field
+      );
+      const currentField = updatedFields.find(field => field.id === fieldId);
+      setValidationErrors(current => {
+        const next = { ...current };
+        if (currentField?.uploadedFile && (!currentField.documentName || currentField.documentName.trim() === '')) {
+          next[fieldId] = true;
+        } else {
+          delete next[fieldId];
+        }
+        return next;
+      });
+      return updatedFields;
+    });
   };
 
   const handleDocumentNameChange = (fieldId: string, name: string) => {
-    setFileUploadFields(fileUploadFields.map(field =>
-      field.id === fieldId
-        ? { ...field, documentName: name }
-        : field
-    ));
+    setFileUploadFields(prev => {
+      const updatedFields = prev.map(field =>
+        field.id === fieldId
+          ? { ...field, documentName: name }
+          : field
+      );
+      const currentField = updatedFields.find(field => field.id === fieldId);
+      setValidationErrors(current => {
+        const next = { ...current };
+        if (currentField?.uploadedFile && (!currentField.documentName || currentField.documentName.trim() === '')) {
+          next[fieldId] = true;
+        } else {
+          delete next[fieldId];
+        }
+        return next;
+      });
+      return updatedFields;
+    });
   };
 
   const handleDeleteFile = (fieldId: string) => {
-    setFileUploadFields(fileUploadFields.map(field =>
-      field.id === fieldId
-        ? { ...field, uploadedFile: null }
-        : field
-    ));
+    setFileUploadFields(prev => {
+      const updatedFields = prev.map(field =>
+        field.id === fieldId ? createEmptyFileField(fieldId) : field
+      );
+      setValidationErrors(current => {
+        const next = { ...current };
+        delete next[fieldId];
+        return next;
+      });
+      return updatedFields;
+    });
   };
 
   const handleRemoveField = (fieldId: string) => {
     if (fileUploadFields.length > 1) {
-      setFileUploadFields(fileUploadFields.filter(field => field.id !== fieldId));
+      setFileUploadFields(prev => prev.filter(field => field.id !== fieldId));
+      setValidationErrors(current => {
+        const next = { ...current };
+        delete next[fieldId];
+        return next;
+      });
       if (focusedFieldId === fieldId) {
         setFocusedFieldId(null);
       }
+    }
+  };
+
+  const handleTemplateReject = async () => {
+    setIsRejectingTemplate(true);
+    const fallbackText = 'درخواست ایجاد تمپلیت جدید';
+    const notesSource = lastSubmissionDescription || description;
+    const notes = notesSource.trim() || fallbackText;
+    try {
+      const response = await createProjectTemplateRequest(request.id, {
+        description: notes,
+        assignment_notes: notes
+      });
+      if (response?.detail) {
+        showError(response.detail);
+        return;
+      }
+      showSuccess(response?.message ?? 'درخواست ایجاد تمپلیت ثبت شد.');
+    } catch (error) {
+      console.error('Error requesting new template:', error);
+      showError(error instanceof Error ? error.message : 'خطا در ارسال درخواست تمپلیت جدید');
+    } finally {
+      setIsRejectingTemplate(false);
+      setIsTemplateSelectorOpen(false);
+      resetFormState();
+    }
+  };
+
+  const handleTemplateConfirm = async (detail: ProjectTemplateDetailResponse) => {
+    setIsVerifyingTemplate(true);
+    const verificationDescription = lastSubmissionDescription || detail.description || '';
+    try {
+      const verifyResponse = await verifyProjectRequest(request.id, {
+        template_id: detail.project_temp_id,
+        title: detail.title,
+        description: verificationDescription,
+        task_assignments: [],
+      });
+
+      if (verifyResponse?.detail) {
+        showError(verifyResponse.detail);
+        return;
+      }
+
+      showSuccess(verifyResponse?.message ?? 'تمپلیت با موفقیت تایید شد.');
+      console.log('Template verification data:', {
+        requestId: request.id,
+        template: detail,
+        description: verificationDescription
+      });
+
+      setIsTemplateSelectorOpen(false);
+      resetFormState();
+      setIsDrawerOpen(false);
+      onApprove?.(request.id);
+    } catch (error) {
+      console.error('Error verifying project request:', error);
+      showError(error instanceof Error ? error.message : 'خطا در تایید تمپلیت انتخاب شده');
+    } finally {
+      setIsVerifyingTemplate(false);
     }
   };
 
@@ -149,26 +332,87 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     return fileName.split('.').pop()?.toUpperCase() || 'FILE';
   };
 
-  const handleSubmit = () => {
-    const finalData = {
-      requestId: request.id,
-      description,
-      files: fileUploadFields
-        .filter(field => field.uploadedFile)
-        .map(field => ({
-          documentName: field.documentName,
-          fileName: field.uploadedFile!.name,
-          fileSize: formatFileSize(field.uploadedFile!.size),
-          uploadDate: field.uploadedFile!.uploadDate,
-          file: field.uploadedFile!.file
-        }))
-    };
+  const handleFinalSubmit = async () => {
+    const fieldsWithFiles = fileUploadFields.filter(field => field.uploadedFile);
+    if (fieldsWithFiles.length === 0) {
+      showError('لطفاً حداقل یک مدرک بارگذاری کنید.');
+      return;
+    }
 
-    console.log('Final Data:', finalData);
+    const currentErrors: Record<string, boolean> = {};
+    fieldsWithFiles.forEach(field => {
+      if (!field.documentName || field.documentName.trim() === '') {
+        currentErrors[field.id] = true;
+      }
+    });
 
-    // Close drawer and call onApprove
-    setIsDrawerOpen(false);
-    onApprove(request.id);
+    if (Object.keys(currentErrors).length > 0) {
+      setValidationErrors(prev => ({ ...prev, ...currentErrors }));
+      showError('لطفاً نام مدرک را برای تمامی فایل‌ها وارد کنید.');
+      return;
+    }
+
+    const filesPayload: DocumentPayload[] = fieldsWithFiles.map(field => ({
+      document_name: field.documentName.trim(),
+      document_type: field.documentType || getFileExtension(field.uploadedFile!.name),
+      file_uid: field.fileUid,
+      version: field.version,
+      status_id: field.statusId
+    }));
+
+    const endpoint = `https://nikicity.com/api/admin/task/project/request/${request.id}/documents?is_verified=${isApproved}`;
+    const token = await getCookieByKey('access_token') as string;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(filesPayload)
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const detail = data?.detail ?? 'خطا در ارسال مدارک';
+        showError(detail);
+        return;
+      }
+
+      if (data?.detail) {
+        showError(data.detail);
+        return;
+      }
+
+      console.log('Document submission data:', {
+        requestId: request.id,
+        isApproved,
+        description,
+        documents: filesPayload
+      });
+
+      setLastSubmissionDescription(description);
+      setFileUploadFields([createEmptyFileField('1')]);
+      setValidationErrors({});
+      setDescription('');
+      setFocusedFieldId(null);
+      setIsDrawerOpen(false);
+
+      if (isApproved) {
+        setIsTemplateSelectorOpen(true);
+      } else {
+        showSuccess(data?.message ?? 'مدارک با موفقیت ثبت شد.');
+        resetFormState();
+      }
+    } catch (error) {
+      console.error('Error submitting documents:', error);
+      showError('خطا در ثبت اطلاعات نهایی');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -203,8 +447,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                     <FileDownload
                       title={doc.filename}
                       fileName={doc.filename}
-                      fileUrl={doc.url || ''}
-
+                      fileUrl={doc.resolvedUrl}
                     />
                     <div className={styles.documentMeta}>
                       <span>{doc.fileSize || '—'}</span>
@@ -221,7 +464,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         <AIAssistantSection comment='این بخش شامل نظر AI هست که در مورد درخواست ارسال شده توضیحات لازم را در راستای کمک به ادمین می‌دهد.' />
         <ActionButtons
           onApprove={handleApproveClick}
-          onReject={handleApproveClick}
+          onReject={handleRejectClick}
           className={styles.actionButtons}
         />
       </div>
@@ -247,12 +490,15 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                       />
                       <input
                         type="text"
-                        className={styles.documentNameInput}
+                        className={`${styles.documentNameInput} ${validationErrors[field.id] ? styles.documentNameInputError : ''}`}
                         placeholder="نام مدرک"
                         value={field.documentName}
                         onChange={(e) => handleDocumentNameChange(field.id, e.target.value)}
                       />
                     </div>
+                    {validationErrors[field.id] && (
+                      <span className={styles.errorText}>نام مدرک الزامی است</span>
+                    )}
                     <div className={styles.uploadStatus}>
                       <span className={styles.statusSuccess}>بارگذاری با موفقیت انجام شد</span>
                       <div className={styles.fileTypeBadge}>{getFileExtension(field.uploadedFile.name)}</div>
@@ -275,11 +521,14 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
                   <div className={styles.fileUploadWrapper}>
                     <input
                       type="text"
-                      className={styles.documentNameInput}
+                      className={`${styles.documentNameInput} ${validationErrors[field.id] ? styles.documentNameInputError : ''}`}
                       placeholder="نام مدرک"
                       value={field.documentName}
                       onChange={(e) => handleDocumentNameChange(field.id, e.target.value)}
                     />
+                    {validationErrors[field.id] && (
+                      <span className={styles.errorText}>نام مدرک الزامی است</span>
+                    )}
                     <FileUpload
                       value={null}
                       onChange={(file) => handleFileChange(field.id, file)}
@@ -331,11 +580,28 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
 
           <Button
             bgColor='primary-900'
-            buttonClassName={styles.submitButton} onClick={handleSubmit}>
-            ثبت
+            buttonClassName={styles.submitButton}
+            onClick={handleFinalSubmit}
+            disabled={isSubmitting}
+          >
+            <Text textColor="main-white" textStyle="14S7">
+              {isSubmitting ? 'در حال ثبت...' : 'ثبت نهایی'}
+            </Text>
           </Button>
         </div>
       </DrawerModal>
+      {isTemplateSelectorOpen && (
+        <TemplateSelector
+          onClose={() => {
+            setIsTemplateSelectorOpen(false);
+            resetFormState();
+          }}
+          onTemplateReject={handleTemplateReject}
+          onConfirmTemplate={handleTemplateConfirm}
+          isRejecting={isRejectingTemplate}
+          isProcessing={isVerifyingTemplate}
+        />
+      )}
     </div>
   );
 };

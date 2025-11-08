@@ -135,9 +135,22 @@ const TaskDetailPage: React.FC = () => {
         if (result.detail) showError('خطا در تایید', result.detail || 'خطا در تایید درخواست');
 
       } else if (taskType === 'help') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${pendingRequestId}/approve/`, {
+        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${pendingRequestId}/verify`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            "template_id": 0,
+            "title": "string",
+            "description": "stringbibiiiiiiiiiiiiiiiiiii",
+            "task_assignments": [
+              {
+                "temp_task_id": 1,
+                "staff_id": 1,
+                "deadline": 0,
+                "assignment_notes": "string"
+              }
+            ]
+          })
         });
       } else if (taskType === 'template') {
         response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${pendingRequestId}/approve/`, {

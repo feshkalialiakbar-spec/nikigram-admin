@@ -1,4 +1,5 @@
 import { TaskInterface } from "@/interface";
+import { buildDocDownloadUrl } from "@/utils/docUrl";
 
 // Re-export TaskInterface for convenience
 export type { TaskInterface };
@@ -268,7 +269,7 @@ export function mapApiProfileChangeToProps(api: ApiProfileChangeRequestResponse)
     id: String(api.task_details.task_id),
     requestDate: api.task_details.created_at,
     userName: `${api.party_request_details.first_name} ${api.party_request_details.last_name}`,
-    userAvatar: api.party_request_details.profile_image,
+    userAvatar: buildDocDownloadUrl(api.party_request_details.profile_image),
     realProfile,
     legalProfile,
     primaryIndividuals: [],

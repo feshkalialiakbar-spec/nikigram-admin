@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ApiProfileChangeRequestResponse } from '@/components/tasks/types';
 import styles from './index.module.scss';
 import Button from '@/components/ui/actions/button/Button';
+import { buildDocDownloadUrl } from '@/utils/docUrl';
 
 interface DetailsModalProps {
   isOpen: boolean;
@@ -14,7 +15,6 @@ interface DetailsModalProps {
 
 const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) => {
   const [activeTab, setActiveTab] = useState<'task' | 'party' | 'docs' | 'platforms'>('task');
-
   if (!isOpen) return null;
 
   const formatDate = (dateString: string): string => {
@@ -48,18 +48,9 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
     return degrees[degree] || 'نامشخص';
   };
 
-  const getImageUrl = (fileUid: string): string => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
-    return `${baseUrl}/api/sys/files/download/${fileUid}`;
-  };
+  const getImageUrl = (fileUid: string): string => buildDocDownloadUrl(fileUid);
 
-  const getProfileImageUrl = (profileImage: string): string => {
-    if (profileImage.startsWith('http')) {
-      return profileImage;
-    }
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
-    return `${baseUrl}/api/sys/files/download/${profileImage}`;
-  };
+  const getProfileImageUrl = (profileImage: string): string => buildDocDownloadUrl(profileImage);
 
   const renderTaskDetails = () => (
     <div className={styles.tabContent}>

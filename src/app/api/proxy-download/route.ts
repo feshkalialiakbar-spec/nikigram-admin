@@ -1,25 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { buildDocDownloadUrl, hasDocBaseUrl } from "@/utils/docUrl";
 
 // Helper to normalize incoming url/id to a full upstream URL
 function buildUpstreamUrl(rawUrl: string): string {
-  const isAbsolute = /^https?:\/\//i.test(rawUrl);
-  const apiBase = process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
-  if (!apiBase) {
-    throw new Error("Missing API_BASE_URL or NEXT_PUBLIC_API_URL env");
+  if (!hasDocBaseUrl()) {
+    throw new Error("Missing NEXT_PUBLIC_DOCUMENT_URL_URL env");
   }
-  const normalizedBase = apiBase.replace(/\/$/, "");
-
-  if (isAbsolute) {
-    // Strip origin and keep path after /api/sys/files/download/
-    const u = new URL(rawUrl);
-    const path = u.pathname.startsWith("/api/sys/files/download/")
-      ? u.pathname.substring("/api/sys/files/download/".length)
-      : u.pathname.replace(/^\//, "");
-    return `${normalizedBase}/api/sys/files/download/${path}`;
+  const resolved = buildDocDownloadUrl(rawUrl);
+  if (!/^https?:\/\//i.test(resolved)) {
+    throw new Error("Failed to build document download URL");
   }
-
-  const trimmed = rawUrl.replace(/^\//, "");
-  return `${normalizedBase}/api/sys/files/download/${trimmed}`;
+  return resolved;
 }
 
 // Proxy download endpoint to bypass CORS and always force attachment download

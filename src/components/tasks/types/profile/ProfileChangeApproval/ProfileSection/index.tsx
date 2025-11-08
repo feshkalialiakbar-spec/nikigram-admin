@@ -2,6 +2,7 @@
 import { RealProfile, LegalProfile, ProfileDocument } from '@/components/tasks/types';
 import styles from './index.module.scss';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
+import { buildDocDownloadUrl } from '@/utils/docUrl';
 
 interface BaseProps {
   title: string;
@@ -10,9 +11,8 @@ interface BaseProps {
 
 const handleDocumentDownload = async (fileDoc: ProfileDocument) => {
   if (!fileDoc.url) return;
-  const absoluteUrl = fileDoc.url.startsWith('http')
-    ? fileDoc.url
-    : `${process.env.NEXT_PUBLIC_API_URL as string}/api/sys/files/download/${fileDoc.url}`;
+  const fileUrl = fileDoc.url || '';
+  const absoluteUrl = buildDocDownloadUrl(fileUrl);
   try {
     const response = await fetch(absoluteUrl);
     const blob = await response.blob();
