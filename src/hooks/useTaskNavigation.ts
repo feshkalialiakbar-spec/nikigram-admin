@@ -16,7 +16,13 @@ export const useTaskNavigation = () => {
     async (taskId: number | string) => {
       try {
         // Fetch task info to get ref_type
-        const taskInfo = await fetchTaskById(taskId);
+        const taskInfoResult = await fetchTaskById(taskId);
+        if (!taskInfoResult.success || !taskInfoResult.data) {
+          console.error('Invalid task info:', taskInfoResult.message || taskInfoResult.error);
+          return;
+        }
+
+        const taskInfo = taskInfoResult.data;
 
         if (!taskInfo.ref_type || !taskInfo.task_id) {
           console.error('Invalid task info:', taskInfo);

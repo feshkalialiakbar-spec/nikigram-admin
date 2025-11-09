@@ -3,6 +3,7 @@ import { RealProfile, LegalProfile, ProfileDocument } from '@/components/tasks/t
 import styles from './index.module.scss';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
+import { downloadFileBlob } from '@/services/file';
 
 interface BaseProps {
   title: string;
@@ -14,8 +15,7 @@ const handleDocumentDownload = async (fileDoc: ProfileDocument) => {
   const fileUrl = fileDoc.url || '';
   const absoluteUrl = buildDocDownloadUrl(fileUrl);
   try {
-    const response = await fetch(absoluteUrl);
-    const blob = await response.blob();
+    const blob = await downloadFileBlob(absoluteUrl);
     const blobUrl = window.URL.createObjectURL(blob);
     const a = window.document.createElement('a');
     a.href = blobUrl;

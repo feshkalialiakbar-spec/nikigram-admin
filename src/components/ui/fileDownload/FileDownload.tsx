@@ -6,6 +6,7 @@ import FileStyle from "@/components/global/fileStyle/FileStyle";
 import Image from "next/image";
 import Button from "@/components/ui/actions/button/Button";
 import { buildDocDownloadUrl } from "@/utils/docUrl";
+import { proxyDownloadFile } from "@/services/file";
 
 interface FileDownloadProps {
   title?: string;
@@ -88,16 +89,10 @@ export default function FileDownload({
   const resolvedFileUrl = React.useMemo(() => buildDocDownloadUrl(fileUrl), [fileUrl]);
   const handleDownload = async () => {
     try {
-      // Call proxy via POST so URL is hidden from address bar and prevent navigation
-      const response = await fetch('/api/proxy-download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: resolvedFileUrl || fileUrl, filename: fileName }),
+      const blob = await proxyDownloadFile({
+        url: resolvedFileUrl || fileUrl,
+        filename: fileName,
       });
-      if (!response.ok) {
-        throw new Error(`Proxy error: ${response.status}`);
-      }
-      const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = blobUrl;

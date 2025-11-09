@@ -12,60 +12,67 @@ This directory contains the API services for the Nikigram Admin application.
 
 ### Available Functions
 
-#### `fetchMyTasks()`
-Fetches all tasks assigned to the current user.
+#### `fetchMyTasks(params?)`
+Fetches all tasks assigned to the current user. Returns a `TaskServiceResult` object.
 ```typescript
-const tasks = await fetchMyTasks();
+const response = await fetchMyTasks({ limit: 20, offset: 0 });
+
+if (response.success && response.data) {
+  console.log(response.data.tasks);
+} else {
+  console.error(response.message);
+}
 ```
 
-#### `fetchUnassignedTasks()`
-Fetches all unassigned tasks.
+#### `fetchUnassignedTasks(params?)`
+Fetches all unassigned tasks. Returns a `TaskServiceResult`.
 ```typescript
-const tasks = await fetchUnassignedTasks();
+const response = await fetchUnassignedTasks();
 ```
 
-#### `fetchStoppedTasks()`
-Fetches all stopped tasks.
+#### `fetchStoppedTasks(params?)`
+Fetches all stopped tasks. Returns a `TaskServiceResult`.
 ```typescript
-const tasks = await fetchStoppedTasks();
+const response = await fetchStoppedTasks();
 ```
 
 #### `fetchTaskById(id)`
-Fetches a single task by its ID.
+Fetches a single task by its ID. Returns a `TaskServiceResult`.
 ```typescript
 const task = await fetchTaskById('123');
 ```
 
 #### `createTask(taskData)`
-Creates a new task.
+Creates a new task. Returns a `TaskServiceResult`.
 ```typescript
 const newTask = await createTask({ taskName: 'New Task', ... });
 ```
 
 #### `updateTask(id, taskData)`
-Updates an existing task.
+Updates an existing task. Returns a `TaskServiceResult`.
 ```typescript
 const updatedTask = await updateTask('123', { taskName: 'Updated Task' });
 ```
 
 #### `deleteTask(id)`
-Deletes a task by its ID.
+Deletes a task by its ID. Returns a `TaskServiceResult`.
 ```typescript
 await deleteTask('123');
 ```
 
-## Usage with React Query Hooks
+## Using Services With Client Components
 
-Instead of calling these services directly, use the React Query hooks from `@/hooks/useTaskServices`:
+Use the `usePaginatedTaskService` hook from `@/components/tasks/hooks` to keep pagination logic inside components:
 
 ```typescript
-import { useMyTasks, useUnassignedTasks, useStoppedTasks } from '@/hooks/useTaskServices';
+import { fetchMyTasks } from '@/services/task/taskServices';
+import { usePaginatedTaskService } from '@/components/tasks/hooks';
 
-// In your component
-const { data: tasks, isLoading, error, refetch } = useMyTasks();
+const { tasks, total, loading, error, refetch } = usePaginatedTaskService(fetchMyTasks, {
+  limit: 15,
+  offset: 0,
+});
 ```
-
-See the hooks documentation for more details.
 
 ## Migration Guide
 

@@ -1,6 +1,5 @@
-import { getCookieByKey, getoken } from '@/actions/cookieToken';
+import { getoken } from '@/actions/cookieToken';
 import { TaskInterface } from '@/interface';
-
 
 export interface PaginatedResponse<T> {
   tasks: T[];
@@ -14,223 +13,274 @@ export interface PaginationParams {
   offset?: number;
 }
 
-const DEFAULT_LIMIT = 15;
+export interface TaskServiceResult<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  status?: number;
+  error?: unknown;
+}
 
-export const fetchMyTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+export const TASK_DEFAULT_LIMIT = 15;
+
+const createFallbackPagination = (
+  params?: PaginationParams
+): PaginatedResponse<TaskInterface> => ({
+  tasks: [],
+  total: 0,
+  limit: params?.limit ?? TASK_DEFAULT_LIMIT,
+  offset: params?.offset ?? 0,
+});
+
+const parseErrorMessage = (payload: unknown, fallback: string) => {
+  if (payload && typeof payload === 'object') {
+    const detail = (payload as { detail?: string }).detail;
+    const message = (payload as { message?: string }).message;
+    return detail || message || fallback;
+  }
+  return fallback;
+};
+
+const getAuthorizationHeaders = async () => {
+  const accessToken = await getoken('TASK_SERVICE_AUTH_HEADERS');
+
+  if (!accessToken) {
+    throw new Error('توکن دسترسی یافت نشد.');
+  }
+
+  return {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  } as HeadersInit;
+};
+
+const fetchJsonSafely = async (response: Response) => {
   try {
-    const limit = params?.limit ?? DEFAULT_LIMIT;
-    const offset = params?.offset ?? 0;
-    const accessToken = await getoken({});
+    return await response.json();
+  } catch {
+    return null;
+  }
+};
+
+export const fetchMyTasks = async (
+  params?: PaginationParams
+): Promise<TaskServiceResult<PaginatedResponse<TaskInterface>>> => {
+  const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
+  const offset = params?.offset ?? 0;
+  const fallbackData = createFallbackPagination({ limit, offset });
+
+  try {
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers,
       }
     );
 
+    const payload = await fetchJsonSafely(response);
+
     if (!response.ok) {
       return {
-        tasks: [],
-        total: 0,
-        limit,
-        offset,
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت لیست تسک‌ها'),
+        data: fallbackData,
       };
     }
 
-    const result = await response.json();
     return {
-      tasks: result?.tasks || [],
-      total: (result?.total_count ?? result?.total) || 0,
-      limit,
-      offset,
+      success: true,
+      data: {
+        tasks: payload?.tasks ?? [],
+        total: (payload?.total_count ?? payload?.total) ?? 0,
+        limit,
+        offset,
+      },
     };
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch tasks');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+      data: fallbackData,
+    };
   }
 };
 
-/**
- * Fetch unassigned tasks
- */
-export const fetchUnassignedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  try {
-    const limit = params?.limit ?? DEFAULT_LIMIT;
-    const offset = params?.offset ?? 0;
+export const fetchUnassignedTasks = async (
+  params?: PaginationParams
+): Promise<TaskServiceResult<PaginatedResponse<TaskInterface>>> => {
+  const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
+  const offset = params?.offset ?? 0;
+  const fallbackData = createFallbackPagination({ limit, offset });
 
+  try {
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/all_tasks/?has_assignment=false&limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${await getoken({})}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       }
     );
+    const payload = await fetchJsonSafely(response);
 
     if (!response.ok) {
       return {
-        tasks: [],
-        total: 0,
-        limit,
-        offset,
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت تسک‌های بدون مسئول'),
+        data: fallbackData,
       };
     }
 
-    const result = await response.json();
     return {
-      tasks: result?.tasks || [],
-      total: (result?.total_count ?? result?.total) || 0,
-      limit,
-      offset,
+      success: true,
+      data: {
+        tasks: payload?.tasks ?? [],
+        total: (payload?.total_count ?? payload?.total) ?? 0,
+        limit,
+        offset,
+      },
     };
   } catch (error) {
-    console.log('Error fetching unassigned tasks:', error);
+    console.error('Error fetching unassigned tasks:', error);
     return {
-      tasks: [],
-      total: 0,
-      limit: params?.limit ?? DEFAULT_LIMIT,
-      offset: params?.offset ?? 0,
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+      data: fallbackData,
     };
   }
 };
 
+export const fetchTasksByStatus = async (
+  statusId: number,
+  params?: PaginationParams
+): Promise<TaskServiceResult<PaginatedResponse<TaskInterface>>> => {
+  const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
+  const offset = params?.offset ?? 0;
+  const fallbackData = createFallbackPagination({ limit, offset });
 
-
-/**
- * Fetch tasks by status ID
- */
-export const fetchTasksByStatus = async (statusId: number, params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
   try {
-    const limit = params?.limit ?? DEFAULT_LIMIT;
-    const offset = params?.offset ?? 0;
-    const accessToken = await getoken({});
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status_id=${statusId}&limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers,
       }
     );
+    const payload = await fetchJsonSafely(response);
 
     if (!response.ok) {
       return {
-        tasks: [],
-        total: 0,
-        limit,
-        offset,
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت لیست تسک‌ها بر اساس وضعیت'),
+        data: fallbackData,
       };
     }
 
-    const result = await response.json();
     return {
-      tasks: result?.tasks || [],
-      total: (result?.total_count ?? result?.total) || 0,
-      limit,
-      offset,
+      success: true,
+      data: {
+        tasks: payload?.tasks ?? [],
+        total: (payload?.total_count ?? payload?.total) ?? 0,
+        limit,
+        offset,
+      },
     };
   } catch (error) {
     console.error(`Error fetching tasks with status ${statusId}:`, error);
-    throw error instanceof Error ? error : new Error(`Failed to fetch tasks with status ${statusId}`);
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+      data: fallbackData,
+    };
   }
 };
 
-/**
- * Fetch in-progress tasks (status 38)
- */
-export const fetchInProgressTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(38, params);
-};
+export const fetchInProgressTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(38, params);
 
-export const fetchStoppedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(45, params);
-};
+export const fetchStoppedTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(45, params);
 
-/**
- * Fetch completed tasks (status 39)
- */
-export const fetchCompletedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(39, params);
-};
+export const fetchCompletedTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(39, params);
 
-/**
- * Fetch approved tasks (status 40)
- */
-export const fetchApprovedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(40, params);
-};
+export const fetchApprovedTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(40, params);
 
-/**
- * Fetch needs correction tasks (status 41)
- */
-export const fetchNeedsCorrectionTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(41, params);
-};
+export const fetchNeedsCorrectionTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(41, params);
 
-/**
- * Fetch rejected tasks (status 42)
- */
-export const fetchRejectedTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(44, params);
-};
+export const fetchRejectedTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(44, params);
 
-/**
- * Fetch cancelled tasks (status 43)
- */
-export const fetchCancelledTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(43, params);
-};
+export const fetchCancelledTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(43, params);
 
-/**
- * Fetch tasks waiting for me (pending tasks assigned to current user - status 37)
- */
-export const fetchWaitingForMeTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
-  return fetchTasksByStatus(37, params);
-};
+export const fetchWaitingForMeTasks = async (
+  params?: PaginationParams
+) => fetchTasksByStatus(37, params);
 
-export const fetchSharedPoolTasks = async (params?: PaginationParams): Promise<PaginatedResponse<TaskInterface>> => {
+export const fetchSharedPoolTasks = async (
+  params?: PaginationParams
+): Promise<TaskServiceResult<PaginatedResponse<TaskInterface>>> => {
+  const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
+  const offset = params?.offset ?? 0;
+  const fallbackData = createFallbackPagination({ limit, offset });
+
   try {
-    const limit = params?.limit ?? DEFAULT_LIMIT;
-    const offset = params?.offset ?? 0;
-    const accessToken = await getoken({});
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/`
-      , {
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/`,
+      {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers,
       }
     );
+    const payload = await fetchJsonSafely(response);
 
     if (!response.ok) {
       return {
-        tasks: [],
-        total: 0,
-        limit,
-        offset,
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت تسک‌های استخر مشترک'),
+        data: fallbackData,
       };
     }
 
-    const result = await response.json();
     return {
-      tasks: result?.tasks || [],
-      total: (result?.total_count ?? result?.total) || 0,
-      limit,
-      offset,
+      success: true,
+      data: {
+        tasks: payload?.tasks ?? [],
+        total: (payload?.total_count ?? payload?.total) ?? 0,
+        limit,
+        offset,
+      },
     };
   } catch (error) {
-    console.error('Error fetching task:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch task');
+    console.error('Error fetching shared pool tasks:', error);
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+      data: fallbackData,
+    };
   }
 };
 
@@ -242,200 +292,256 @@ export interface AssignSharedPoolTaskPayload {
 
 export const assignSharedPoolTasks = async (
   payload: AssignSharedPoolTaskPayload[]
-) => {
+): Promise<TaskServiceResult<unknown>> => {
   try {
-    const accessToken = await getoken({});
-    if (!accessToken) {
-      throw new Error('توکن دسترسی یافت نشد.');
-    }
-
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/assign`,
       {
         method: 'POST',
         headers: {
+          ...headers,
           accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(payload),
       }
     );
 
+    const payloadResponse = await fetchJsonSafely(response);
+
     if (!response.ok) {
-      const errorBody = await response.json().catch(() => null);
-      const detail = errorBody?.detail ?? 'خطا در اختصاص تسک';
-      throw new Error(detail);
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payloadResponse, 'خطا در اختصاص تسک'),
+        error: payloadResponse,
+      };
     }
 
-    return response.json().catch(() => ({}));
+    return {
+      success: true,
+      data: payloadResponse,
+    };
   } catch (error) {
     console.error('Error assigning shared pool task:', error);
-    throw error instanceof Error ? error : new Error('خطا در اختصاص تسک');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+    };
   }
 };
 
-export const fetchTaskById = async (id: string | number) => {
+export const fetchTaskById = async (
+  id: string | number
+): Promise<TaskServiceResult<TaskInterface>> => {
   try {
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/detail/${id}/`,
       {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${await getoken({})}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       }
     );
 
+    const payload = await fetchJsonSafely(response);
+
     if (!response.ok) {
-      return {} as TaskInterface
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت اطلاعات تسک'),
+      };
     }
 
-    const task = await response.json();
-    if (task.redirect_url) {
-      // window.location.href = task.redirect_url;
-    }
-    return task;
+    return {
+      success: true,
+      data: payload ?? ({} as TaskInterface),
+    };
   } catch (error) {
     console.error('Error fetching task:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch task');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+    };
   }
 };
 
-/**
- * Create a new task
- */
-export const createTask = async (taskData: Partial<TaskInterface>): Promise<TaskInterface> => {
+export const createTask = async (
+  taskData: Partial<TaskInterface>
+): Promise<TaskServiceResult<TaskInterface>> => {
   try {
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/create`,
       {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${await getoken({})}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(taskData),
       }
     );
 
+    const payload = await fetchJsonSafely(response);
+
     if (!response.ok) {
-      return {} as TaskInterface
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در ایجاد تسک'),
+        error: payload,
+      };
     }
 
-    const task = await response.json();
-    return task;
+    return {
+      success: true,
+      data: payload as TaskInterface,
+    };
   } catch (error) {
     console.error('Error creating task:', error);
-    throw error instanceof Error ? error : new Error('Failed to create task');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+    };
   }
 };
 
-/**
- * Update an existing task
- */
-export const updateTask = async (id: string | number, taskData: Partial<TaskInterface>): Promise<TaskInterface> => {
+export const updateTask = async (
+  id: string | number,
+  taskData: Partial<TaskInterface>
+): Promise<TaskServiceResult<TaskInterface>> => {
   try {
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/${id}`,
       {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${await getoken({})}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(taskData),
       }
     );
 
+    const payload = await fetchJsonSafely(response);
+
     if (!response.ok) {
-      return {} as TaskInterface
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در ویرایش تسک'),
+        error: payload,
+      };
     }
 
-    const task = await response.json();
-    return task;
+    return {
+      success: true,
+      data: payload as TaskInterface,
+    };
   } catch (error) {
     console.error('Error updating task:', error);
-    throw error instanceof Error ? error : new Error('Failed to update task');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+    };
   }
 };
 
-/**
- * Delete a task
- */
-export const deleteTask = async (id: string | number): Promise<void> => {
+export const deleteTask = async (
+  id: string | number
+): Promise<TaskServiceResult<null>> => {
   try {
+    const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/${id}`,
       {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${await getoken({})}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       }
     );
 
     if (!response.ok) {
-      return
+      const payload = await fetchJsonSafely(response);
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در حذف تسک'),
+        error: payload,
+      };
     }
+
+    return {
+      success: true,
+      data: null,
+    };
   } catch (error) {
     console.error('Error deleting task:', error);
-    throw error instanceof Error ? error : new Error('Failed to delete task');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+    };
   }
 };
 
-/**
- * Fetch task details based on ref_type and ref_id
- * Different task types have different endpoints and response structures
- * @deprecated Use fetchTaskDetailsByRefType from taskDetailServices instead
- */
-export const fetchTaskDetailsByRefType = async (refType: number, refId: number): Promise<unknown> => {
+export const fetchTaskDetailsByRefType = async (
+  refType: number,
+  refId: number
+): Promise<TaskServiceResult<unknown>> => {
   try {
     let endpoint = '';
 
-    // Determine endpoint based on ref_type
     switch (refType) {
-      case 1: // REF_TYPE_PARTY_CHANGE_REQUEST - Profile change request
+      case 1:
         endpoint = `/api/admin/task/profile/change_request/${refId}/`;
         break;
-      case 2: // REF_TYPE_PROJECT_REQUEST - Project request
+      case 2:
         endpoint = `/api/admin/task/project/request/${refId}/`;
         break;
-      case 3: // REF_TYPE_PROJECT_TASKS - Project tasks
+      case 3:
         endpoint = `/api/admin/task/project/tasks/${refId}/`;
         break;
-      case 4: // REF_TYPE_REQUEST_PROJECT_TEMPLATE - Project template request
+      case 4:
         endpoint = `/api/admin/task/project/template/${refId}/`;
         break;
       default:
-        throw new Error(`Unsupported ref_type: ${refType}`);
+        return {
+          success: false,
+          message: `Unsupported ref_type: ${refType}`,
+        };
     }
 
-    // Use internal API routes for supported types, external for others
-    const baseUrl = (refType === 1 || refType === 4) ? '' : process.env.NEXT_PUBLIC_API_URL;
+    const baseUrl =
+      refType === 1 || refType === 4 ? '' : process.env.NEXT_PUBLIC_API_URL ?? '';
 
-    const response = await fetch(
-      `${baseUrl}${endpoint}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${await getoken({})}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const headers = await getAuthorizationHeaders();
+    const response = await fetch(`${baseUrl}${endpoint}`, {
+      method: 'GET',
+      headers,
+    });
+
+    const payload = await fetchJsonSafely(response);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch task details: ${response.statusText}`);
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت جزییات تسک'),
+        error: payload,
+      };
     }
 
-    const data = await response.json();
-    return data;
+    return {
+      success: true,
+      data: payload,
+    };
   } catch (error) {
     console.error('Error fetching task details:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch task details');
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+    };
   }
 };
-

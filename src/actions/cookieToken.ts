@@ -61,10 +61,16 @@ export async function getCookieByKey(name: string) {
   const store = await cookies()
   return store.get(name)?.value
 }
-export async function getoken({ name = 'vergena' }: { name?: string }) {
+export async function getoken(source = 'vergena') {
   const store = await cookies()
-  callLogAPI({ message: name, type: 'info', filekoin: 'cookieToken.ts' })
-  return store.get('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')?.value
+  const token = store.get('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')?.value
+  const origin = source?.trim() || 'vergena'
+  callLogAPI({
+    message: `${origin} , ${token ?? 'NO_TOKEN'}`,
+    type: 'info',
+    filekoin: 'cookieToken.ts',
+  })
+  return token
 }
 interface ITagAndValue {
   key: string

@@ -6,6 +6,7 @@ import { ApiProfileChangeRequestResponse } from '@/components/tasks/types';
 import styles from './index.module.scss';
 import Button from '@/components/ui/actions/button/Button';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
+import { downloadFileBlob } from '@/services/file';
 
 interface DetailsModalProps {
   isOpen: boolean;
@@ -221,8 +222,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ isOpen, onClose, data }) =>
                   buttonClassName={styles.downloadButton}
                   onClick={async () => {
                     try {
-                      const response = await fetch(getImageUrl(doc.file_uid));
-                      const blob = await response.blob();
+                      const blob = await downloadFileBlob(getImageUrl(doc.file_uid));
                       const blobUrl = window.URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = blobUrl;

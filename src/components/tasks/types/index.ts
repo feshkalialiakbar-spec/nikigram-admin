@@ -48,6 +48,7 @@ export interface TaskTableProps {
   tasks: TaskInterface[];
   onOperationClick?: (taskId: number, operation: string) => Promise<void> | void;
   className?: string;
+  isAssignable?: boolean;
 }
 
 export interface FilterBarProps {

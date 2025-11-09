@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { HelpRequestApprovalProps } from '@/components/tasks/types';
 import DrawerModal from '@/components/ui/modal/drawerModal/DrawerModal';
@@ -8,7 +8,6 @@ import styles from './index.module.scss';
 import { AIAssistantSection } from '@/components/tasks/shared/AIAssistantSection';
 import { ActionButtons } from '../../shared/ActionButtons';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
-import { getCookieByKey } from '@/actions/cookieToken';
 import { useToast } from '@/components/ui';
 import TemplateSelector from './TemplateSelector/TemplateSelector';
 import {
@@ -16,16 +15,17 @@ import {
   verifyProjectRequest,
   ProjectTemplateDetailResponse,
 } from '@/services/projectTemplate';
+import { submitHelpRequestDocuments } from '@/services/helpRequest';
 import DocumentUploadModal from './DocumentUploadModal';
 import type { DocumentSubmissionForm } from './lib/types';
 import { safeText } from '@/hooks/texedit';
 
-const 
-HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
+const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
   onReject,
-  className
+  className,
+  rawApiData,
 }) => {
   const { showSuccess, showError } = useToast();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -36,24 +36,58 @@ HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   const [isVerifyingTemplate, setIsVerifyingTemplate] = useState(false);
   const [lastSubmissionDescription, setLastSubmissionDescription] = useState('');
 
+  const taskStatusId = useMemo(
+    () => rawApiData?.task_details?.status_id ?? null,
+    [rawApiData?.task_details?.status_id]
+  );
+
+  useEffect(() => {
+    if (taskStatusId === 41) {
+      setIsApproved(true);
+      setIsTemplateSelectorOpen(true);
+    }
+  }, [taskStatusId]);
+
   const containerClassName = `${styles.container}${className ? ` ${className}` : ''}`;
 
-  const attachments = (request.attachedDocuments || []).map((doc) => ({
-    ...doc,
-    resolvedUrl: buildDocDownloadUrl(doc.url || ''),
-  }));
+  const attachments = (request.attachedDocuments || []).map((doc) => {
+    const resolvedUrl = buildDocDownloadUrl(doc.url || '');
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.debug('[HelpRequestApproval] attachment url', {
+        original: doc.url,
+        resolved: resolvedUrl,
+        id: doc.id,
+      });
+    }
+    return {
+      ...doc,
+      resolvedUrl,
+    };
+  });
 
   const userAvatarUrl = request.user.avatar
     ? buildDocDownloadUrl(request.user.avatar)
     : undefined;
 
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line no-console
+    console.debug('[HelpRequestApproval] user avatar', {
+      original: request.user.avatar,
+      resolved: userAvatarUrl,
+      userId: request.user.id,
+    });
+  }
+
   const detailItems = [
     {
-      key: 'user', label: 'نام کاربر', value: (
+      key: 'user',
+      label: 'نام کاربر',
+      value: (
         <div className={styles.userValue}>
           {userAvatarUrl && (
             <Image
-              src={`${request.user.avatar}`}
+              src={userAvatarUrl}
               alt={request.user.name}
               className={styles.avatar}
               width={40}
@@ -62,7 +96,7 @@ HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
           )}
           <span>{safeText(request.user.name)}</span>
         </div>
-      )
+      ),
     },
     { key: 'level', label: 'سطح کاربر', value: safeText(request.user.level) },
     { key: 'type', label: 'نوع درخواست', value: safeText(request.requestType) },
@@ -73,13 +107,15 @@ HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     { key: 'amount', label: 'مقدار مبلغ موردنیاز', value: safeText(request.requiredAmount) },
     { key: 'contact', label: 'اطلاعات تماس', value: safeText(request.contactInfo) },
     {
-      key: 'sheba', label: 'شماره شبا', value: (
+      key: 'sheba',
+      label: 'شماره شبا',
+      value: (
         <div className={styles.shebaValue}>
           <span>{safeText(request.shebaNumber)}</span>
           {request.isShebaVerified && <span className={styles.shebaBadge}>تایید شده</span>}
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   const handleApproveClick = () => {
@@ -114,32 +150,13 @@ HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     description,
     documents,
   }: DocumentSubmissionForm) => {
-    const token = (await    getoken({})) as string | undefined;
-    if (!token) {
-      showError('توکن دسترسی یافت نشد. لطفاً مجدداً وارد شوید.');
-      return;
-    }
-
-    const endpoint = `https://nikicity.com/api/admin/task/project/request/${request.id}/documents?is_verified=${isApproved}`;
-
     setIsSubmitting(true);
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(documents),
+      const data = await submitHelpRequestDocuments({
+        requestId: request.id,
+        isApproved,
+        documents,
       });
-
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        const detail = data?.detail ?? 'خطا در ارسال مدارک';
-        showError(detail);
-        return;
-      }
 
       if (data?.detail) {
         showError(data.detail);
@@ -164,6 +181,18 @@ HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
       }
     } catch (error) {
       console.error('Error submitting documents:', error);
+      if (error instanceof Error) {
+        if (error.message === 'ACCESS_TOKEN_MISSING') {
+          showError('توکن دسترسی یافت نشد. لطفاً مجدداً وارد شوید.');
+          return;
+        }
+        if (error.message === 'API base URL is not configured.') {
+          showError('آدرس سرور تنظیم نشده است.');
+          return;
+        }
+        showError(error.message || 'خطا در ثبت اطلاعات نهایی');
+        return;
+      }
       showError('خطا در ثبت اطلاعات نهایی');
     } finally {
       setIsSubmitting(false);

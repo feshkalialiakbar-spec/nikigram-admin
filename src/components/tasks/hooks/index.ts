@@ -1,30 +1,132 @@
-import { useState, useMemo, useCallback } from 'react';
-import { TaskInterface, FilterOptions, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
-import { useMyTasks } from '@/hooks/useTaskServices';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import {
+  TaskInterface,
+  FilterOptions,
+  UseTaskFiltersReturn,
+  UseTaskPaginationReturn,
+} from '../types';
 import { useSkeletonLoading } from './useSkeletonLoading';
-import { PaginationParams } from '@/services/task/taskServices';
+import {
+  fetchMyTasks,
+  PaginationParams,
+  PaginatedResponse,
+  TaskServiceResult,
+  TASK_DEFAULT_LIMIT,
+} from '@/services/task/taskServices';
 
 interface UseTasksQueryOptions {
   enabled?: boolean;
 }
+
+type TaskListFetcher = (
+  params?: PaginationParams
+) => Promise<TaskServiceResult<PaginatedResponse<TaskInterface>>>;
+
+interface UsePaginatedTaskServiceOptions {
+  enabled?: boolean;
+}
+
+interface UsePaginatedTaskServiceReturn {
+  tasks: TaskInterface[];
+  total: number;
+  limit: number;
+  offset: number;
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<TaskServiceResult<PaginatedResponse<TaskInterface>> | void>;
+}
+
+const createPaginationFallback = (params?: PaginationParams) => ({
+  limit: params?.limit ?? TASK_DEFAULT_LIMIT,
+  offset: params?.offset ?? 0,
+});
+
+export const usePaginatedTaskService = (
+  fetcher: TaskListFetcher,
+  paginationParams?: PaginationParams,
+  options?: UsePaginatedTaskServiceOptions
+): UsePaginatedTaskServiceReturn => {
+  const { limit, offset } = createPaginationFallback(paginationParams);
+  const enabled = options?.enabled ?? true;
+
+  const [tasks, setTasks] = useState<TaskInterface[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    if (!enabled) {
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetcher({ limit, offset });
+
+      if (response.success && response.data) {
+        setTasks(response.data.tasks);
+        setTotal(response.data.total);
+      } else {
+        setTasks([]);
+        setTotal(0);
+        setError(response.message ?? 'خطا در بارگذاری داده‌ها');
+      }
+
+      return response;
+    } catch (err) {
+      setTasks([]);
+      setTotal(0);
+      setError(err instanceof Error ? err.message : 'خطای ناشناخته رخ داده است');
+    } finally {
+      setLoading(false);
+    }
+  }, [enabled, fetcher, limit, offset]);
+
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+    void fetchData();
+  }, [fetchData, enabled]);
+
+  return {
+    tasks,
+    total,
+    limit,
+    offset,
+    loading,
+    error,
+    refetch: fetchData,
+  };
+};
 
 export const useTasksQuery = (
   _filters?: FilterOptions,
   paginationParams?: PaginationParams,
   options?: UseTasksQueryOptions,
 ) => {
-  const { data, isLoading, error, refetch } = useMyTasks(paginationParams, {
-    enabled: options?.enabled,
-  });
-  const showSkeleton = useSkeletonLoading({ isLoading });
+  const {
+    tasks,
+    total,
+    loading,
+    error,
+    refetch: refetchTasks,
+  } = usePaginatedTaskService(
+    fetchMyTasks,
+    paginationParams,
+    options
+  );
+  const showSkeleton = useSkeletonLoading({ isLoading: loading });
 
   return {
-    tasks: data?.tasks || [],
-    total: data?.total || 0,
+    tasks,
+    total,
     loading: showSkeleton,
-    error: error?.message || null,
+    error,
     refetch: async () => {
-      await refetch();
+      await refetchTasks();
     },
   };
 };

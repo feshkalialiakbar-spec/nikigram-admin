@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useApiList } from '@/hooks/useTaskServices';
+import { useMemo, useState, type FC } from 'react';
 import { fetchWaitingForMeTasks } from '@/services/task/taskServices';
 import { TaskDashboard } from '@/components/tasks';
+import { usePaginatedTaskService } from '@/components/tasks/hooks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 import Button from '@/components/ui/actions/button/Button';
@@ -12,28 +12,28 @@ interface TasksWaitingForMeProps {
   className?: string;
 }
 
-const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
+const TasksWaitingForMe: FC<TasksWaitingForMeProps> = ({ className }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
-  const paginationParams = {
+  const paginationParams = useMemo(() => ({
     limit: itemsPerPage,
     offset: (currentPage - 1) * itemsPerPage,
-  };
+  }), [itemsPerPage, currentPage]);
 
-  const { data: tasks, total, isLoading, error, refetch } = useApiList({
-    fetcher: fetchWaitingForMeTasks,
-    queryKey: ['my-tasks', 'waiting-for-me', paginationParams],
-    enabled: true,
-    retry: 3,
-    paginationParams,
-  });
+  const {
+    tasks,
+    total,
+    loading,
+    error,
+    refetch,
+  } = usePaginatedTaskService(fetchWaitingForMeTasks, paginationParams);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
         <div className={styles.header}>
@@ -50,8 +50,8 @@ const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
     return (
       <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
         <div className={styles.error}>
-          <p>خطا در بارگذاری داده‌ها: {error.message}</p>
-          <Button onClick={() => refetch()} buttonClassName={styles.retryButton}>
+          <p>خطا در بارگذاری داده‌ها: {error}</p>
+          <Button onClick={() => void refetch()} buttonClassName={styles.retryButton}>
             تلاش مجدد
           </Button>
         </div>
@@ -65,9 +65,9 @@ const TasksWaitingForMe: React.FC<TasksWaitingForMeProps> = ({ className }) => {
         <div className={styles.content}>
           <TaskDashboard
             tasks={tasks}
-            loading={isLoading}
-            error={error ? (error as unknown as Error)?.message || null : null}
-            onRefetch={refetch}
+            loading={loading}
+            error={error}
+            onRefetch={() => { void refetch(); }}
             currentPage={currentPage}
             totalItems={total}
             itemsPerPage={itemsPerPage}

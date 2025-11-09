@@ -5,6 +5,7 @@ import { TagUser, Import, Trash } from "iconsax-react";
 import { IconProps } from "../forms/textField/TextField";
 import styles from "./FileUpload.module.scss";
 import FileStyle from "@/components/global/fileStyle/FileStyle";
+import { uploadFile } from "@/services/file";
 
 export interface FileUploadResult {
   file_uid: string;
@@ -109,34 +110,20 @@ export default function FileUpload({
   // فراخوانی API آپلود و ذخیره‌سازی اطلاعات در کوکی
   const uploadFileToServer = async (file: File): Promise<FileUploadResult | undefined> => {
     try {
-      const formData = new FormData();
-      formData.append("is_featured", "false");
-      formData.append("is_private", "false");
-      formData.append("attachment_type", "");
-      formData.append("entity_type", entityType || "project-request");
-      formData.append("title", "");
-      formData.append("description", "");
-      formData.append("file", file, file.name);
-
       // خواندن توکن از کوکی‌های کلاینت
-      const accessToken = getCookie("access_token");
+      const accessToken = getCookie("34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e");
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sys/files/upload`, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        body: formData,
+      const uploadResult = await uploadFile({
+        file,
+        entityType: entityType || "project-request",
+        accessToken,
       });
 
-      const result = await response.json()
-
       const meta: FileUploadResult = {
-        file_uid: result.file_uid,
-        name: file.name,
-        size: file.size,
-        type: file.type,
+        file_uid: uploadResult.file_uid,
+        name: uploadResult.name,
+        size: uploadResult.size,
+        type: uploadResult.type,
       };
 
       const cookieKey = "uploaded_files";

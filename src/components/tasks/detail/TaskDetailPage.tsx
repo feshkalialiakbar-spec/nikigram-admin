@@ -18,7 +18,14 @@ import {
   ApiCooperationRequestResponse,
   ApiTemplateRequestResponse,
 } from '@/components/tasks/types';
-import { getCookieByKey, getoken } from '@/actions/cookieToken';
+import {
+  fetchTaskDetail,
+  verifyProfileChangeRequest,
+  verifyHelpRequest,
+  approveTemplateRequest,
+  approveCooperationRequest,
+  approveTicketRequest,
+} from '@/services/taskDetailServices';
 
 const TaskDetailPage: React.FC = () => {
   const params = useParams();
@@ -49,25 +56,8 @@ const TaskDetailPage: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        // Use internal API route to avoid CORS issues
-        const response = await fetch(`/api/task/detail/${taskId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const result: {
-          taskData:
-          | ApiProfileChangeRequestResponse
-          | ApiHelpRequestResponse
-          | ApiCooperationRequestResponse
-          | ApiTemplateRequestResponse;
-          redirectData: { ref_type: number };
-        } = await response.json();
-        console.log('API Response data:', result);
-
-        const { taskData, redirectData } = result;
+        const { taskData, redirectData } = await fetchTaskDetail(taskId);
+        console.log('API Response data:', { taskData, redirectData });
 
         // Determine task type based on ref_type
         if (redirectData.ref_type === 1) {
@@ -113,66 +103,63 @@ const TaskDetailPage: React.FC = () => {
 
     setActionLoading(true);
     try {
-      let response;
+      let result: Record<string, unknown> | undefined;
 
       if (taskType === 'regular-profile') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/change_request/${pendingRequestId}/verify`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${await   getoken({})}`
-          },
-          body: JSON.stringify({
-            is_verified: isApprove,
-            description: ''
-          })
-        });
-        const result = await response.json();
-        if (result.status == '1') {
+        result = await verifyProfileChangeRequest(pendingRequestId, isApprove);
+        const status = typeof result?.status === 'string' ? result.status : undefined;
+        if (status === '1') {
           showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
-          return
+          return;
         }
-        if (result.detail) showError('خطا در تایید', result.detail || 'خطا در تایید درخواست');
-
+        const detail = typeof result?.detail === 'string' ? result.detail : undefined;
+        if (detail) {
+          showError('خطا در تایید', detail || 'خطا در تایید درخواست');
+          return;
+        }
       } else if (taskType === 'help') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${pendingRequestId}/verify`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            "template_id": 0,
-            "title": "string",
-            "description": "stringbibiiiiiiiiiiiiiiiiiii",
-            "task_assignments": [
-              {
-                "temp_task_id": 1,
-                "staff_id": 1,
-                "deadline": 0,
-                "assignment_notes": "string"
-              }
-            ]
-          })
+        result = await verifyHelpRequest(pendingRequestId, {
+          template_id: 0,
+          title: 'string',
+          description: 'stringbibiiiiiiiiiiiiiiiiiii',
+          task_assignments: [
+            {
+              temp_task_id: 1,
+              staff_id: 1,
+              deadline: 0,
+              assignment_notes: 'string',
+            },
+          ],
         });
       } else if (taskType === 'template') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/template/${pendingRequestId}/approve/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
+        result = await approveTemplateRequest(pendingRequestId);
       } else if (taskType === 'cooperation') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/cooperation_request/${pendingRequestId}/approve/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-      else if (taskType === 'ticket') {
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/profile/ticket/${pendingRequestId}/approve/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
+        result = await approveCooperationRequest(pendingRequestId);
+      } else if (taskType === 'ticket') {
+        result = await approveTicketRequest(pendingRequestId);
       }
 
+      const detail = typeof result?.detail === 'string' ? result.detail : undefined;
+      if (detail) {
+        showError('خطا در تایید', detail || 'خطا در تایید درخواست');
+        return;
+      }
+      if (isApprove) {
+        showSuccess('عملیات موفق', 'درخواست با موفقیت تایید شد');
+      }
     } catch (error) {
       console.error('Error approving request:', error);
-      showError('خطا در تایید', 'خطا در ارتباط با سرور');
+      if (error instanceof Error) {
+        if (error.message === 'ACCESS_TOKEN_MISSING') {
+          showError('خطا در تایید', 'توکن دسترسی یافت نشد. لطفاً مجدداً وارد شوید.');
+        } else if (error.message === 'API base URL is not configured.') {
+          showError('خطا در تایید', 'آدرس سرور تنظیم نشده است.');
+        } else {
+          showError('خطا در تایید', error.message || 'خطا در ارتباط با سرور');
+        }
+      } else {
+        showError('خطا در تایید', 'خطا در ارتباط با سرور');
+      }
     } finally {
       setActionLoading(false);
       setShowApproveModal(false);

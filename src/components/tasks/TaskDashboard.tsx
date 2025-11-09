@@ -64,13 +64,17 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
 
   const handleOperationClick = React.useCallback(async (taskId: number, _operation?: string) => {
     const exclusiveUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
-    await assignSharedPoolTasks([
+    const result = await assignSharedPoolTasks([
       {
         task_id: taskId,
         is_exclusive: false,
         exclusive_until: exclusiveUntil,
       },
     ]);
+
+    if (!result.success) {
+      console.error('Failed to assign shared pool task:', result.message || result.error);
+    }
   }, []);
 
   // Determine which pagination data to use
@@ -101,7 +105,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
       <div className={`${styles.dashboard} ${className || ''}`}>
         <div className={styles.error}>
           خطا در بارگذاری داده‌ها: {error}
-          <Button onClick={refetch} buttonClassName={styles.retryButton}>
+          <Button onClick={() => void refetch()} buttonClassName={styles.retryButton}>
             تلاش مجدد
           </Button>
         </div>

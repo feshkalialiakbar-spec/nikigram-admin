@@ -12,6 +12,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   tasks,
   className,
   onOperationClick,
+  isAssignable = false,
 }) => {
   const router = useRouter();
   const { showSuccess, showError } = useToast();
@@ -44,12 +45,12 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
     try {
       await onOperationClick(taskId, 'perform');
-      showSuccess('تسک با موفقیت به شما اختصاص یافت');
+      if (isAssignable) showSuccess('تسک با موفقیت به شما اختصاص یافت');
       navigateToTask(taskId);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'خطا در اختصاص تسک';
-      showError('خطا در اختصاص تسک', message);
+      if (isAssignable) showError('خطا در اختصاص تسک', message);
       console.error('Failed to assign task before navigation:', error);
     } finally {
       setPendingTaskId(null);

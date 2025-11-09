@@ -15,8 +15,6 @@ import {
 } from '@/components/tasks/types';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
 
-const DOWNLOAD_FALLBACK_BASE = 'https://nikicity.com/api/sys/files/download';
-
 const ensureArray = <T>(value?: T[] | null): T[] => (Array.isArray(value) ? value : []);
 
 const safeBuildDocDownloadUrl = (value?: string | null): string | undefined => {
@@ -33,7 +31,11 @@ const safeBuildDocDownloadUrl = (value?: string | null): string | undefined => {
     });
   }
   const sanitized = String(value).replace(/^\/+/, '');
-  return `${DOWNLOAD_FALLBACK_BASE}/${sanitized}`;
+  const envBase = process.env.NEXT_PUBLIC_DOC_URL?.replace(/\/$/, '');
+  if (envBase) {
+    return `${envBase}/${sanitized}`;
+  }
+  return `/api/sys/files/download/${sanitized}`;
 };
 
 /**

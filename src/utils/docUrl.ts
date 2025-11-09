@@ -1,130 +1,127 @@
+// utils/docUrl.ts
 type Protocol = "http" | "https";
 
-const RAW_DOC_URL = `https://nikicity.com/api/sys/files/download/`
+/**
+ * مقدار محیط را فقط در زمان نیاز می‌خوانیم تا در همه محیط‌ها درست کار کند.
+ */
+const getRawDocUrl = (): string => {
+  const docUrl = process.env.NEXT_PUBLIC_DOC_URL?.trim();
+  if (docUrl) return docUrl;
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (apiUrl) return apiUrl;
 
-const normalizeRawUrl = (raw: string): string => {
-  if (!raw) return "";
-  if (/^[a-zA-Z]+:\/\//.test(raw)) {
-    return raw;
-  }
-  return `http://${raw}`;
+  return "";
 };
 
+/**
+ * اطمینان از اینکه URL حتماً پروتکل دارد.
+ */
+const normalizeUrl = (raw: string): string => {
+  if (!raw) return "";
+  if (/^[a-zA-Z]+:\/\//.test(raw)) return raw;
+  return `https://${raw}`;
+};
+
+/**
+ * پارس امن URL
+ */
 const safeParseUrl = (raw: string): URL | null => {
-  const normalized = normalizeRawUrl(raw);
-  if (!normalized) return null;
   try {
+    const normalized = normalizeUrl(raw);
     return new URL(normalized);
   } catch {
     return null;
   }
 };
 
-const buildBaseFromUrl = (parsed: URL | null): string => {
-  if (!parsed) return "";
-  const origin = `${parsed.protocol}//${parsed.hostname}${parsed.port ? `:${parsed.port}` : ""}`;
-  return `${origin}${parsed.pathname.replace(/\/$/, "")}`;
+/**
+ * ساخت base از URL پارس‌شده
+ */
+const buildBaseFromUrl = (url: URL | null): string => {
+  if (!url) return "";
+  return `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ""}`;
 };
 
-const parsedDocUrl = safeParseUrl(RAW_DOC_URL);
-
-const DOC_BASE = buildBaseFromUrl(parsedDocUrl);
-
+/**
+ * افزودن مسیر دانلود
+ */
 const ensureDownloadBase = (base: string): string => {
   if (!base) return "";
-  if (/\/api\/sys\/files\/download$/i.test(base)) {
-    return base;
-  }
-  return `${base}/api/sys/files/download`;
+  return base.endsWith("/api/sys/files/download")
+    ? base
+    : `${base.replace(/\/+$/, "")}/api/sys/files/download`;
 };
 
-const DOC_DOWNLOAD_BASE = ensureDownloadBase(DOC_BASE);
+/**
+ * بازسازی URL دانلود
+ */
+export const buildDocDownloadUrl = (value?: string | null): string => {
+  if (!value) return "";
 
-export const hasDocBaseUrl = (): boolean => Boolean(parsedDocUrl);
+  // اگر مقدار ورودی خودش یک URL کامل باشد، همان را برمی‌گردانیم
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
 
-const buildRemotePattern = (parsed: URL | null) => {
+  const rawBase = getRawDocUrl();
+  const parsed = safeParseUrl(rawBase);
+  const docBase = buildBaseFromUrl(parsed);
+  const downloadBase = ensureDownloadBase(docBase);
+
+  const isProd = process.env.NODE_ENV === "production";
+
+  // استخراج slug و search
+  const [pathPart, searchPart] = value.split("?");
+  const slug = pathPart.replace(/^\/?api\/sys\/files\/download\/?/, "").replace(/^\/+/, "");
+  const search = searchPart ? `?${searchPart}` : "";
+
+  if (!isProd) {
+    console.debug("[docUrl] buildDocDownloadUrl input", {
+      env: rawBase,
+      docBase,
+      downloadBase,
+      value,
+      slug,
+    });
+  }
+
+  if (downloadBase) {
+    return `${downloadBase}/${slug}${search}`;
+  }
+
+  // fallback
+  return `/api/sys/files/download/${slug}${search}`;
+};
+
+/**
+ * بررسی وجود مقدار معتبر
+ */
+export const hasDocBaseUrl = (): boolean => {
+  const raw = getRawDocUrl();
+  return Boolean(safeParseUrl(raw));
+};
+
+/**
+ * گرفتن الگوی Remote Pattern برای next/image
+ */
+export const getDocRemotePattern = () => {
+  const raw = getRawDocUrl();
+  const parsed = safeParseUrl(raw);
   if (!parsed) return null;
   const protocol = parsed.protocol.replace(":", "") as Protocol;
-  if (protocol !== "http" && protocol !== "https") {
-    return null;
-  }
   return {
     protocol,
     hostname: parsed.hostname,
     ...(parsed.port ? { port: parsed.port } : {}),
-  } as {
-    protocol: Protocol;
-    hostname: string;
-    port?: string;
   };
 };
 
-export const getDocRemotePattern = () => buildRemotePattern(parsedDocUrl);
-
-const stripDownloadPrefix = (value: string): { slug: string; search: string } => {
-  if (!value) {
-    return { slug: "", search: "" };
-  }
-
-  try {
-    const url = new URL(value);
-    const pathname = url.pathname.replace(/^\/?api\/sys\/files\/download\/?/, "");
-    return {
-      slug: pathname.replace(/^\/+/, ""),
-      search: url.search,
-    };
-  } catch {
-    const [pathPart, searchPart] = value.split("?");
-    const slug = pathPart.replace(/^\/?api\/sys\/files\/download\/?/, "").replace(/^\/+/, "");
-    return {
-      slug,
-      search: searchPart ? `?${searchPart}` : "",
-    };
-  }
+/**
+ * گرفتن base URL (مثلاً برای نمایش یا دیباگ)
+ */
+export const getDocBaseUrl = (): string => {
+  const raw = getRawDocUrl();
+  const parsed = safeParseUrl(raw);
+  return buildBaseFromUrl(parsed);
 };
-
-export const buildDocDownloadUrl = (value?: string | null): string => {
-  if (!value) return "";
-  const { slug, search } = stripDownloadPrefix(value);
-  const isProd = process.env.NODE_ENV === "production";
-
-  if (!isProd) {
-    console.debug("[docUrl] buildDocDownloadUrl inputs", {
-      raw: value,
-      docBase: DOC_BASE,
-      downloadBase: DOC_DOWNLOAD_BASE,
-      slug,
-      search,
-    });
-  }
-
-  if (DOC_DOWNLOAD_BASE) {
-    const normalized = slug ? `${DOC_DOWNLOAD_BASE}/${slug}` : DOC_DOWNLOAD_BASE;
-    if (!isProd) {
-      console.debug("[docUrl] buildDocDownloadUrl resolved", normalized + search);
-    }
-    return `${normalized}${search}`;
-  }
-
-  if (/^https?:\/\//i.test(value)) {
-    if (!isProd) {
-      console.debug("[docUrl] buildDocDownloadUrl fallback absolute", value);
-    }
-    return value;
-  }
-
-  const fallback = value.startsWith("/")
-    ? value
-    : `/api/sys/files/download/${slug}${search}`;
-
-  if (!isProd) {
-    console.debug("[docUrl] buildDocDownloadUrl fallback relative", fallback);
-  }
-
-  return fallback;
-};
-
-export const getDocBaseUrl = (): string => DOC_BASE;
-
-

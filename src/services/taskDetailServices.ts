@@ -1,184 +1,153 @@
-import { getCookieByKey } from '@/actions/cookieToken';
+import { getoken } from '@/actions/cookieToken';
 import {
-  ProfileChangeRequest,
-  ProjectTemplate,
-  RefType
-} from '@/types/api';
+  ApiProfileChangeRequestResponse,
+  ApiHelpRequestResponse,
+  ApiCooperationRequestResponse,
+  ApiTemplateRequestResponse,
+} from '@/components/tasks/types';
 
-/**
- * Fetch profile change request details
- */
-export const fetchProfileChangeRequest = async (taskId: number): Promise<ProfileChangeRequest> => {
-  try {
-    const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
-      method: 'GET',
+export interface TaskDetailApiResponse {
+  taskData:
+    | ApiProfileChangeRequestResponse
+    | ApiHelpRequestResponse
+    | ApiCooperationRequestResponse
+    | ApiTemplateRequestResponse;
+  redirectData: {
+    ref_type: number;
+  };
+}
+
+const getApiBaseUrl = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!baseUrl) {
+    throw new Error('API base URL is not configured.');
+  }
+  return baseUrl;
+};
+
+const getAccessToken = async (): Promise<string> => {
+  const token = (await getoken('TASK_DETAIL_SERVICES_ACCESS')) as string | undefined;
+  if (!token) {
+    throw new Error('ACCESS_TOKEN_MISSING');
+  }
+  return token;
+};
+
+const fetchJson = async <T>(input: RequestInfo, init?: RequestInit): Promise<T> => {
+  const response = await fetch(input, init);
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    const detail =
+      (errorBody && (errorBody.detail as string | undefined)) ||
+      response.statusText ||
+      'Request failed';
+    throw new Error(detail);
+  }
+  return response.json() as Promise<T>;
+};
+
+export const fetchTaskDetail = async (taskId: string): Promise<TaskDetailApiResponse> => {
+  return fetchJson<TaskDetailApiResponse>(`/api/task/detail/${taskId}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
+export const verifyProfileChangeRequest = async (
+  requestId: string,
+  isVerified: boolean
+): Promise<Record<string, unknown>> => {
+  const token = await getAccessToken();
+  return fetchJson<Record<string, unknown>>(
+    `${getApiBaseUrl()}/api/admin/task/profile/change_request/${requestId}/verify`,
+    {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${await    getoken({})}`,
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch profile change request: ${response.statusText}`);
+      body: JSON.stringify({
+        is_verified: isVerified,
+        description: '',
+      }),
     }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching profile change request:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch profile change request');
-  }
+  );
 };
 
-/**
- * Update profile change request
- */
-export const updateProfileChangeRequest = async (
-  taskId: number,
-  updateData: Partial<ProfileChangeRequest>
-): Promise<void> => {
-  try {
-    const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
-      method: 'PUT',
+interface HelpRequestVerificationPayload {
+  template_id: number;
+  title: string;
+  description: string;
+  task_assignments: Array<{
+    temp_task_id: number;
+    staff_id: number;
+    deadline: number;
+    assignment_notes: string;
+  }>;
+}
+
+export const verifyHelpRequest = async (
+  requestId: string,
+  payload: HelpRequestVerificationPayload
+): Promise<Record<string, unknown>> => {
+  const token = await getAccessToken();
+  return fetchJson<Record<string, unknown>>(
+    `${getApiBaseUrl()}/api/admin/task/project/request/${requestId}/verify`,
+    {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${await    getoken({})}`,
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(updateData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update profile change request: ${response.statusText}`);
+      body: JSON.stringify(payload),
     }
-  } catch (error) {
-    console.error('Error updating profile change request:', error);
-    throw error instanceof Error ? error : new Error('Failed to update profile change request');
-  }
+  );
 };
 
-/**
- * Delete profile change request
- */
-export const deleteProfileChangeRequest = async (taskId: number): Promise<void> => {
-  try {
-    const response = await fetch(`/api/admin/task/profile/change_request/${taskId}/`, {
-      method: 'DELETE',
+export const approveTemplateRequest = async (
+  requestId: string
+): Promise<Record<string, unknown>> => {
+  const token = await getAccessToken();
+  return fetchJson<Record<string, unknown>>(
+    `${getApiBaseUrl()}/api/admin/task/project/template/${requestId}/approve/`,
+    {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${await    getoken({})}`,
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to delete profile change request: ${response.statusText}`);
     }
-  } catch (error) {
-    console.error('Error deleting profile change request:', error);
-    throw error instanceof Error ? error : new Error('Failed to delete profile change request');
-  }
+  );
 };
 
-/**
- * Fetch project template details
- */
-export const fetchProjectTemplate = async (
-  taskId: number,
-  languageId: string = 'fa'
-): Promise<ProjectTemplate> => {
-  try {
-    const response = await fetch(`/api/admin/task/project/template/${taskId}/?LAN_ID=${languageId}`, {
-      method: 'GET',
+export const approveCooperationRequest = async (
+  requestId: string
+): Promise<Record<string, unknown>> => {
+  const token = await getAccessToken();
+  return fetchJson<Record<string, unknown>>(
+    `${getApiBaseUrl()}/api/admin/task/profile/cooperation_request/${requestId}/approve/`,
+    {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${await    getoken({})}`,
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch project template: ${response.statusText}`);
     }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching project template:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch project template');
-  }
+  );
 };
 
-/**
- * Update project template
- */
-export const updateProjectTemplate = async (
-  taskId: number,
-  updateData: Partial<ProjectTemplate>
-): Promise<void> => {
-  try {
-    const response = await fetch(`/api/admin/task/project/template/${taskId}/`, {
-      method: 'PUT',
+export const approveTicketRequest = async (
+  requestId: string
+): Promise<Record<string, unknown>> => {
+  const token = await getAccessToken();
+  return fetchJson<Record<string, unknown>>(
+    `${getApiBaseUrl()}/api/admin/task/profile/ticket/${requestId}/approve/`,
+    {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${await    getoken({})}`,
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(updateData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update project template: ${response.statusText}`);
     }
-  } catch (error) {
-    console.error('Error updating project template:', error);
-    throw error instanceof Error ? error : new Error('Failed to update project template');
-  }
+  );
 };
-
-/**
- * Delete project template
- */
-export const deleteProjectTemplate = async (taskId: number): Promise<void> => {
-  try {
-    const response = await fetch(`/api/admin/task/project/template/${taskId}/`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${await    getoken({})}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to delete project template: ${response.statusText}`);
-    }
-  } catch (error) {
-    console.error('Error deleting project template:', error);
-    throw error instanceof Error ? error : new Error('Failed to delete project template');
-  }
-};
-
-/**
- * Fetch task details by ref type - Updated to use internal API routes
- */
-export const fetchTaskDetailsByRefType = async (
-  refType: number,
-  refId: number
-): Promise<ProfileChangeRequest | ProjectTemplate> => {
-  try {
-    switch (refType) {
-      case RefType.PARTY_CHANGE_REQUEST:
-        return await fetchProfileChangeRequest(refId);
-      case RefType.PROJECT_REQUEST:
-        // This would still call the external API as it's not implemented yet
-        throw new Error('Project request endpoint not implemented');
-      case RefType.PROJECT_TASKS:
-        // This would still call the external API as it's not implemented yet
-        throw new Error('Project tasks endpoint not implemented');
-      case RefType.REQUEST_PROJECT_TEMPLATE:
-        return await fetchProjectTemplate(refId);
-      default:
-        throw new Error(`Unsupported ref_type: ${refType}`);
-    }
-  } catch (error) {
-    console.error('Error fetching task details:', error);
-    throw error instanceof Error ? error : new Error('Failed to fetch task details');
-  }
-};
-
