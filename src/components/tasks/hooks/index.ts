@@ -2,10 +2,20 @@ import { useState, useMemo, useCallback } from 'react';
 import { TaskInterface, FilterOptions, UseTaskFiltersReturn, UseTaskPaginationReturn } from '../types';
 import { useMyTasks } from '@/hooks/useTaskServices';
 import { useSkeletonLoading } from './useSkeletonLoading';
-import { PaginationParams } from '@/services/taskServices';
+import { PaginationParams } from '@/services/task/taskServices';
 
-export const useTasksQuery = (_filters?: FilterOptions, paginationParams?: PaginationParams) => {
-  const { data, isLoading, error, refetch } = useMyTasks(paginationParams);
+interface UseTasksQueryOptions {
+  enabled?: boolean;
+}
+
+export const useTasksQuery = (
+  _filters?: FilterOptions,
+  paginationParams?: PaginationParams,
+  options?: UseTasksQueryOptions,
+) => {
+  const { data, isLoading, error, refetch } = useMyTasks(paginationParams, {
+    enabled: options?.enabled,
+  });
   const showSkeleton = useSkeletonLoading({ isLoading });
 
   return {

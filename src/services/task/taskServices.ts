@@ -1,4 +1,4 @@
-import { getCookieByKey } from '@/actions/cookieToken';
+import { getCookieByKey, getoken } from '@/actions/cookieToken';
 import { TaskInterface } from '@/interface';
 
 
@@ -20,7 +20,7 @@ export const fetchMyTasks = async (params?: PaginationParams): Promise<Paginated
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await getoken({});
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=${limit}&offset=${offset}`,
       {
@@ -67,7 +67,7 @@ export const fetchUnassignedTasks = async (params?: PaginationParams): Promise<P
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${await getCookieByKey('access_token')}`,
+          Authorization: `Bearer ${await getoken({})}`,
           'Content-Type': 'application/json',
         },
       }
@@ -109,7 +109,7 @@ export const fetchTasksByStatus = async (statusId: number, params?: PaginationPa
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await getoken({});
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status_id=${statusId}&limit=${limit}&offset=${offset}`,
       {
@@ -200,7 +200,7 @@ export const fetchSharedPoolTasks = async (params?: PaginationParams): Promise<P
   try {
     const limit = params?.limit ?? DEFAULT_LIMIT;
     const offset = params?.offset ?? 0;
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await getoken({});
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/`
       , {
@@ -234,6 +234,47 @@ export const fetchSharedPoolTasks = async (params?: PaginationParams): Promise<P
   }
 };
 
+export interface AssignSharedPoolTaskPayload {
+  task_id: number;
+  is_exclusive: boolean;
+  exclusive_until?: string | null;
+}
+
+export const assignSharedPoolTasks = async (
+  payload: AssignSharedPoolTaskPayload[]
+) => {
+  try {
+    const accessToken = await getoken({});
+    if (!accessToken) {
+      throw new Error('توکن دسترسی یافت نشد.');
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/assign`,
+      {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (!response.ok) {
+      const errorBody = await response.json().catch(() => null);
+      const detail = errorBody?.detail ?? 'خطا در اختصاص تسک';
+      throw new Error(detail);
+    }
+
+    return response.json().catch(() => ({}));
+  } catch (error) {
+    console.error('Error assigning shared pool task:', error);
+    throw error instanceof Error ? error : new Error('خطا در اختصاص تسک');
+  }
+};
+
 export const fetchTaskById = async (id: string | number) => {
   try {
     const response = await fetch(
@@ -241,7 +282,7 @@ export const fetchTaskById = async (id: string | number) => {
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${await getCookieByKey('access_token')}`,
+          Authorization: `Bearer ${await getoken({})}`,
           'Content-Type': 'application/json',
         },
       }
@@ -272,7 +313,7 @@ export const createTask = async (taskData: Partial<TaskInterface>): Promise<Task
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${await getCookieByKey('access_token')}`,
+          Authorization: `Bearer ${await getoken({})}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(taskData),
@@ -301,7 +342,7 @@ export const updateTask = async (id: string | number, taskData: Partial<TaskInte
       {
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${await getCookieByKey('access_token')}`,
+          Authorization: `Bearer ${await getoken({})}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(taskData),
@@ -330,7 +371,7 @@ export const deleteTask = async (id: string | number): Promise<void> => {
       {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${await getCookieByKey('access_token')}`,
+          Authorization: `Bearer ${await getoken({})}`,
           'Content-Type': 'application/json',
         },
       }
@@ -380,7 +421,7 @@ export const fetchTaskDetailsByRefType = async (refType: number, refId: number):
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${await getCookieByKey('access_token')}`,
+          Authorization: `Bearer ${await getoken({})}`,
           'Content-Type': 'application/json',
         },
       }

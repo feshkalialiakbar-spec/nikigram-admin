@@ -1,11 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
-import { fetchMyTasks } from '@/services/taskServices';
+import { fetchMyTasks } from '@/services/task/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 import Button from '@/components/ui/actions/button/Button';
+import { TaskTableSkeleton } from '@/components/ui/TaskTableSkeleton';
 
 interface MyTasksProps {
     className?: string;
@@ -34,14 +35,16 @@ const MyTasks: React.FC<MyTasksProps> = ({ className }) => {
 
     if (isLoading) {
         return (
-            <div className={`${styles.myTasks} ${className || ''}`}>
-                <div className={styles.header}>
-                    <h1 className={styles.title}>کارهای من</h1>
+            <WithNavbarLayout>
+                <div className={`${styles.myTasks} ${className || ''}`}>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>کارهای من</h1>
+                    </div>
+                    <div className={styles.content}>
+                        <TaskTableSkeleton rows={itemsPerPage} />
+                    </div>
                 </div>
-                <div className={styles.content}>
-                    <TaskDashboard />
-                </div>
-            </div>
+            </WithNavbarLayout>
         );
     }
 

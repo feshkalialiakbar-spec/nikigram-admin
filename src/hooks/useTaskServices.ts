@@ -8,7 +8,7 @@ import {
   deleteTask,
   PaginatedResponse,
   PaginationParams,
-} from '@/services/taskServices';
+} from '@/services/task/taskServices';
 
 /**
  * Generic hook for fetching data with React Query

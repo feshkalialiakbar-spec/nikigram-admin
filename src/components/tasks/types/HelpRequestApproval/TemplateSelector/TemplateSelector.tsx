@@ -27,9 +27,7 @@ interface TemplateSelectorProps {
   isRejecting: boolean;
   isProcessing: boolean;
 }
-
 const MAX_TEMPLATE_DESCRIPTION_LENGTH = 180;
-
 const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onClose,
   onTemplateReject,
@@ -48,7 +46,6 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   const hasMore = useMemo(() => templates.length < totalCount, [templates.length, totalCount]);
-
   const loadTemplates = async (nextOffset = 0, append = false) => {
     setIsLoading(true);
     try {

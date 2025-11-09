@@ -10,7 +10,7 @@ export {
   createTask,
   updateTask,
   deleteTask,
-} from './taskServices';
+} from './task/taskServices';
 
 // Re-export deprecated task service for backward compatibility
 export * from './task';

@@ -115,7 +115,7 @@ const buildProjectTemplateListUrl = (params?: ProjectTemplateListParams) => {
 export const fetchProjectTemplateList = async (
     params?: ProjectTemplateListParams
 ): Promise<ProjectTemplateListResponse> => {
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await    getoken({});
 
     const response = await fetch(buildProjectTemplateListUrl(params), {
         method: 'GET',
@@ -136,7 +136,7 @@ export const createProjectTemplateRequest = async (
     requestId: number | string,
     payload: ProjectTemplateRequestPayload
 ) => {
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await    getoken({});
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${requestId}/request-template`;
 
     const response = await fetch(url, {
@@ -162,7 +162,7 @@ export const verifyProjectRequest = async (
     requestId: number | string,
     payload: VerifyProjectRequestPayload
 ) => {
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await    getoken({});
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/project/request/${requestId}/verify`;
 
     const response = await fetch(url, {
@@ -188,7 +188,7 @@ export const fetchProjectTemplateDetail = async (
     templateId: number | string,
     languageId = 'fa'
 ): Promise<ProjectTemplateDetailResponse> => {
-    const accessToken = await getCookieByKey('access_token');
+    const accessToken = await    getoken({});
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/admin/project-template/${templateId}?LAN_ID=${languageId}`;
 
     const response = await fetch(url, {

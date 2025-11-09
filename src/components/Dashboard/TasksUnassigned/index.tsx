@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useApiList } from '@/hooks/useTaskServices';
-import { fetchUnassignedTasks } from '@/services/taskServices';
+import { fetchUnassignedTasks } from '@/services/task/taskServices';
 import { TaskDashboard } from '@/components/tasks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';

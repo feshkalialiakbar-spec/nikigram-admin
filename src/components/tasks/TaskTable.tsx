@@ -6,12 +6,16 @@ import { TaskTableProps } from './types';
 import { getStatusText, getStatusClass } from './utils';
 import styles from './TaskTable.module.scss';
 import Button from '@/components/ui/actions/button/Button';
+import { useToast } from '@/components/ui';
 
 const TaskTable: React.FC<TaskTableProps> = ({
   tasks,
-  className
+  className,
+  onOperationClick,
 }) => {
   const router = useRouter();
+  const { showSuccess, showError } = useToast();
+  const [pendingTaskId, setPendingTaskId] = React.useState<number | null>(null);
 
   const getOperationIcon = React.useCallback((operation: string) => {
     switch (operation) {
@@ -26,9 +30,31 @@ const TaskTable: React.FC<TaskTableProps> = ({
     }
   }, []);
 
-  const handleRowClick = (taskId: number) => {
+  const navigateToTask = React.useCallback((taskId: number) => {
     router.push(`/dashboard/my-tasks/${taskId}`);
-  };
+  }, [router]);
+
+  const handleOperation = React.useCallback(async (taskId: number) => {
+    if (!onOperationClick) {
+      navigateToTask(taskId);
+      return;
+    }
+
+    setPendingTaskId(taskId);
+
+    try {
+      await onOperationClick(taskId, 'perform');
+      showSuccess('تسک با موفقیت به شما اختصاص یافت');
+      navigateToTask(taskId);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'خطا در اختصاص تسک';
+      showError('خطا در اختصاص تسک', message);
+      console.error('Failed to assign task before navigation:', error);
+    } finally {
+      setPendingTaskId(null);
+    }
+  }, [navigateToTask, onOperationClick, showError, showSuccess]);
 
   if (tasks.length === 0) {
     return (
@@ -75,14 +101,15 @@ const TaskTable: React.FC<TaskTableProps> = ({
               <td className={styles.operations}>
                 <Button
                   buttonClassName={styles.operationButton}
-                  onClick={() => handleRowClick(task.task_id)}
+                  onClick={() => handleOperation(task.task_id)}
+                  disabled={pendingTaskId === task.task_id}
                   type="button"
                   ariaLabel={`انجام عملیات برای وظیفه ${task.task_title}`}
                 >
                   <span className={styles.operationIcon}>
                     {getOperationIcon('perform')}
                   </span>
-                  انجام عملیات
+                  {pendingTaskId === task.task_id ? 'در حال اختصاص...' : 'انجام عملیات'}
                 </Button>
               </td>
             </tr>

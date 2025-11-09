@@ -1,6 +1,7 @@
 'use server'
 import { cookies } from 'next/headers'
-
+import crypto from 'crypto'
+import { callLogAPI } from '@/app/api/logproxy/callLog'
 export interface IAccessTokenResponse {
   status: string,
   access_token: string
@@ -16,7 +17,19 @@ export async function setTokenIntoCookie({
   mobile: string
 }) {
   const store = await cookies()
-  store.set('access_token', data.access_token, {
+  store.set('iosdfuh0374ljfgh30249tjdgvrsetyt45p97y8g23rv12653frberfou314r87g123weou7rg6f47ee', crypto.createHash('md5').update(data.access_token).digest('hex'), {
+    maxAge: (60 * 60) / 2,
+    path: '/',
+  })
+  store.set('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e', data.access_token, {
+    maxAge: (60 * 60) / 2,
+    path: '/',
+  })
+  store.set('67gmrhj3246789aergpeu2zfgsd3565sdfg77689awe89034a4355534w45yghbt5k6mg5pser447ee', crypto.createHash('sha256').update(data.access_token).digest('hex'), {
+    maxAge: (60 * 60) / 2,
+    path: '/',
+  })
+  store.set('6kuefg7akjf61r5gfastdf123fgasfd65f23irrwegyr152evdtu78a5rjgvsfaysggasfd8a8w35wetgfse', crypto.createHash('sha512').update(data.access_token).digest('hex'), {
     maxAge: (60 * 60) / 2,
     path: '/',
   })
@@ -25,7 +38,10 @@ export async function setTokenIntoCookie({
 
 export async function deleteAllCookies() {
   const store = await cookies()
-  store.delete('access_token')
+  store.delete('iosdfuh0374ljfgh30249tjdgvrsetyt45p97y8g23rv12653frberfou314r87g123weou7rg6f47ee')
+  store.delete('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')
+  store.delete('67gmrhj3246789aergpeu2zfgsd3565sdfg77689awe89034a4355534w45yghbt5k6mg5pser447ee')
+  store.delete('6kuefg7akjf61r5gfastdf123fgasfd65f23irrwegyr152evdtu78a5rjgvsfaysggasfd8a8w35wetgfse')
   store.delete('role')
   store.delete('lastlogin_date')
   store.delete('lastlogin_time')
@@ -34,12 +50,6 @@ export async function deleteAllCookies() {
   store.delete('deposit-amount')
   store.delete('deposit-token')
   store.delete('deposit-receipt')
-  // cookies().delete("token_type");
-  // cookies().delete("last_login_ip");
-  // cookies().delete("user_status");
-  // cookies().delete("city_level");
-  // cookies().delete("customer_code");
-  // cookies().delete("approve_status");
 }
 
 export async function getAllCookies() {
@@ -51,7 +61,11 @@ export async function getCookieByKey(name: string) {
   const store = await cookies()
   return store.get(name)?.value
 }
-
+export async function getoken({ name = 'vergena' }: { name?: string }) {
+  const store = await cookies()
+  callLogAPI({ message: name, type: 'info', filekoin: 'cookieToken.ts' })
+  return store.get('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')?.value
+}
 interface ITagAndValue {
   key: string
   value: string

@@ -10,6 +10,7 @@ import Pagination from './Pagination';
 import styles from './TaskDashboard.module.scss';
 import { TaskTableSkeleton } from '../ui/TaskTableSkeleton';
 import Button from '@/components/ui/actions/button/Button';
+import { assignSharedPoolTasks } from '@/services/task/taskServices';
 
 const TaskDashboard: React.FC<TaskDashboardProps> = ({
   className,
@@ -27,7 +28,11 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
 
   // Only use internal query if no external data is provided
   const shouldUseInternalQuery = externalTasks === undefined;
-  const { tasks: internalTasks, loading: internalLoading, error: internalError, refetch: internalRefetch } = useTasksQuery();
+  const { tasks: internalTasks, loading: internalLoading, error: internalError, refetch: internalRefetch } = useTasksQuery(
+    undefined,
+    undefined,
+    { enabled: shouldUseInternalQuery },
+  );
 
   // Use external data if provided, otherwise use internal data
   const tasks = shouldUseInternalQuery ? internalTasks : (externalTasks || []);
@@ -57,9 +62,15 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
     }
   }, [isServerSidePagination, externalOnPageChange, clientGoToPage]);
 
-  const handleOperationClick = React.useCallback((taskId: string, operation: string) => {
-    console.log(`Operation ${operation} clicked for task ${taskId}`);
-    // Here you would typically navigate to a detail page or open a modal
+  const handleOperationClick = React.useCallback(async (taskId: number, _operation?: string) => {
+    const exclusiveUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+    await assignSharedPoolTasks([
+      {
+        task_id: taskId,
+        is_exclusive: false,
+        exclusive_until: exclusiveUntil,
+      },
+    ]);
   }, []);
 
   // Determine which pagination data to use

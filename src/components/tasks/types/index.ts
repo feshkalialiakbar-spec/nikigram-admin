@@ -46,7 +46,7 @@ export interface TaskDashboardProps {
 
 export interface TaskTableProps {
   tasks: TaskInterface[];
-  onOperationClick: (taskId: string, operation: string) => void;
+  onOperationClick?: (taskId: number, operation: string) => Promise<void> | void;
   className?: string;
 }
 

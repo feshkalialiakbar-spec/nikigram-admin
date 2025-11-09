@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { fetchTaskById } from '@/services/taskServices';
+import { fetchTaskById } from '@/services/task/taskServices';
 import { getTaskDetailUrl } from '@/utils/taskRouting';
 
 /**

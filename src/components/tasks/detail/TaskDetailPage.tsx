@@ -18,7 +18,7 @@ import {
   ApiCooperationRequestResponse,
   ApiTemplateRequestResponse,
 } from '@/components/tasks/types';
-import { getCookieByKey } from '@/actions/cookieToken';
+import { getCookieByKey, getoken } from '@/actions/cookieToken';
 
 const TaskDetailPage: React.FC = () => {
   const params = useParams();
@@ -120,7 +120,7 @@ const TaskDetailPage: React.FC = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${await getCookieByKey('access_token')}`
+            Authorization: `Bearer ${await   getoken({})}`
           },
           body: JSON.stringify({
             is_verified: isApprove,
@@ -311,7 +311,10 @@ const TaskDetailPage: React.FC = () => {
   }
 
   if (taskType === 'help' && taskData) {
-    const helpRequest = mapHelpRequestToComponent(taskData as ApiHelpRequestResponse);
+    const helpRequest = mapHelpRequestToComponent(
+      taskData as ApiHelpRequestResponse,
+      { fallbackTaskId: taskId },
+    );
 
     return (
       <>

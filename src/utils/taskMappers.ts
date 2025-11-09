@@ -281,14 +281,37 @@ const mapProjectDocsToHelpDocuments = (
   });
 };
 
+const normalizeIdentifier = (
+  value: number | string | null | undefined,
+  fallback?: string
+): string => {
+  if (typeof value === 'number' && !Number.isNaN(value)) {
+    return value.toString();
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed.length > 0) {
+      return trimmed;
+    }
+  }
+
+  if (fallback) {
+    return fallback;
+  }
+
+  return 'unknown';
+};
+
 /**
  * Map help request API response to HelpRequestDetails component props
  * Supports both new and old API response formats
  */
 const buildFallbackHelpRequest = (
-  taskDetails?: ApiHelpRequestResponse['task_details']
+  taskDetails?: ApiHelpRequestResponse['task_details'],
+  fallbackTaskId?: string
 ): HelpRequestDetails => ({
-  id: taskDetails?.task_id?.toString() || 'unknown',
+  id: normalizeIdentifier(taskDetails?.task_id, fallbackTaskId),
   requestDate: taskDetails?.created_at ? formatDate(taskDetails.created_at) : '—',
   requestType: 'نامشخص',
   requestTitle: '—',
@@ -302,7 +325,7 @@ const buildFallbackHelpRequest = (
   description: '—',
   attachedDocuments: [],
   user: {
-    id: taskDetails?.task_id?.toString() || '0',
+    id: normalizeIdentifier(taskDetails?.task_id, '0'),
     name: 'نامشخص',
     level: getUserLevelLabel(1),
     avatar: undefined,
@@ -310,8 +333,13 @@ const buildFallbackHelpRequest = (
   aiComment: undefined,
 });
 
+interface HelpRequestMapperOptions {
+  fallbackTaskId?: string;
+}
+
 export const mapHelpRequestToComponent = (
-  apiResponse: ApiHelpRequestResponse
+  apiResponse: ApiHelpRequestResponse,
+  options?: HelpRequestMapperOptions
 ): HelpRequestDetails => {
   const { task_details, project_request_details } = apiResponse;
 
@@ -320,8 +348,13 @@ export const mapHelpRequestToComponent = (
       hasTask: Boolean(task_details),
       hasProjectDetails: Boolean(project_request_details),
     });
-    return buildFallbackHelpRequest(task_details);
+    return buildFallbackHelpRequest(task_details, options?.fallbackTaskId);
   }
+
+  const normalizedTaskId = normalizeIdentifier(
+    task_details.task_id,
+    options?.fallbackTaskId
+  );
 
   // Handle user level - use provided level or default
   const userLevel = typeof project_request_details.user_level === 'number'
@@ -380,7 +413,13 @@ export const mapHelpRequestToComponent = (
   };
 
   const request: HelpRequestDetails = {
-    id: task_details.task_id.toString(),
+    id: normalizeIdentifier(
+      project_request_details.request_id
+        ?? project_request_details.project_request_id
+        ?? task_details.ref_id
+        ?? task_details.task_id,
+      normalizedTaskId
+    ),
     requestDate: formatDate(task_details.created_at),
     requestType: getRequestTypeLabel(project_request_details.request_type),
     requestTitle,
