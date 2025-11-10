@@ -3,6 +3,7 @@
 /node_modules
 /.github
 /public
+/logs
 /.pnp
 .pnp.*
 .yarn/*

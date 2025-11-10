@@ -23,12 +23,12 @@ Displays tasks that are pending and waiting for the current user to act on them.
 ---
 
 ### 2. To-Do List (Shared Pending Tasks) ✅
-**Route:** `/dashboard/to-do-list`
+**Route:** `/dashboard/shared-pool`
 
 **Files Created:**
 - `src/components/Dashboard/ToDoList/index.tsx`
 - `src/components/Dashboard/ToDoList/index.module.scss`
-- `src/app/dashboard/to-do-list\page.tsx`
+- `src/app/dashboard/shared-pool\page.tsx`
 
 **API Service:**
 - `fetchToDoListTasks()` - Fetches shared pending tasks for collaboration
@@ -166,7 +166,7 @@ All routes are properly registered in the sidebar menu (`src/components/hub/Side
     { label: 'در حال انجام', href: '/dashboard/tasks-in-progress', icon: TickCircle },
     { label: 'انجام شده', href: '/dashboard/tasks-completed', icon: CloseCircle },
     { label: 'متوقف شده', href: '/dashboard/tasks-stopped', icon: Profile2User },
-    { label: 'در انتظار انجام مشترک', href: '/dashboard/to-do-list', icon: Profile2User },
+    { label: 'در انتظار انجام مشترک', href: '/dashboard/shared-pool', icon: Profile2User },
     { label: 'اختصاص نیافته', href: '/dashboard/tasks-unassigned', icon: ProfileRemove },
   ],
 }

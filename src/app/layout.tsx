@@ -1,4 +1,4 @@
-
+"use client"
 import '../styles/main.scss';
 import '../styles/modal-animations.css';
 import { ToastProvider } from '@/components/ui';

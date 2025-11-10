@@ -247,7 +247,7 @@ export const fetchSharedPoolTasks = async (
   try {
     const headers = await getAuthorizationHeaders();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/?has_assignment=false`,
       {
         method: 'GET',
         headers,

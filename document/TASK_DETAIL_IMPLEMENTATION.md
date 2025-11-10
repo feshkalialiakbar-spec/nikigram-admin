@@ -66,7 +66,7 @@ All task detail pages now use the unified `TaskDetailPage` component:
 - `src/app/dashboard/tasks-stopped/[id]/page.tsx`
 - `src/app/dashboard/tasks-unassigned/[id]/page.tsx`
 - `src/app/dashboard/tasks-waiting-for-me/[id]/page.tsx`
-- `src/app/dashboard/to-do-list/[id]/page.tsx`
+- `src/app/dashboard/shared-pool/[id]/page.tsx`
 
 Each page is now simplified to:
 ```typescript

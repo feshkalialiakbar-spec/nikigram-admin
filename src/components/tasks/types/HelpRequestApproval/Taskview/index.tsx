@@ -6,10 +6,9 @@ import { HelpRequestApprovalProps } from '@/components/tasks/types';
 import { useToast } from '@/components/ui';
 import DrawerModal from '@/components/ui/modal/drawerModal/DrawerModal';
 import FileDownload from '@/components/ui/fileDownload/FileDownload';
-import TemplateSelector from './TemplateSelector/TemplateSelector';
-import DocumentUploadModal from './DocumentUploadModal';
+import DocumentUploadModal from '../DocumentUploadModal';
 import { AIAssistantSection } from '@/components/tasks/shared/AIAssistantSection';
-import { ActionButtons } from '../../shared/ActionButtons';
+import { ActionButtons } from '../../../shared/ActionButtons';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
 import {
   createProjectTemplateRequest,
@@ -18,8 +17,8 @@ import {
 } from '@/services/projectTemplate';
 import { submitHelpRequestDocuments } from '@/services/helpRequest';
 import { safeText } from '@/hooks/texedit';
-import type { DocumentSubmissionForm } from './lib/types';
- 
+import type { DocumentSubmissionForm } from '../lib/types';
+
 const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
@@ -213,11 +212,9 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     [request.id, lastDescription, onApprove, showError, showSuccess]
   );
 
-  // ---- Render ----
   return (
     <>
-
-      {!modalState.templateOpen ? (<div className={`${styles.container} ${className ?? ''}`}>
+      (<div className={`${styles.container} ${className ?? ''}`}>
         <div className={styles.card}>
           <section className={styles.requestPanel}>
             <header className={styles.requestHeader}>
@@ -264,16 +261,13 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
               </section>
             )}
           </section>
-
           <AIAssistantSection comment='این بخش شامل نظر AI درباره درخواست است.' />
-
           <ActionButtons
             onApprove={() => openDrawer(true)}
             onReject={() => openDrawer(false)}
             className={styles.actionButtons}
           />
         </div>
-
         <DrawerModal
           isOpen={modalState.drawerOpen}
           setIsOpen={handleDrawerClose}
@@ -287,23 +281,6 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
           />
         </DrawerModal>
       </div>
-      ) : (
-        <TemplateSelector
-          onClose={() =>
-            setModalState((s) => ({
-              ...s,
-              templateOpen: false,
-              rejectingTemplate: false,
-              verifyingTemplate: false,
-            }))
-          }
-          onTemplateReject={handleTemplateReject}
-          onConfirmTemplate={handleTemplateConfirm}
-          isRejecting={modalState.rejectingTemplate}
-          isProcessing={modalState.verifyingTemplate}
-        />
-      )}
     </>);
 };
-
 export default HelpRequestApproval;

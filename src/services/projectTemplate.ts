@@ -108,28 +108,48 @@ const buildProjectTemplateListUrl = (params?: ProjectTemplateListParams) => {
     if (typeof params?.limit === 'number') {
         url.searchParams.set('limit', String(params.limit));
     }
-
     return url.toString();
+};
+
+const inFlightRequests = new Map<string, Promise<unknown>>();
+
+const runSingleFlight = async <T>(key: string, fetcher: () => Promise<T>): Promise<T> => {
+    if (inFlightRequests.has(key)) {
+        return inFlightRequests.get(key) as Promise<T>;
+    }
+
+    const promise = fetcher().finally(() => {
+        inFlightRequests.delete(key);
+    });
+
+    inFlightRequests.set(key, promise);
+
+    return promise;
 };
 
 export const fetchProjectTemplateList = async (
     params?: ProjectTemplateListParams
 ): Promise<ProjectTemplateListResponse> => {
-    const accessToken = await getoken('PROJECT_TEMPLATE_LIST');
+    const url = buildProjectTemplateListUrl(params);
+    const cacheKey = `GET:${url}`;
 
-    const response = await fetch(buildProjectTemplateListUrl(params), {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-        },
+    return runSingleFlight(cacheKey, async () => {
+        const accessToken = await getoken('PROJECT_TEMPLATE_LIST');
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch project templates');
+        }
+
+        return response.json();
     });
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch project templates');
-    }
-
-    return response.json();
 };
 
 export const createProjectTemplateRequest = async (
@@ -188,21 +208,25 @@ export const fetchProjectTemplateDetail = async (
     templateId: number | string,
     languageId = 'fa'
 ): Promise<ProjectTemplateDetailResponse> => {
-    const accessToken = await getoken('PROJECT_TEMPLATE_DETAIL');
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/admin/project-template/${templateId}?LAN_ID=${languageId}`;
+    const cacheKey = `GET:${url}`;
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-        },
+    return runSingleFlight(cacheKey, async () => {
+        const accessToken = await getoken('PROJECT_TEMPLATE_DETAIL');
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch project template detail');
+        }
+
+        return response.json();
     });
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch project template detail');
-    }
-
-    return response.json();
 };
 

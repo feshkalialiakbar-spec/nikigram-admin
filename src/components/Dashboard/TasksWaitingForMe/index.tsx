@@ -7,6 +7,7 @@ import { usePaginatedTaskService } from '@/components/tasks/hooks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 import Button from '@/components/ui/actions/button/Button';
+import { TaskTableSkeleton } from '@/components/ui/TaskTableSkeleton';
 
 interface TasksWaitingForMeProps {
   className?: string;
@@ -35,14 +36,16 @@ const TasksWaitingForMe: FC<TasksWaitingForMeProps> = ({ className }) => {
 
   if (loading) {
     return (
-      <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>در انتظار انجام من</h1>
+      <WithNavbarLayout>
+        <div className={`${styles.tasksWaitingForMe} ${className || ''}`}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>در انتظار انجام من</h1>
+          </div>
+          <div className={styles.content}>
+            <TaskTableSkeleton rows={itemsPerPage} />
+          </div>
         </div>
-        <div className={styles.content}>
-          <TaskDashboard />
-        </div>
-      </div>
+      </WithNavbarLayout>
     );
   }
 

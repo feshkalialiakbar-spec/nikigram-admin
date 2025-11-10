@@ -7,6 +7,7 @@ import { usePaginatedTaskService } from '@/components/tasks/hooks';
 import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 import Button from '@/components/ui/actions/button/Button';
+import { TaskTableSkeleton } from '@/components/ui/TaskTableSkeleton';
 
 interface TasksCompletedProps {
   className?: string;
@@ -35,14 +36,16 @@ const TasksCompleted: FC<TasksCompletedProps> = ({ className }) => {
 
   if (loading) {
     return (
-      <div className={`${styles.tasksCompleted} ${className || ''}`}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>تکمیل شده</h1>
+      <WithNavbarLayout>
+        <div className={`${styles.tasksCompleted} ${className || ''}`}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>تکمیل شده</h1>
+          </div>
+          <div className={styles.content}>
+            <TaskTableSkeleton rows={itemsPerPage} />
+          </div>
         </div>
-        <div className={styles.content}>
-          <TaskDashboard />
-        </div>
-      </div>
+      </WithNavbarLayout>
     );
   }
 

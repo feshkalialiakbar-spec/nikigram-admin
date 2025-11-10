@@ -63,7 +63,7 @@ export const quickActions: TaskMenuItem[] = [
         icon: Profile2User,
       }, {
         label: 'در انتظار انجام مشترک',
-        href: '/dashboard/to-do-list',
+        href: '/dashboard/shared-pool',
         icon: Profile2User,
       },
       {

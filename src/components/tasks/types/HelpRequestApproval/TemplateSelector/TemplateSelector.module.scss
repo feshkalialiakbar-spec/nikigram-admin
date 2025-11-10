@@ -1,261 +1,62 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1100;
-  background: linear-gradient(180deg, rgba(14, 49, 93, 0.15) 0%, rgba(14, 49, 93, 0.05) 100%);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 48px 24px;
-  overflow-y: auto;
-}
-
-.wrapper {
-  position: relative;
-  width: min(1260px, 100%);
-  background: #ffffff;
-  border-radius: 28px;
-  padding: 40px 32px;
+.container {
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  box-shadow: 0 24px 64px rgba(14, 49, 93, 0.15);
+  gap: 24px;
   direction: rtl;
+  min-height: 80vh;
 }
 
-/* ===== Header ===== */
-.topSection {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-}
-
-.primaryHeading {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 16px;
-  flex: 1;
 
   h2 {
-    font-size: 22px;
+    margin: 0;
+    font-size: 20px;
     font-weight: 700;
     color: #0e315d;
-    margin: 0;
-  }
-
-  p {
-    font-size: 14px;
-    color: #435a73;
-    margin: 0;
   }
 }
 
-.rejectPill {
+.rejectButton {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 24px;
-  border-radius: 24px;
-  background: rgba(231, 2, 24, 0.08);
-  border: 2px solid rgba(231, 2, 24, 0.4);
+  padding: 10px 22px; 
+  background-color: white;
   color: #e70218;
+  font-weight: 600;
   font-size: 14px;
-  font-weight: 500;
   transition: all 0.2s ease;
 
-  &:hover {
-    background: rgba(231, 2, 24, 0.15);
+  &:hover:not(:disabled) {
+    background: rgba(231, 2, 24, 0.12);
+    border-color: rgba(231, 2, 24, 0.55);
   }
-}
 
-/* ===== Sections ===== */
-.listSection {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.listHeader {
-  text-align: right;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0e315d;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .cardsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(284px, 1fr));
-  gap: 24px;
-  padding-right: 4px;
-  overflow-y: auto;
-  max-height: 626px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 }
 
-/* ===== Cards ===== */
-.card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 24px 16px;
+.loadingState,
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 0;
+  color: #4b5a70;
+  font-weight: 500;
+  background: rgba(30, 100, 233, 0.04);
   border-radius: 16px;
-  background: linear-gradient(180deg, #dee9f4 0%, #e9f1fa 100%);
-  border: 2px solid transparent;
-  min-height: 277px;
-  text-align: right;
-  transition: all 0.2s ease;
-  box-shadow: 0 10px 24px rgba(14, 49, 93, 0.08);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 32px rgba(14, 49, 93, 0.12);
-  }
-}
-
-.cardSelected {
-  border-color: #007bff;
-  background: #e8f2ff;
-  box-shadow: 0 28px 48px rgba(0, 123, 255, 0.18);
-}
-
-.cardHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-end;
-
-  h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: #0e315d;
-  }
-
-  p {
-    font-size: 13px;
-    color: #435a73;
-    line-height: 1.6;
-    margin: 0;
-    min-height: 54px;
-  }
-}
-
-.cardBody {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-end;
-}
-
-.cardRow {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-
-  .label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1f2b37;
-  }
-
-  .value {
-    font-size: 12px;
-    color: #435a73;
-  }
-}
-
-/* ===== Card Action ===== */
-.cardAction {
-  margin-top: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 24px;
-  border-radius: 24px;
-  border: 2px solid #007bff;
-  background: transparent;
-  transition: all 0.2s ease;
-
-  span {
-    color: #007bff;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  &:hover {
-    background: rgba(0, 123, 255, 0.08);
-  }
-}
-
-/* ===== Load More Button ===== */
-.loadMore {
-  align-self: center;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 28px;
-  border-radius: 24px;
-  border: 2px solid #007bff;
-  background: transparent;
-  transition: all 0.2s ease;
-  margin-top: 16px;
-
-  span {
-    color: #007bff;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  &:hover {
-    background: rgba(0, 123, 255, 0.08);
-  }
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 1200px) {
-  .cardsGrid {
-    max-height: initial;
-  }
-}
-
-@media (max-width: 1024px) {
-  .wrapper {
-    padding: 32px 20px;
-  }
-
-  .topSection {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .cardsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .overlay {
-    padding: 24px 12px;
-  }
-
-  .wrapper {
-    padding: 24px 16px;
-  }
-
-  .cardsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .card {
-    min-height: 240px;
-  }
-
-  .primaryHeading {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
