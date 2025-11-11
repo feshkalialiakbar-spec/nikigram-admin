@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss';
@@ -13,13 +12,17 @@ import { ActionButtons } from '../../shared/ActionButtons';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
 import {
   createProjectTemplateRequest,
-  verifyProjectRequest,
   ProjectTemplateDetailResponse,
 } from '@/services/projectTemplate';
 import { submitHelpRequestDocuments } from '@/services/helpRequest';
 import { safeText } from '@/hooks/texedit';
-import type { DocumentSubmissionForm } from './lib/types';
- 
+import type {
+  DocumentSubmissionForm,
+  ApprovalWorkflowState,
+  ApprovalPhaseStatus,
+} from './lib/types';
+import SelectedTemplateOverview from './SelectedTemplateOverview';
+
 const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
@@ -28,7 +31,6 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   rawApiData,
 }) => {
   const { showSuccess, showError } = useToast();
-
   // ---- State Management ----
   const [modalState, setModalState] = useState({
     drawerOpen: false,
@@ -38,18 +40,91 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     verifyingTemplate: false,
     approved: false,
   });
-
   const [lastDescription, setLastDescription] = useState('');
-
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<ProjectTemplateDetailResponse | null>(null);
+  const [approvalWorkflow, setApprovalWorkflow] = useState<ApprovalWorkflowState>({
+    currentStage: 'review',
+    phases: [],
+  });
+  const storageKey = useMemo(
+    () => `helpRequestApproval:selectedTemplate:${request.id}`,
+    [request.id]
+  );
+  const persistSelectedTemplate = useCallback(
+    (detail: ProjectTemplateDetailResponse) => {
+      if (typeof window === 'undefined') return;
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(detail));
+      } catch (error) {
+        console.error('Failed to persist selected template detail', error);
+      }
+    },
+    [storageKey]
+  );
+  const clearPersistedTemplate = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.removeItem(storageKey);
+    } catch (error) {
+      console.error('Failed to clear stored template detail', error);
+    }
+  }, [storageKey]);
   const taskStatusId = rawApiData?.task_details?.status_id ?? null;
   const taskId = rawApiData?.task_details?.task_id ?? request.id;
-
   // ---- Effects ----
   useEffect(() => {
-    if (taskStatusId === 41) {
-      setModalState((s) => ({ ...s, approved: true, templateOpen: true }));
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      if (!stored) return;
+      const parsed = JSON.parse(stored) as ProjectTemplateDetailResponse;
+      setSelectedTemplate(parsed);
+    } catch (error) {
+      console.error('Failed to load stored template detail', error);
     }
-  }, [taskStatusId]);
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (taskStatusId !== 41) return;
+    setModalState((s) => {
+      if (selectedTemplate) {
+        if (!s.approved || s.templateOpen) {
+          return { ...s, approved: true, templateOpen: false };
+        }
+        return s;
+      }
+      if (!s.approved || !s.templateOpen) {
+        return { ...s, approved: true, templateOpen: true };
+      }
+      return s;
+    });
+  }, [taskStatusId, selectedTemplate]);
+
+  useEffect(() => {
+    if (!selectedTemplate) {
+      setApprovalWorkflow((prev) =>
+        prev.currentStage === 'review' && prev.phases.length === 0
+          ? prev
+          : { currentStage: 'review', phases: [] }
+      );
+      return;
+    }
+
+    setApprovalWorkflow((prev) => ({
+      currentStage: prev.currentStage === 'completed' ? prev.currentStage : 'template',
+      phases:
+        selectedTemplate.phases?.map((phase) => {
+          const existing = prev.phases.find((item) => item.phaseId === phase.phase_id);
+          return (
+            existing ?? {
+              phaseId: phase.phase_id,
+              status: 'pending',
+            }
+          );
+        }) ?? [],
+    }));
+  }, [selectedTemplate]);
 
   // ---- Data Preparation ----
   const attachments = useMemo(
@@ -117,6 +192,10 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
       rejectingTemplate: false,
       verifyingTemplate: false,
     }));
+    setApprovalWorkflow((prev) => ({
+      ...prev,
+      currentStage: approved ? 'documents' : 'review',
+    }));
     setLastDescription('');
   }, []);
 
@@ -128,6 +207,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   const handleDocumentSubmit = useCallback(
     async ({ description, documents }: DocumentSubmissionForm) => {
       setModalState((s) => ({ ...s, submitting: true }));
+      const isApprovalFlow = modalState.approved;
 
       try {
         const res = await submitHelpRequestDocuments({
@@ -139,12 +219,22 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         if (res?.detail) return showError(res.detail);
 
         setLastDescription(description);
-        setModalState((s) => ({ ...s, drawerOpen: false, submitting: false }));
+        const successMessage = res?.message ?? 'مدارک با موفقیت ثبت شد.';
 
-        if (modalState.approved) {
-          setModalState((s) => ({ ...s, templateOpen: true }));
-        } else {
-          showSuccess(res?.message ?? 'مدارک با موفقیت ثبت شد.');
+        setModalState((s) => ({
+          ...s,
+          drawerOpen: false,
+          submitting: false,
+          templateOpen: s.approved && !selectedTemplate,
+        }));
+
+        setApprovalWorkflow((prev) => ({
+          ...prev,
+          currentStage: isApprovalFlow ? 'template' : prev.currentStage,
+        }));
+
+        if (!modalState.approved || selectedTemplate) {
+          showSuccess(successMessage);
         }
       } catch (err) {
         const message =
@@ -154,7 +244,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         setModalState((s) => ({ ...s, submitting: false }));
       }
     },
-    [modalState.approved, taskId, showError, showSuccess]
+    [modalState.approved, selectedTemplate, taskId, showError, showSuccess]
   );
 
   const handleTemplateReject = useCallback(async () => {
@@ -172,6 +262,12 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         err instanceof Error ? err.message : 'خطا در ارسال درخواست تمپلیت جدید'
       );
     } finally {
+      clearPersistedTemplate();
+      setSelectedTemplate(null);
+      setApprovalWorkflow({
+        currentStage: 'review',
+        phases: [],
+      });
       setModalState((s) => ({
         ...s,
         rejectingTemplate: false,
@@ -179,116 +275,78 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
       }));
       setLastDescription('');
     }
-  }, [request.id, lastDescription, showError, showSuccess]);
+  }, [request.id, lastDescription, clearPersistedTemplate, showError, showSuccess]);
 
   const handleTemplateConfirm = useCallback(
     async (detail: ProjectTemplateDetailResponse) => {
       setModalState((s) => ({ ...s, verifyingTemplate: true }));
-      const desc = lastDescription || detail.description || '';
       try {
-        const res = await verifyProjectRequest(request.id, {
-          template_id: detail.project_temp_id,
-          title: detail.title,
-          description: desc,
-          task_assignments: [],
-        });
-        if (res?.detail) return showError(res.detail);
-        showSuccess(res?.message ?? 'تمپلیت تایید شد.');
+        setSelectedTemplate(detail);
+        persistSelectedTemplate(detail);
+        setLastDescription('');
+        showSuccess('تمپلیت انتخاب‌شده ذخیره شد.');
         setModalState((s) => ({
           ...s,
           verifyingTemplate: false,
           templateOpen: false,
-          drawerOpen: false,
         }));
-        setLastDescription('');
+        setApprovalWorkflow((prev) => ({
+          ...prev,
+          currentStage: 'completed',
+        }));
         onApprove?.(request.id);
       } catch (err) {
+        console.error('Failed to store selected template detail', err);
         showError(
-          err instanceof Error ? err.message : 'خطا در تایید تمپلیت انتخاب‌شده'
+          err instanceof Error
+            ? err.message
+            : 'خطا در ذخیره تمپلیت انتخاب‌شده'
         );
-      } finally {
         setModalState((s) => ({ ...s, verifyingTemplate: false }));
       }
     },
-    [request.id, lastDescription, onApprove, showError, showSuccess]
+    [onApprove, persistSelectedTemplate, request.id, showError, showSuccess]
+  );
+
+  const handleTemplateChange = useCallback(() => {
+    setModalState((s) => ({
+      ...s,
+      templateOpen: true,
+      verifyingTemplate: false,
+      rejectingTemplate: false,
+    }));
+  }, []);
+
+  const handlePhaseStatusChange = useCallback(
+    (phaseId: number, status: ApprovalPhaseStatus) => {
+      setApprovalWorkflow((prev) => ({
+        ...prev,
+        phases: prev.phases.map((phase) =>
+          phase.phaseId === phaseId ? { ...phase, status } : phase
+        ),
+      }));
+    },
+    []
   );
 
   // ---- Render ----
   return (
     <>
 
-      {!modalState.templateOpen ? (<div className={`${styles.container} ${className ?? ''}`}>
-        <div className={styles.card}>
-          <section className={styles.requestPanel}>
-            <header className={styles.requestHeader}>
-              <span className={styles.requestTitle}>درخواست کمک</span>
-              <span className={styles.requestDate}>
-                تاریخ درخواست: {safeText(request.requestDate)}
-              </span>
-            </header>
-
-            <div className={styles.details}>
-              {detailItems.map((item) => (
-                <div key={item.key} className={styles.detailRow}>
-                  <span className={styles.detailLabel}>{item.label}</span>
-                  <div className={styles.detailValue}>{item.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <section className={styles.descriptionSection}>
-              <h2 className={styles.sectionTitle}>شرح درخواست</h2>
-              <p className={styles.descriptionText}>
-                {safeText(request.description)}
-              </p>
-            </section>
-
-            {attachments.length > 0 && (
-              <section className={styles.documentsSection}>
-                <h2 className={styles.sectionTitle}>مدارک پیوست</h2>
-                <div className={styles.documentsList}>
-                  {attachments.map((doc) => (
-                    <div key={doc.id} className={styles.documentItem}>
-                      <FileDownload
-                        title={doc.filename}
-                        fileName={doc.filename}
-                        fileUrl={doc.resolvedUrl}
-                      />
-                      <div className={styles.documentMeta}>
-                        <span>{doc.fileSize || '—'}</span>
-                        {doc.uploadDate && <span> · {doc.uploadDate}</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-          </section>
-
-          <AIAssistantSection comment='این بخش شامل نظر AI درباره درخواست است.' />
-
-          <ActionButtons
-            onApprove={() => openDrawer(true)}
-            onReject={() => openDrawer(false)}
-            className={styles.actionButtons}
-          />
-        </div>
-
-        <DrawerModal
-          isOpen={modalState.drawerOpen}
-          setIsOpen={handleDrawerClose}
-        >
-          <DocumentUploadModal
-            isApproved={modalState.approved}
-            isSubmitting={modalState.submitting}
-            isOpen={modalState.drawerOpen}
-            onSubmit={handleDocumentSubmit}
-            onError={showError}
-          />
-        </DrawerModal>
-      </div>
-      ) : (
+      {selectedTemplate && (
+        <SelectedTemplateOverview
+          template={selectedTemplate}
+          onChangeTemplate={handleTemplateChange}
+          workflow={approvalWorkflow}
+          onPhaseStatusChange={handlePhaseStatusChange}
+          isLoading={modalState.verifyingTemplate}
+        />
+      )
+      }
+      {modalState.templateOpen ? (
         <TemplateSelector
+          defaultTemplateId={selectedTemplate?.project_temp_id ?? null}
+          defaultTemplateDetail={selectedTemplate ?? undefined}
           onClose={() =>
             setModalState((s) => ({
               ...s,
@@ -302,6 +360,79 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
           isRejecting={modalState.rejectingTemplate}
           isProcessing={modalState.verifyingTemplate}
         />
+      ) : !selectedTemplate && (
+        <div className={`${styles.container} ${className ?? ''}`}>
+          <div className={styles.card}>
+            <section className={styles.requestPanel}>
+              <header className={styles.requestHeader}>
+                <span className={styles.requestTitle}>درخواست کمک</span>
+                <span className={styles.requestDate}>
+                  تاریخ درخواست: {safeText(request.requestDate)}
+                </span>
+              </header>
+
+              <div className={styles.details}>
+                {detailItems.map((item) => (
+                  <div key={item.key} className={styles.detailRow}>
+                    <span className={styles.detailLabel}>{item.label}</span>
+                    <div className={styles.detailValue}>{item.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              <section className={styles.descriptionSection}>
+                <h2 className={styles.sectionTitle}>شرح درخواست</h2>
+                <p className={styles.descriptionText}>
+                  {safeText(request.description)}
+                </p>
+              </section>
+
+              {attachments.length > 0 && (
+                <section className={styles.documentsSection}>
+                  <h2 className={styles.sectionTitle}>مدارک پیوست</h2>
+                  <div className={styles.documentsList}>
+                    {attachments.map((doc) => (
+                      <div key={doc.id} className={styles.documentItem}>
+                        <FileDownload
+                          title={doc.filename}
+                          fileName={doc.filename}
+                          fileUrl={doc.resolvedUrl}
+                        />
+                        <div className={styles.documentMeta}>
+                          <span>{doc.fileSize || '—'}</span>
+                          {doc.uploadDate && <span> · {doc.uploadDate}</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </section>
+
+            <AIAssistantSection comment='این بخش شامل نظر AI درباره درخواست است.' />
+
+
+
+            <ActionButtons
+              onApprove={() => openDrawer(true)}
+              onReject={() => openDrawer(false)}
+              className={styles.actionButtons}
+            />
+          </div>
+
+          <DrawerModal
+            isOpen={modalState.drawerOpen}
+            setIsOpen={handleDrawerClose}
+          >
+            <DocumentUploadModal
+              isApproved={modalState.approved}
+              isSubmitting={modalState.submitting}
+              isOpen={modalState.drawerOpen}
+              onSubmit={handleDocumentSubmit}
+              onError={showError}
+            />
+          </DrawerModal>
+        </div >
       )}
     </>);
 };

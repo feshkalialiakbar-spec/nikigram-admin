@@ -68,7 +68,12 @@ export const fetchMyTasks = async (
   const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
   const offset = params?.offset ?? 0;
   const fallbackData = createFallbackPagination({ limit, offset });
-
+console.log('params', params);
+console.log('limit', limit);
+console.log('offset', offset);
+console.log('fallbackData', fallbackData);
+console.log('process.env.NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
+console.log('headers', 'as;kklgdihlsdkeirghbiwerghi uds fvnskdfghb7ertghnee lrty295t wne vbgnw56trq83 bfxqmsdvf v6 SZRDFGB 9AHXCVUXBVZ Isf HBLSZY');
   try {
     const headers = await getAuthorizationHeaders();
     const response = await fetch(

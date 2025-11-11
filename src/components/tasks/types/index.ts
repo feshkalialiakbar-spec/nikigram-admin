@@ -42,6 +42,7 @@ export interface TaskDashboardProps {
   totalItems?: number;
   itemsPerPage?: number;
   onPageChange?: (page: number) => void;
+  allowAssignment?: boolean;
 }
 
 export interface TaskTableProps {

@@ -16,6 +16,8 @@ interface TemplateSelectorProps {
   onConfirmTemplate: (detail: ProjectTemplateDetailResponse) => Promise<void>;
   isRejecting: boolean;
   isProcessing: boolean;
+  defaultTemplateId?: number | null;
+  defaultTemplateDetail?: ProjectTemplateDetailResponse;
 }
 
 const TemplateSelector: React.FC<TemplateSelectorProps> = ({
@@ -23,6 +25,8 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onConfirmTemplate,
   isRejecting,
   isProcessing,
+  defaultTemplateId,
+  defaultTemplateDetail,
 }) => {
   const { showError } = useToast();
   const [templates, setTemplates] = useState<ProjectTemplateItem[]>([]);
@@ -61,6 +65,23 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       return value ?? '—';
     }
   }, []);
+
+  useEffect(() => {
+    if (typeof defaultTemplateId === 'number') {
+      setSelectedTemplateId(defaultTemplateId);
+    }
+  }, [defaultTemplateId]);
+
+  useEffect(() => {
+    if (!defaultTemplateDetail) return;
+    setDetailsCache((prev) => {
+      if (prev[defaultTemplateDetail.project_temp_id]) return prev;
+      return {
+        ...prev,
+        [defaultTemplateDetail.project_temp_id]: defaultTemplateDetail,
+      };
+    });
+  }, [defaultTemplateDetail]);
 
   const handleConfirmTemplate = useCallback(
     async (template: ProjectTemplateItem) => {

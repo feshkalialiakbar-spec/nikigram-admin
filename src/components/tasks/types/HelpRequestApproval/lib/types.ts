@@ -32,3 +32,17 @@ export interface DocumentSubmissionForm {
 
 export type ValidationErrors = Record<string, boolean>;
 
+export type ApprovalPhaseStatus = 'pending' | 'inProgress' | 'completed' | 'blocked';
+
+export type ApprovalWorkflowStage = 'review' | 'documents' | 'template' | 'completed';
+
+export interface ApprovalPhaseState {
+  phaseId: number;
+  status: ApprovalPhaseStatus;
+}
+
+export interface ApprovalWorkflowState {
+  currentStage: ApprovalWorkflowStage;
+  phases: ApprovalPhaseState[];
+}
+

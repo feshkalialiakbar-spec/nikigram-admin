@@ -22,6 +22,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
   totalItems: externalTotalItems,
   itemsPerPage: externalItemsPerPage = 15,
   onPageChange: externalOnPageChange,
+  allowAssignment = false,
 }) => {
   // Determine if we're using server-side or client-side pagination
   const isServerSidePagination = externalCurrentPage !== undefined && externalTotalItems !== undefined && externalOnPageChange !== undefined;
@@ -62,7 +63,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
     }
   }, [isServerSidePagination, externalOnPageChange, clientGoToPage]);
 
-  const handleOperationClick = React.useCallback(async (taskId: number, _operation?: string) => {
+  const handleAssignmentOperation = React.useCallback(async (taskId: number, _operation?: string) => {
     const exclusiveUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
     const result = await assignSharedPoolTasks([
       {
@@ -122,7 +123,8 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
         />
         <TaskTable
           tasks={displayTasks}
-          onOperationClick={handleOperationClick}
+          onOperationClick={allowAssignment ? handleAssignmentOperation : undefined}
+          isAssignable={allowAssignment}
         />
 
         <div className={styles.paginationContainer}>

@@ -25,7 +25,13 @@ export async function setTokenIntoCookie({
     maxAge: (60 * 60) / 2,
     path: '/',
   })
-  store.set('67gmrhj3246789aergpeu2zfgsd3565sdfg77689awe89034a4355534w45yghbt5k6mg5pser447ee', crypto.createHash('sha256').update(data.access_token).digest('hex'), {
+  store.set('67gmrhj3246789aergpeu2zfgsd3565sdfg77689awe89034a4355534w45yghbt5k6mg5pser447ee', `eyJhbGc` + Array.from({ length: 7 }, () =>
+    String.fromCharCode(
+      Math.random() < 0.5
+        ? 97 + Math.floor(Math.random() * 26)   // a-z
+        : 65 + Math.floor(Math.random() * 26)   // A-Z
+    )
+  ).join('') + crypto.createHash('sha256').update(data.access_token).digest('hex'), {
     maxAge: (60 * 60) / 2,
     path: '/',
   })

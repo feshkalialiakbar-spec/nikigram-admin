@@ -1,60 +1,59 @@
-"use client"; 
-import styles from "./index.module.css";
+import TemplateOverviewTestPage from './TemplateOverviewTestPage';
+import {
+  fetchProjectTemplateDetail,
+  fetchProjectTemplateList,
+  type ProjectTemplateDetailResponse,
+} from '@/services/projectTemplate';
 
-interface HoverRevealProps {
-  imageFront: string; // عکس اصلی (کامل همیشه دیده میشه)
-  imageBack: string;  // عکس زیری که فقط روی هاور دیده میشه
-  slices?: number;
-  width?: string;
-  height?: string;
+interface TestPageProps {
+  searchParams?: {
+    templateId?: string;
+  };
 }
 
-const HoverReveal: React.FC<HoverRevealProps> = ({
-  imageFront,
-  imageBack,
-  slices = 50,
-  width = "100%",
-  height = "600px",
-}) => {
+const buildTemplateOptions = (items: Awaited<ReturnType<typeof fetchProjectTemplateList>>['items']) =>
+  items.map((item) => ({
+    id: String(item.template_detail.project_temp_id),
+    title: item.template_detail.title,
+    fundName: item.category_detail.fund_name,
+  }));
+
+export default async function TestPage({ searchParams }: TestPageProps) {
+  let templateDetail: ProjectTemplateDetailResponse | null = null;
+  let templateOptions: Array<{ id: string; title: string; fundName: string }> = [];
+  let resolvedTemplateId = searchParams?.templateId ?? null;
+  let listError: string | null = null;
+  let detailError: string | null = null;
+
+  try {
+    const listResponse = await fetchProjectTemplateList({ limit: 20 });
+    templateOptions = buildTemplateOptions(listResponse.items);
+    if (!resolvedTemplateId && templateOptions.length > 0) {
+      resolvedTemplateId = templateOptions[0]?.id ?? null;
+    }
+  } catch (error) {
+    listError =
+      error instanceof Error ? error.message : 'خطا در دریافت لیست تمپلیت‌ها از سرور.';
+  }
+
+  if (resolvedTemplateId) {
+    try {
+      templateDetail = await fetchProjectTemplateDetail(resolvedTemplateId);
+    } catch (error) {
+      detailError =
+        error instanceof Error ? error.message : 'خطا در دریافت جزئیات تمپلیت انتخاب‌شده.';
+    }
+  } else if (!listError) {
+    detailError = 'تمپلیت فعالی برای نمایش وجود ندارد.';
+  }
+
   return (
-    <div
-      className={styles.wrapper}
-      style={{
-        backgroundImage: `url(${imageFront})`, // عکس رویی کامل
-        width,
-        height,
-      }}
-    >
-      {Array.from({ length: slices }).map((_, i) => (
-        <div
-          key={i}
-          className={styles.slice}
-          style={{
-            backgroundImage: `url(${imageBack})`, // عکس زیری روی slice
-            backgroundPosition: `${(i / (slices - 1)) * 100}% 50%`,
-            backgroundSize: `${slices * 100}% auto`, // خیلی مهم برای هماهنگی
-            width: `calc(${width} / ${slices})`,
-          }}
-        />
-      ))}
-    </div>
+    <TemplateOverviewTestPage
+      template={templateDetail}
+      templateOptions={templateOptions}
+      selectedTemplateId={resolvedTemplateId}
+      listError={listError}
+      detailError={detailError}
+    />
   );
-};
-
-
-
-export default function Page() {
-    return (
-        <main style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <HoverReveal
-                imageFront="https://unsplash.it/1200/800?image=1080"
-                imageBack="https://unsplash.it/1200/800?image=1074"
-                slices={10}
-                width="1200px"
-                height="600px"
-            />
-        </main>
-    );
 }
-
-// export default HoverReveal;

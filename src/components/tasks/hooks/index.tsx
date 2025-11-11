@@ -1,4 +1,5 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+'use client'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   TaskInterface,
   FilterOptions,
@@ -53,6 +54,7 @@ export const usePaginatedTaskService = (
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const lastFetchedKeyRef = useRef<string | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!enabled) {
@@ -86,10 +88,19 @@ export const usePaginatedTaskService = (
 
   useEffect(() => {
     if (!enabled) {
+      lastFetchedKeyRef.current = null;
       return;
     }
+
+    const fetchKey = `${limit}-${offset}`;
+
+    if (lastFetchedKeyRef.current === fetchKey) {
+      return;
+    }
+
+    lastFetchedKeyRef.current = fetchKey;
     void fetchData();
-  }, [fetchData, enabled]);
+  }, [enabled, fetchData, limit, offset]);
 
   return {
     tasks,
@@ -147,19 +158,19 @@ export const useTaskFilters = (
 
       const matchesProcess =
         !filters.process || String(task.ref_type) === filters.process;
-      
+
       const matchesDate = !filters.date || task.created_at.includes(filters.date);
-      
+
       // Skip performer personnel filter for now as it's not in TaskInterface
       const matchesPerformerPersonnel = !filters.performerPersonnel;
-      
+
       const matchesStatus = !filters.status || String(task.status_id) === filters.status;
-      
+
       // Skip operations filter as it's not in TaskInterface
       const matchesOperations = !filters.operations;
 
-      return matchesSearch && matchesProcess && matchesDate && 
-             matchesPerformerPersonnel && matchesStatus && matchesOperations;
+      return matchesSearch && matchesProcess && matchesDate &&
+        matchesPerformerPersonnel && matchesStatus && matchesOperations;
     });
   }, [tasks, filters]);
 
@@ -225,7 +236,7 @@ export const useTaskPagination = (
 // Hook for server-side pagination
 export const useServerPagination = (itemsPerPage: number = 15) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  
+
   const paginationParams: PaginationParams = useMemo(() => ({
     limit: itemsPerPage,
     offset: (currentPage - 1) * itemsPerPage,

@@ -78,6 +78,7 @@ const SharedPool: FC<SharedPoolProps> = ({ className }) => {
             totalItems={total}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
+            allowAssignment
           />
         </div>
       </div>

@@ -1,0 +1,20 @@
+import type { FC } from 'react';
+import styles from './SelectedTemplateOverview.module.scss';
+
+const placeholderPhases = Array.from({ length: 3 });
+
+const SelectedTemplateSkeleton: FC = () => (
+  <section className={styles.container}>
+    <div className={styles.skeletonHero}>
+      <div className={styles.skeletonSummary} />
+    </div>
+    <div className={styles.skeletonDescription} />
+    <div className={styles.skeletonPhaseList}>
+      {placeholderPhases.map((_, index) => (
+        <div key={index} className={styles.skeletonPhase} />
+      ))}
+    </div>
+  </section>
+);
+
+export default SelectedTemplateSkeleton;

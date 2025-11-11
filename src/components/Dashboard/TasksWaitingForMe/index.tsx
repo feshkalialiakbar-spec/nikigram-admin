@@ -21,7 +21,6 @@ const TasksWaitingForMe: FC<TasksWaitingForMeProps> = ({ className }) => {
     limit: itemsPerPage,
     offset: (currentPage - 1) * itemsPerPage,
   }), [itemsPerPage, currentPage]);
-
   const {
     tasks,
     total,
