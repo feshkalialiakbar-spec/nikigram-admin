@@ -100,7 +100,7 @@
 }
 
 .statsTitle {
-  line-height: 24px;
+   line-height: 24px;
   font-style: normal;
   position: relative;
   flex-shrink: 0;
@@ -132,7 +132,7 @@
   font-size: 12px;
   white-space: nowrap;
   text-align: right;
-
+  
 }
 
 .statsUpdate .updateText p {
@@ -154,6 +154,7 @@
 }
 
 .statsAmount .amount {
+  
   line-height: 24px;
   position: relative;
   flex-shrink: 0;
@@ -161,7 +162,7 @@
 }
 
 .statsAmount .currency {
-
+  
   line-height: normal;
   position: relative;
   flex-shrink: 0;

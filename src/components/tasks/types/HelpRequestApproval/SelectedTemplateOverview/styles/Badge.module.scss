@@ -9,23 +9,23 @@
   flex-shrink: 0;
 }
 
-.badge.blue {
+.blue {
   background: #edfaff;
+
+  .text {
+    color: #007bff;
+  }
 }
 
-.badge.blue .text {
-  color: #007bff;
-}
-
-.badge.yellow {
+.yellow {
   background: #ffffea;
+
+  .text {
+    color: #e29400;
+  }
 }
 
-.badge.yellow .text {
-  color: #e29400;
-}
-
-.badge .content {
+.content {
   display: flex;
   gap: 2px;
   align-items: center;
@@ -34,7 +34,7 @@
   flex-shrink: 0;
 }
 
-.badge .text {
+.text {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -45,9 +45,11 @@
   font-size: 14px;
   text-align: center;
   white-space: nowrap;
- }
-
-.badge .text p {
-  line-height: normal;
-  white-space: pre;
+ 
+  p {
+    line-height: normal;
+    white-space: pre;
+    margin: 0;
+  }
 }
+

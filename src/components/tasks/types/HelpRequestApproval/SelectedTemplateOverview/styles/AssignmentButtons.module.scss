@@ -14,13 +14,25 @@
   width: 151px;
   cursor: pointer;
   transition: opacity 0.2s;
+  background: transparent;
+  border: none;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    border: 2px solid #007bff;
+    inset: -1px;
+    pointer-events: none;
+    border-radius: 25px;
+  }
 }
 
-.button:hover {
-  opacity: 0.8;
-}
-
-.button .content {
+.content {
   display: flex;
   height: 32px;
   align-items: center;
@@ -32,7 +44,7 @@
   width: 151px;
 }
 
-.button .textWrapper {
+.textWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,7 +53,7 @@
   flex-shrink: 0;
 }
 
-.button .text {
+.text {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,18 +65,11 @@
   font-size: 14px;
   text-align: center;
   white-space: nowrap;
- }
-
-.button .text p {
-  line-height: normal;
-  white-space: pre;
+ 
+  p {
+    line-height: normal;
+    white-space: pre;
+    margin: 0;
+  }
 }
 
-.button::after {
-  content: '';
-  position: absolute;
-  border: 2px solid #007bff;
-  inset: -1px;
-  pointer-events: none;
-  border-radius: 25px;
-}

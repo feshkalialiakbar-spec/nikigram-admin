@@ -39,3 +39,5 @@ export {
   uploadFile,
 } from './file';
 
+export { fetchStaffList } from './staff';
+

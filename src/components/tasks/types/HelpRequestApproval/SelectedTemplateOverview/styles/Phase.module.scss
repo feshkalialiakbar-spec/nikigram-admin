@@ -1,12 +1,14 @@
 .phase {
-  background: #ebf1f8;
+  background: linear-gradient(160deg, rgba(217, 233, 255, 0.55), rgba(243, 248, 255, 0.95));
   position: relative;
-  border-radius: 20px;
+  border-radius: 24px;
   flex-shrink: 0;
   width: 100%;
+  border: 1px solid rgba(117, 156, 209, 0.24);
+  box-shadow: 0 18px 48px rgba(40, 85, 145, 0.08);
 }
 
-.phase .inner {
+.inner {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -14,12 +16,12 @@
   height: 100%;
 }
 
-.phase .content {
+.content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   align-items: flex-end;
-  padding: 16px;
+  padding: 24px;
   position: relative;
   width: 100%;
 }
@@ -40,7 +42,7 @@
   align-self: stretch;
 }
 
-.phaseHeaderRight .headerInfo {
+.headerInfo {
   display: flex;
   gap: 8px;
   height: 100%;
@@ -50,8 +52,8 @@
   flex-shrink: 0;
 }
 
-.phaseHeaderRight .phaseName {
- 
+.phaseName {
+  
   line-height: 24px;
   font-style: normal;
   position: relative;
@@ -60,9 +62,10 @@
   color: black;
   white-space: nowrap;
   text-align: right;
+  margin: 0;
 }
 
-.phaseHeaderRight .phaseNumber {
+.phaseNumber {
    line-height: normal;
   font-style: normal;
   position: relative;
@@ -71,19 +74,20 @@
   font-size: 14px;
   white-space: nowrap;
   text-align: right;
+  margin: 0;
 }
 
-.phaseHeaderRight .phaseDot {
+.phaseDot {
   position: relative;
   flex-shrink: 0;
   width: 8px;
   height: 8px;
-}
 
-.phaseHeaderRight .phaseDot svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .toggleButton {
@@ -96,52 +100,46 @@
   border: none;
   padding: 0;
   transition: opacity 0.2s;
-}
 
-.toggleButton:hover {
-  opacity: 0.7;
-}
+  &:hover {
+    opacity: 0.7;
+  }
 
-.toggleButton svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.2s;
-}
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s;
+  }
 
-.toggleButton.expanded svg {
-  transform: rotate(0deg);
-}
+  &.expanded svg {
+    transform: rotate(0deg);
+  }
 
-.toggleButton.collapsed svg {
-  transform: rotate(180deg);
+  &.collapsed svg {
+    transform: rotate(180deg);
+  }
 }
 
 .phaseBody {
   position: relative;
   flex-shrink: 0;
   width: 100%;
+  padding-top: 12px;
 }
 
-.phaseBody::after {
-  content: '';
-  position: absolute;
-  border-right: 1px dashed #b7cfe8;
-  inset: 0;
-  pointer-events: none;
-}
-
-.phaseBody .bodyInner {
+.bodyInner {
   width: 100%;
   height: 100%;
 }
 
-.phaseBody .tasks {
+.tasks {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  align-items: flex-start;
-  padding: 8px 16px 8px 0;
+  gap: 16px;
+  align-items: stretch;
+  padding: 0;
   position: relative;
   width: 100%;
 }
+

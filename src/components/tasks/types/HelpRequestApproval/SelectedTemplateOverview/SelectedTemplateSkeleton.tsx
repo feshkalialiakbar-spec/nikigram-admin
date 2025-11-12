@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import styles from './SelectedTemplateOverview.module.scss';
+import styles from './styles/SelectedTemplateOverview.module.scss';
 
 const placeholderPhases = Array.from({ length: 3 });
 
