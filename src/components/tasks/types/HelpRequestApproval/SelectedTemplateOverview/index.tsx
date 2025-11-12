@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState, useCallback, type FC } from 'react';
 import type {
   ProjectTemplateDetailResponse,
 } from '@/services/projectTemplate';
-import { fetchProjectTemplateDetail } from '@/services/projectTemplate';
+import { fetchProjectTemplateDetail, verifyProjectRequest } from '@/services/projectTemplate';
 import { safeText } from '@/hooks/texedit';
 import { useToast } from '@/components/ui';
 import type {
@@ -26,6 +26,7 @@ interface SelectedTemplateOverviewProps {
   onPhaseStatusChange: (phaseId: number, status: ApprovalPhaseStatus) => void;
   isLoading?: boolean;
   onOpenActionSidebar?: (payload: PhaseActionPayload) => void;
+  requestId?: number;
 }
 
  
@@ -50,15 +51,22 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
   onPhaseStatusChange,
   isLoading: externalLoading,
   onOpenActionSidebar,
+  requestId,
 }) => {
   void onPhaseStatusChange;
-  const { showError } = useToast();
+  const { showError, showSuccess } = useToast();
   const [template, setTemplate] = useState<ProjectTemplateDetailResponse>(initialTemplate);
   const [isLoading, setIsLoading] = useState(false);
   const [assignmentState, setAssignmentState] = useState<{
     isOpen: boolean;
     payload?: PhaseActionPayload;
   }>({ isOpen: false });
+  const [taskAssignments, setTaskAssignments] = useState<Array<{
+    temp_task_id: number;
+    staff_id: number;
+    deadline: number;
+    assignment_notes: string;
+  }>>([]);
 
   // Fetch template detail when component is displayed
   useEffect(() => {
@@ -115,9 +123,51 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
     return activePhase?.tasks?.find((task) => task.task_id === assignmentState.payload?.taskId);
   }, [activePhase?.tasks, assignmentState.payload?.taskId]);
 
-  const handleAssignmentSubmit = useCallback((payload: TaskAssignmentSubmitPayload) => {
-    console.log('Final assignment submit payload', payload);
-  }, []);
+  const handleAssignmentSubmit = useCallback(async (payload: TaskAssignmentSubmitPayload) => {
+    if (!requestId || !payload.taskId || !payload.staffId) {
+      showError('اطلاعات ناقص است');
+      return;
+    }
+
+    const newAssignment = {
+      temp_task_id: payload.taskId,
+      staff_id: payload.staffId,
+      deadline: payload.deadlineDays ?? 0,
+      assignment_notes: payload.assignmentNotes ?? '',
+    };
+
+    // Update existing assignment for the same task, or add new one
+    const existingIndex = taskAssignments.findIndex(
+      (a) => a.temp_task_id === payload.taskId
+    );
+    const updatedAssignments =
+      existingIndex >= 0
+        ? [
+            ...taskAssignments.slice(0, existingIndex),
+            newAssignment,
+            ...taskAssignments.slice(existingIndex + 1),
+          ]
+        : [...taskAssignments, newAssignment];
+
+    setTaskAssignments(updatedAssignments);
+
+    try {
+      const verifyPayload = {
+        template_id: template.project_temp_id,
+        title: template.title,
+        description: template.description || '',
+        task_assignments: updatedAssignments,
+      };
+
+      const response = await verifyProjectRequest(requestId, verifyPayload);
+      showSuccess(response?.message ?? 'تسک با موفقیت اختصاص داده شد');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'خطا در ثبت اختصاص تسک';
+      showError(message);
+      // Revert the assignment if API call failed
+      setTaskAssignments(taskAssignments);
+    }
+  }, [requestId, template, taskAssignments, showError, showSuccess]);
 
   if (externalLoading || isLoading) return <SelectedTemplateSkeleton />;
 
@@ -235,6 +285,8 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
         taskTitle={assignmentState.payload?.taskTitle ?? activeTask?.task_title}
         taskDescription={activeTask?.task_description ?? null}
         onSubmit={handleAssignmentSubmit}
+        requestId={requestId}
+        templateId={template.project_temp_id}
       />
     </section>
   );

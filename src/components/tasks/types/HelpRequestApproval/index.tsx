@@ -340,6 +340,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
           workflow={approvalWorkflow}
           onPhaseStatusChange={handlePhaseStatusChange}
           isLoading={modalState.verifyingTemplate}
+          requestId={typeof taskId === 'number' ? taskId : Number(taskId)}
         />
       )
       }

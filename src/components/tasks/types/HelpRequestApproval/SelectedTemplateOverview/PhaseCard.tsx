@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowUp2, Edit2 } from 'iconsax-react';
 import type { ProjectTemplatePhase, ProjectTemplatePhaseTask } from '@/services/projectTemplate';
 import { safeText } from '@/hooks/texedit';
-import phaseStyles from './styles/Phase.module.scss';
-import taskStyles from './styles/Task.module.scss';
-import badgeStyles from './styles/Badge.module.scss';
+import phaseStyles from '../../../../../app/test/styles/Phase.module.css';
+import taskStyles from '../../../../../app/test/styles/Task.module.css';
+import badgeStyles from '../../../../../app/test/styles/Badge.module.css';
+import svgPaths from '../../../../../app/test/imports/svg-x98sifuilj';
 
 export type TemplatePhaseTaskStatus = 'done' | 'blocked';
 
@@ -30,48 +30,75 @@ interface PhaseCardProps {
   onOpenActionSidebar?: (payload: PhaseActionPayload) => void;
 }
 
+const PhaseToggleButton: React.FC<{ isExpanded: boolean; onClick: () => void }> = ({ isExpanded, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`${phaseStyles.toggleButton} ${isExpanded ? phaseStyles.expanded : phaseStyles.collapsed}`}
+    data-name="vuesax/bulk/arrow-up"
+  >
+    <div className="absolute contents inset-0">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+        <g id="arrow-up">
+          <path d={svgPaths.p9f39700} fill="var(--fill-0, #007BFF)" id="Vector" />
+          <path d={svgPaths.p369d6c00} fill="var(--fill-0, #007BFF)" id="Vector_2" opacity="0.4" />
+        </g>
+      </svg>
+    </div>
+  </button>
+);
+
+const EditButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <div data-name="Component 4">
+    <div className={taskStyles.editButton} data-name="vuesax/bulk/edit-2" onClick={onClick}>
+      <div className="absolute contents inset-0">
+        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+          <g id="edit-2">
+            <path d={svgPaths.p3dd95700} fill="var(--fill-0, #007BFF)" id="Vector" opacity="0.4" />
+            <path d={svgPaths.p33964d80} fill="var(--fill-0, #007BFF)" id="Vector_2" opacity="0.4" />
+            <path d={svgPaths.p10a34900} fill="var(--fill-0, #007BFF)" id="Vector_3" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+);
+
 const StatusIcon: React.FC<{ status: TemplatePhaseTaskStatus }> = ({ status }) => {
   const isDone = status === 'done';
 
   return (
     <div className={taskStyles.statusIcon}>
-      <div className={taskStyles.icon}>
-        {isDone ? (
-          <svg fill="none" viewBox="0 0 24 24">
-            <g id="tick-square">
+      <div
+        className={taskStyles.icon}
+        data-name={isDone ? 'vuesax/bulk/tick-square' : 'vuesax/bulk/close-square'}
+      >
+        <div className="absolute contents inset-0">
+          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+            <g id={isDone ? 'tick-square' : 'close-square'}>
               <path
-                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2Z"
-                fill="#28A745"
+                d={svgPaths.pd3eef80}
+                fill={isDone ? 'var(--fill-0, #28A745)' : 'var(--fill-0, #E70218)'}
+                id="Vector"
                 opacity="0.4"
               />
               <path
-                d="M10.58 15.58C10.38 15.58 10.19 15.5 10.05 15.36L7.22 12.53C6.93 12.24 6.93 11.76 7.22 11.47C7.51 11.18 7.99 11.18 8.28 11.47L10.58 13.77L15.72 8.63C16.01 8.34 16.49 8.34 16.78 8.63C17.07 8.92 17.07 9.4 16.78 9.69L11.11 15.36C10.97 15.5 10.78 15.58 10.58 15.58Z"
-                fill="#28A745"
+                d={isDone ? svgPaths.p1b028e00 : svgPaths.p2bbbf000}
+                fill={isDone ? 'var(--fill-0, #28A745)' : 'var(--fill-0, #E70218)'}
+                id="Vector_2"
               />
             </g>
           </svg>
-        ) : (
-          <svg fill="none" viewBox="0 0 24 24">
-            <g id="close-square">
-              <path
-                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2Z"
-                fill="#E70218"
-                opacity="0.4"
-              />
-              <path
-                d="M13.06 12L15.36 9.7C15.65 9.41 15.65 8.93 15.36 8.64C15.07 8.35 14.59 8.35 14.3 8.64L12 10.94L9.7 8.64C9.41 8.35 8.93 8.35 8.64 8.64C8.35 8.93 8.35 9.41 8.64 9.7L10.94 12L8.64 14.3C8.35 14.59 8.35 15.07 8.64 15.36C8.79 15.51 8.98 15.58 9.17 15.58C9.36 15.58 9.55 15.51 9.7 15.36L12 13.06L14.3 15.36C14.45 15.51 14.64 15.58 14.83 15.58C15.02 15.58 15.21 15.51 15.36 15.36C15.65 15.07 15.65 14.59 15.36 14.3L13.06 12Z"
-                fill="#E70218"
-              />
-            </g>
-          </svg>
-        )}
+        </div>
       </div>
     </div>
   );
 };
 
 const Badge: React.FC<TemplatePhaseTaskBadge> = ({ text, variant }) => (
-  <div className={`${badgeStyles.badge} ${variant === 'blue' ? badgeStyles.blue : badgeStyles.yellow}`}>
+  <div
+    className={`${badgeStyles.badge} ${variant === 'blue' ? badgeStyles.blue : badgeStyles.yellow}`}
+    data-name="Badge"
+  >
     <div className={badgeStyles.content}>
       <div className={badgeStyles.text}>
         <p dir="auto">{text}</p>
@@ -136,14 +163,7 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSide
       <div className={phaseStyles.inner}>
         <div className={phaseStyles.content}>
           <div className={phaseStyles.phaseHeader}>
-            <button
-              type="button"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className={`${phaseStyles.toggleButton} ${isExpanded ? phaseStyles.expanded : phaseStyles.collapsed}`}
-              style={{ transform: isExpanded ? 'rotate(0deg)' : 'rotate(180deg)' }}
-            >
-              <ArrowUp2 size={24} variant="Bold" color="#007BFF" />
-            </button>
+            <PhaseToggleButton isExpanded={isExpanded} onClick={() => setIsExpanded(!isExpanded)} />
 
             <div className={phaseStyles.phaseHeaderRight}>
               <div className={phaseStyles.headerInfo}>
@@ -154,8 +174,8 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSide
                   فاز {position}:
                 </p>
                 <div className={phaseStyles.phaseDot}>
-                  <svg fill="none" viewBox="0 0 8 8">
-                    <circle cx="4" cy="4" fill="#007BFF" r="4" />
+                  <svg fill="none" preserveAspectRatio="none" viewBox="0 0 8 8">
+                    <circle cx="4" cy="4" fill="var(--fill-0, #007BFF)" r="4" />
                   </svg>
                 </div>
               </div>
@@ -171,53 +191,38 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSide
                     const badges = getTaskBadges(task, tasks);
 
                     return (
-                      <div key={task.task_id} className={taskStyles.taskCard}>
-                        <div className={taskStyles.taskContent}>
-                          <div className={taskStyles.taskHeader}>
-                            <div className={taskStyles.taskTitleGroup}>
-                              <p className={taskStyles.taskNumber} dir="auto">
-                                تسک {taskIndex + 1}
-                              </p>
-                              <span className={taskStyles.titleSeparator}>/</span>
-                              <p className={taskStyles.taskName} dir="auto">
-                                {safeText(task.task_title)}
-                              </p>
-                            </div>
-                            <StatusIcon status={status} />
-                          </div>
-
-                          {task.task_description && (
-                            <p className={taskStyles.taskDescription} dir="auto">
-                              {safeText(task.task_description)}
-                            </p>
-                          )}
-
-                          {badges.length > 0 && (
-                            <div className={taskStyles.badgeList}>
-                              {badges.map((badge, idx) => (
-                                <Badge key={`${task.task_id}-${idx}`} {...badge} />
-                              ))}
-                            </div>
-                          )}
+                      <div key={task.task_id} className={taskStyles.taskRow}>
+                        <div className={taskStyles.taskLeft}>
+                          <EditButton
+                            onClick={() =>
+                              onOpenActionSidebar?.({
+                                phaseId: phase.phase_id,
+                                phaseName: phase.phase_name,
+                                phasePosition: position,
+                                taskId: task.task_id,
+                                taskTitle: task.task_title,
+                                action: 'assignToUser',
+                              })
+                            }
+                          />
                         </div>
 
-                        <button
-                          type="button"
-                          className={taskStyles.editIconButton}
-                          onClick={() =>
-                            onOpenActionSidebar?.({
-                              phaseId: phase.phase_id,
-                              phaseName: phase.phase_name,
-                              phasePosition: position,
-                              taskId: task.task_id,
-                              taskTitle: task.task_title,
-                              action: 'assignToUser',
-                            })
-                          }
-                          aria-label={`ویرایش ${safeText(task.task_title)}`}
-                        >
-                          <Edit2 size={24} variant="Bulk" color="#2F6AFF" />
-                        </button>
+                        <div className={taskStyles.taskRight}>
+                          {badges.map((badge) => (
+                            <Badge key={`${task.task_id}-${badge.text}`} {...badge} />
+                          ))}
+
+                          <div className={taskStyles.taskInfo}>
+                            <p className={taskStyles.taskName} dir="auto">
+                              {safeText(task.task_title)}
+                            </p>
+                            <p className={taskStyles.taskNumber} dir="auto">
+                              تسک {taskIndex + 1}:
+                            </p>
+                          </div>
+
+                          <StatusIcon status={status} />
+                        </div>
                       </div>
                     );
                   })}
@@ -232,4 +237,3 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSide
 };
 
 export default PhaseCard;
-

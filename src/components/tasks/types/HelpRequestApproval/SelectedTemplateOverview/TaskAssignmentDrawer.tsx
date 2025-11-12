@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import DrawerModal from '@/components/ui/modal/drawerModal/DrawerModal';
 import Dropdown from '@/components/ui/forms/dropdown/Dropdown';
 import TextField from '@/components/ui/forms/textField/TextField';
+import Text, { type Colors } from '@/components/hub/forms/text/Text';
 import { safeText } from '@/hooks/texedit';
 import {
   fetchStaffList,
@@ -32,7 +33,9 @@ interface TaskAssignmentDrawerProps {
   taskId?: number;
   taskTitle?: string;
   taskDescription?: string | null;
-  onSubmit?: (payload: TaskAssignmentSubmitPayload) => void;
+  onSubmit?: (payload: TaskAssignmentSubmitPayload) => void | Promise<void>;
+  requestId?: number;
+  templateId?: number;
 }
 
 const buildStaffLabel = (member: StaffMember): string => {
@@ -117,7 +120,45 @@ const TaskAssignmentDrawer: React.FC<TaskAssignmentDrawerProps> = ({
     [staffMembers]
   );
 
-  const drawerTitle = useMemo(() => safeText(taskTitle ?? 'انتخاب کاربر'), [taskTitle]);
+  const drawerTitle = useMemo(() => safeText(taskTitle ?? 'انتصاب به کاربران'), [taskTitle]);
+
+  type DropdownColorConfig = {
+    borderAndLabel: Colors;
+    inputBgColor: Colors;
+    textInput: Colors;
+    textError: Colors;
+    listBgColor: Colors;
+    listTextColor: Colors;
+  };
+
+  type TextFieldColorConfig = {
+    borderAndLabel: Colors;
+    inputBgColor: Colors;
+    textInput: Colors;
+    textError: Colors;
+  };
+
+  const dropdownBaseColors = useMemo<DropdownColorConfig>(
+    () => ({
+      borderAndLabel: 'gray-300',
+      inputBgColor: 'main-white',
+      textInput: 'gray-900',
+      textError: 'error-500',
+      listBgColor: 'main-white',
+      listTextColor: 'gray-900',
+    }),
+    []
+  );
+
+  const textFieldBaseColors = useMemo<TextFieldColorConfig>(
+    () => ({
+      borderAndLabel: 'gray-300',
+      inputBgColor: 'main-white',
+      textInput: 'gray-900',
+      textError: 'error-500',
+    }),
+    []
+  );
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -150,10 +191,14 @@ const TaskAssignmentDrawer: React.FC<TaskAssignmentDrawerProps> = ({
         assignmentNotes,
       };
 
-      console.log('Task assignment payload', payload);
-      onSubmit?.(payload);
+      await onSubmit?.(payload);
       onClose();
       resetForm();
+    } catch (error) {
+      console.error('Error submitting assignment', error);
+      setFormError(
+        error instanceof Error ? error.message : 'خطا در ثبت اختصاص تسک'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -167,85 +212,106 @@ const TaskAssignmentDrawer: React.FC<TaskAssignmentDrawerProps> = ({
 
   return (
     <DrawerModal isOpen={isOpen} setIsOpen={handleDrawerVisibility}>
-      <section className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.headerMeta}>
-            {phasePosition !== undefined && (
-              <span className={styles.phaseBadge}>
-                فاز {phasePosition}
-              </span>
+      <section className={styles.container} dir="rtl">
+        <div className={styles.content}>
+          <header className={styles.header}>
+            <div className={styles.titleRow}>
+              <Text textTag="h2" textStyle="20S5" textColor="gray-950" textAlign="right">
+                {drawerTitle}
+              </Text>
+            </div>
+
+            <div className={styles.phaseMeta}>
+              {phaseName && (
+                <Text textTag="span" textStyle="14S5" textColor="gray-700" textAlign="right">
+                  {safeText(phaseName)}
+                </Text>
+              )}
+              {phasePosition !== undefined && (
+                <span className={styles.phaseBadge}>فاز {phasePosition}</span>
+              )}
+            </div>
+
+            {taskDescription && (
+              <Text
+                textTag="p"
+                textStyle="14S4"
+                textColor="gray-600"
+                textAlign="right"
+                textClassName={styles.taskDescription}
+              >
+                {safeText(taskDescription)}
+              </Text>
             )}
-            {phaseName && <span className={styles.phaseName}>{safeText(phaseName)}</span>}
-          </div>
-          <h2 className={styles.taskTitle} dir="auto">
-            {drawerTitle}
-          </h2>
-          {taskDescription && (
-            <p className={styles.taskDescription} dir="auto">
-              {safeText(taskDescription)}
-            </p>
-          )}
-        </header>
+          </header>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.fieldGroup}>
-            <Dropdown
-              label="انتخاب کاربر"
-              placeholder={isLoadingStaff ? 'در حال بارگذاری...' : 'کاربر مورد نظر را انتخاب کنید'}
-              value={selectedStaff}
-              onChangeAction={(value) => {
-                setSelectedStaff(value);
-                setFormError(null);
-              }}
-              options={staffOptions}
-              disabled={isLoadingStaff || !!loadError}
-              showSearch
-            />
-            {loadError && <span className={styles.errorText}>{loadError}</span>}
-            {formError && <span className={styles.errorText}>{formError}</span>}
-          </div>
+          <form className={styles.form} onSubmit={handleSubmit} dir="rtl">
+            <div className={styles.fieldGroup}>
+              <Dropdown
+                label="انتخاب کاربر"
+                placeholder={isLoadingStaff ? 'در حال بارگذاری...' : 'کاربر مورد نظر را انتخاب کنید'}
+                value={selectedStaff}
+                onChangeAction={(value) => {
+                  setSelectedStaff(value);
+                  setFormError(null);
+                }}
+                options={staffOptions}
+                disabled={isLoadingStaff || !!loadError}
+                showSearch
+                size="sm"
+                baseColor={dropdownBaseColors}
+              />
+              {loadError && <span className={styles.errorText}>{loadError}</span>}
+              {formError && <span className={styles.errorText}>{formError}</span>}
+            </div>
 
-          <div className={styles.fieldGroup}>
-            <TextField
-              label="مهلت انجام کار ( مثلا 10 روز )"
-              placeholder="تعداد روز"
-              value={deadline}
-              onChangeAction={setDeadline}
-              inputMode="numeric"
-            />
-          </div>
+            <div className={styles.fieldGroup}>
+              <TextField
+                label="مهلت انجام کار ( مثلا 10 روز )"
+                placeholder="تعداد روز"
+                value={deadline}
+                onChangeAction={setDeadline}
+                inputMode="numeric"
+                size="sm"
+                baseColor={textFieldBaseColors}
+                normalizeDigits
+              />
+            </div>
 
-          <div className={styles.fieldGroup}>
-            <TextField
-              label="شرح"
-              placeholder="توضیحات تکمیلی"
-              value={notes}
-              onChangeAction={setNotes}
-              isTextArea
-              rows={4}
-            />
-          </div>
+            <div className={styles.fieldGroup}>
+              <TextField
+                label="شرح"
+                placeholder="توضیحات تکمیلی"
+                value={notes}
+                onChangeAction={setNotes}
+                isTextArea
+                rows={4}
+                size="sm"
+                baseColor={textFieldBaseColors}
+              />
+            </div>
 
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.cancelButton}
-              onClick={() => {
-                onClose();
-                resetForm();
-              }}
-            >
-              انصراف
-            </button>
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={isSubmitting || !selectedStaff}
-            >
-              {isSubmitting ? 'در حال ثبت...' : 'ثبت'}
-            </button>
-          </div>
-        </form>
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={styles.cancelButton}
+                onClick={() => {
+                  onClose();
+                  resetForm();
+                }}
+              >
+                انصراف
+              </button>
+              <button
+                type="submit"
+                className={styles.submitButton}
+                disabled={isSubmitting || !selectedStaff}
+              >
+                {isSubmitting ? 'در حال ثبت...' : 'ثبت'}
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
     </DrawerModal>
   );

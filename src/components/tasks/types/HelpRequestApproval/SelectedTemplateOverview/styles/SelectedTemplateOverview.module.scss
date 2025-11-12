@@ -617,6 +617,20 @@
   animation: loadingPulse 1.6s ease-in-out infinite;
 }
 
+.skeletonTemplateCard {
+  width: 100%;
+  height: 311px;
+  border-radius: 16px;
+  background: linear-gradient(
+    110deg,
+    rgba(235, 241, 248, 0.55) 25%,
+    rgba(209, 225, 242, 0.9) 37%,
+    rgba(235, 241, 248, 0.55) 63%
+  );
+  background-size: 200% 100%;
+  animation: loadingPulse 1.6s ease-in-out infinite;
+}
+
 .skeletonDescription {
   width: 100%;
   max-width: 960px;
