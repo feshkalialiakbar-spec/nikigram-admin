@@ -1,0 +1,114 @@
+.container {
+  background: white;
+  position: relative;
+  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+}
+
+.container .inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.container .content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  overflow: clip;
+  padding: 40px 24px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.createProjectButton {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.buttonOuter {
+  background: #9eb8d4;
+  display: flex;
+  flex-direction: column;
+  height: 52px;
+  align-items: flex-start;
+  position: relative;
+  border-radius: 24px;
+  flex-shrink: 0;
+  width: 200px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.buttonOuter:hover {
+  background: #8aa8c4;
+}
+
+.buttonInner {
+  background: #b7cfe8;
+  height: 48px;
+  position: relative;
+  border-radius: 24px;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.buttonInner .buttonContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonInner .buttonPadding {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  position: relative;
+  width: 100%;
+}
+
+.buttonInner .buttonTextWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.buttonInner .buttonText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 0;
+  font-style: normal;
+  position: relative;
+  flex-shrink: 0;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  color: white;
+  font-family: 'IRANSansXFaNum:Medium', sans-serif;
+}
+
+.buttonInner .buttonText p {
+  line-height: normal;
+  white-space: pre;
+}

@@ -28,6 +28,7 @@ interface PhaseCardProps {
   phase: ProjectTemplatePhase;
   position: number;
   onOpenActionSidebar?: (payload: PhaseActionPayload) => void;
+  taskAssignmentsMap?: Map<number, string>;
 }
 
 const PhaseToggleButton: React.FC<{ isExpanded: boolean; onClick: () => void }> = ({ isExpanded, onClick }) => (
@@ -107,7 +108,7 @@ const Badge: React.FC<TemplatePhaseTaskBadge> = ({ text, variant }) => (
   </div>
 );
 
-const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSidebar }) => {
+const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSidebar, taskAssignmentsMap }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const tasks = phase.tasks ?? [];
 
@@ -215,6 +216,16 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSide
                           <div className={taskStyles.taskInfo}>
                             <p className={taskStyles.taskName} dir="auto">
                               {safeText(task.task_title)}
+                              {taskAssignmentsMap?.has(task.task_id) && (
+                                <span style={{ 
+                                  marginRight: '8px', 
+                                  color: '#007BFF', 
+                                  fontSize: '12px',
+                                  fontWeight: 'normal'
+                                }}>
+                                  ({safeText(taskAssignmentsMap.get(task.task_id) ?? '')})
+                                </span>
+                              )}
                             </p>
                             <p className={taskStyles.taskNumber} dir="auto">
                               تسک {taskIndex + 1}:

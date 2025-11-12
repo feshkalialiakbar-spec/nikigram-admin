@@ -10,6 +10,10 @@ import {
   fetchStaffList,
   type StaffMember,
 } from '@/services/staff';
+import {
+  getTaskAssignmentsFromCookie,
+  type TaskAssignmentCookieData,
+} from '@/utils/taskAssignmentCookies';
 import styles from './styles/TaskAssignmentDrawer.module.scss';
 
 export interface TaskAssignmentSubmitPayload {
@@ -71,6 +75,25 @@ const TaskAssignmentDrawer: React.FC<TaskAssignmentDrawerProps> = ({
     setNotes('');
     setFormError(null);
   }, []);
+
+  // Load existing assignment from cookie when drawer opens
+  useEffect(() => {
+    if (!isOpen || !taskId) {
+      resetForm();
+      return;
+    }
+
+    const savedAssignments = getTaskAssignmentsFromCookie();
+    const existingAssignment = savedAssignments.find((a) => a.temp_task_id === taskId);
+
+    if (existingAssignment) {
+      setSelectedStaff(String(existingAssignment.staff_id));
+      setDeadline(existingAssignment.deadline > 0 ? String(existingAssignment.deadline) : '');
+      setNotes(existingAssignment.assignment_notes || '');
+    } else {
+      resetForm();
+    }
+  }, [isOpen, taskId, resetForm]);
 
   useEffect(() => {
     if (!isOpen) return;

@@ -20,6 +20,7 @@ export interface ProjectTemplateCategoryDetail {
     parent_title: string;
     parent_description: string;
     fund_name: string;
+    fund_logo: string | null;
 }
 
 export interface ProjectTemplateItem {

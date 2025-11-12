@@ -18,6 +18,12 @@ import TaskAssignmentDrawer, {
 } from './TaskAssignmentDrawer';
 import headerStyles from '../../../../../app/test/styles/Header.module.css';
 import statsStyles from '../../../../../app/test/styles/Stats.module.css';
+import {
+  getTaskAssignmentsFromCookie,
+  saveTaskAssignmentToCookie,
+  clearTaskAssignmentsCookie,
+  type TaskAssignmentCookieData,
+} from '@/utils/taskAssignmentCookies';
 
 interface SelectedTemplateOverviewProps {
   template: ProjectTemplateDetailResponse;
@@ -61,12 +67,18 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
     isOpen: boolean;
     payload?: PhaseActionPayload;
   }>({ isOpen: false });
-  const [taskAssignments, setTaskAssignments] = useState<Array<{
-    temp_task_id: number;
-    staff_id: number;
-    deadline: number;
-    assignment_notes: string;
-  }>>([]);
+  const [taskAssignments, setTaskAssignments] = useState<TaskAssignmentCookieData[]>([]);
+
+  // Load task assignments from cookie on mount
+  useEffect(() => {
+    const savedAssignments = getTaskAssignmentsFromCookie();
+    // Ensure staff_label exists for backward compatibility
+    const normalizedAssignments = savedAssignments.map((assignment) => ({
+      ...assignment,
+      staff_label: assignment.staff_label || `کاربر ${assignment.staff_id}`,
+    }));
+    setTaskAssignments(normalizedAssignments);
+  }, []);
 
   // Fetch template detail when component is displayed
   useEffect(() => {
@@ -101,6 +113,15 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
     }));
   }, [template.phases, workflow.phases]);
 
+  // Create a map of task_id to staff_label for all tasks
+  const allTaskAssignmentsMap = useMemo(() => {
+    const map = new Map<number, string>();
+    taskAssignments.forEach((assignment) => {
+      map.set(assignment.temp_task_id, assignment.staff_label || `کاربر ${assignment.staff_id}`);
+    });
+    return map;
+  }, [taskAssignments]);
+
   const handleOpenAssignment = useCallback(
     (payload: PhaseActionPayload) => {
       setAssignmentState({ isOpen: true, payload });
@@ -124,19 +145,23 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
   }, [activePhase?.tasks, assignmentState.payload?.taskId]);
 
   const handleAssignmentSubmit = useCallback(async (payload: TaskAssignmentSubmitPayload) => {
-    if (!requestId || !payload.taskId || !payload.staffId) {
+    if (!payload.taskId || !payload.staffId) {
       showError('اطلاعات ناقص است');
       return;
     }
 
-    const newAssignment = {
+    const newAssignment: TaskAssignmentCookieData = {
       temp_task_id: payload.taskId,
       staff_id: payload.staffId,
+      staff_label: payload.staffLabel,
       deadline: payload.deadlineDays ?? 0,
       assignment_notes: payload.assignmentNotes ?? '',
     };
 
-    // Update existing assignment for the same task, or add new one
+    // Save to cookie
+    saveTaskAssignmentToCookie(newAssignment);
+
+    // Update local state
     const existingIndex = taskAssignments.findIndex(
       (a) => a.temp_task_id === payload.taskId
     );
@@ -150,24 +175,8 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
         : [...taskAssignments, newAssignment];
 
     setTaskAssignments(updatedAssignments);
-
-    try {
-      const verifyPayload = {
-        template_id: template.project_temp_id,
-        title: template.title,
-        description: template.description || '',
-        task_assignments: updatedAssignments,
-      };
-
-      const response = await verifyProjectRequest(requestId, verifyPayload);
-      showSuccess(response?.message ?? 'تسک با موفقیت اختصاص داده شد');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'خطا در ثبت اختصاص تسک';
-      showError(message);
-      // Revert the assignment if API call failed
-      setTaskAssignments(taskAssignments);
-    }
-  }, [requestId, template, taskAssignments, showError, showSuccess]);
+    showSuccess('تسک با موفقیت اختصاص داده شد');
+  }, [taskAssignments, showError, showSuccess]);
 
   if (externalLoading || isLoading) return <SelectedTemplateSkeleton />;
 
@@ -211,9 +220,22 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
                       {/* Frame11 (Left + Frame10) */}
                       <div className={statsStyles.statsLeft}>
                         <div className={statsStyles.statsIcon}>
-                          <div className={statsStyles.iconText}>
-                            <p dir="auto">{stageLabel || categoryTitle}</p>
-                          </div>
+                          {template.category_detail?.fund_logo ? (
+                            <img
+                              src={template.category_detail.fund_logo}
+                              alt={fundName}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                borderRadius: '8px',
+                              }}
+                            />
+                          ) : (
+                            <div className={statsStyles.iconText}>
+                              <p dir="auto">{stageLabel || categoryTitle}</p>
+                            </div>
+                          )}
                         </div>
                         <div className={statsStyles.statsInfo} data-name="Left">
                           <p className={statsStyles.statsTitle} dir="auto">
@@ -258,6 +280,7 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
             phase={phase}
             position={position}
             onOpenActionSidebar={handleOpenAssignment}
+            taskAssignmentsMap={allTaskAssignmentsMap}
           />
         ))}
       </div>
@@ -266,9 +289,35 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
         <button
           type="button"
           className={styles.createProjectButton}
-          onClick={() => {
-            // Handle create project action
-            console.log('Create project clicked');
+          onClick={async () => {
+            if (!requestId) {
+              showError('شناسه درخواست موجود نیست');
+              return;
+            }
+
+            if (taskAssignments.length === 0) {
+              showError('لطفا حداقل یک تسک را به کاربر اختصاص دهید');
+              return;
+            }
+
+            try {
+              const verifyPayload = {
+                template_id: template.project_temp_id,
+                title: template.title,
+                description: template.description || '',
+                task_assignments: taskAssignments,
+              };
+
+              const response = await verifyProjectRequest(requestId, verifyPayload);
+              showSuccess(response?.message ?? 'پروژه با موفقیت ایجاد شد');
+              
+              // Clear cookie after successful verification
+              clearTaskAssignmentsCookie();
+              setTaskAssignments([]);
+            } catch (error) {
+              const message = error instanceof Error ? error.message : 'خطا در ایجاد پروژه';
+              showError(message);
+            }
           }}
         >
           ایجاد پروژه

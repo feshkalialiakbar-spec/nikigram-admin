@@ -1,0 +1,54 @@
+.badge {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  position: relative;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+.badge.blue {
+  background: #edfaff;
+}
+
+.badge.blue .text {
+  color: #007bff;
+}
+
+.badge.yellow {
+  background: #ffffea;
+}
+
+.badge.yellow .text {
+  color: #e29400;
+}
+
+.badge .content {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.badge .text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 0;
+  font-style: normal;
+  position: relative;
+  flex-shrink: 0;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  font-family: 'IRANSansXFaNum:Medium', sans-serif;
+}
+
+.badge .text p {
+  line-height: normal;
+  white-space: pre;
+}
