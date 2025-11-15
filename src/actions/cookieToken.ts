@@ -21,7 +21,7 @@ export async function setTokenIntoCookie({
     maxAge: (60 * 60) / 2,
     path: '/',
   })
-  store.set('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e', data.access_token, {
+  store.set(`${process.env.NEXT_PUBLIC_TOKEN_NAME}`, data.access_token, {
     maxAge: (60 * 60) / 2,
     path: '/',
   })
@@ -45,7 +45,7 @@ export async function setTokenIntoCookie({
 export async function deleteAllCookies() {
   const store = await cookies()
   store.delete('iosdfuh0374ljfgh30249tjdgvrsetyt45p97y8g23rv12653frberfou314r87g123weou7rg6f47ee')
-  store.delete('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')
+  store.delete(`${process.env.NEXT_PUBLIC_TOKEN_NAME}`)
   store.delete('67gmrhj3246789aergpeu2zfgsd3565sdfg77689awe89034a4355534w45yghbt5k6mg5pser447ee')
   store.delete('6kuefg7akjf61r5gfastdf123fgasfd65f23irrwegyr152evdtu78a5rjgvsfaysggasfd8a8w35wetgfse')
   store.delete('role')
@@ -69,7 +69,7 @@ export async function getCookieByKey(name: string) {
 }
 export async function getoken(source = 'vergena') {
   const store = await cookies()
-  const token = store.get('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')?.value
+  const token = store.get(`${process.env.NEXT_PUBLIC_TOKEN_NAME}`)?.value
   const origin = source?.trim() || 'vergena'
   callLogAPI({
     message: `${origin} , ${token ?? 'NO_TOKEN'}`,

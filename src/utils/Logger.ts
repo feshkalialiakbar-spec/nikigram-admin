@@ -12,11 +12,11 @@ function formatDateYYYYMMDD(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-function flattenObject(obj: any, parentKey = '', result: any = {}) {
+function flattenObject(obj: Record<string, unknown>, parentKey = '', result: Record<string, unknown> = {}) {
   for (const [key, value] of Object.entries(obj)) {
     const fullKey = parentKey ? `${parentKey}_${key}` : key
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      flattenObject(value, fullKey, result)
+      flattenObject(value as Record<string, unknown>, fullKey, result)
     } else {
       result[fullKey] = value
     }
@@ -24,7 +24,7 @@ function flattenObject(obj: any, parentKey = '', result: any = {}) {
   return result
 }
 
-function toCSVRow(obj: Record<string, any>, orderedKeys: string[]): string {
+function toCSVRow(obj: Record<string, unknown>, orderedKeys: string[]): string {
   return orderedKeys
     .map((key) => {
       const value = obj[key]
@@ -86,8 +86,8 @@ async function triggerSizeWebhook(totalBytes: number) {
         ts: new Date().toISOString(),
       }),
     })
-  } catch (err: any) {
-    console.error('[×] logs size webhook error:', err.message)
+  } catch (err) {
+    console.error('[×] logs size webhook error:', err instanceof Error ? err.message : String(err))
   }
 }
 
@@ -101,12 +101,12 @@ async function checkLogsFolderSizeAndAlert(logsDir: string) {
       console.warn('[!] logs folder exceeded 1GB. Triggering webhook...')
       await triggerSizeWebhook(totalBytes)
     }
-  } catch (err: any) {
-    console.error('[×] logs size check error:', err.message)
+  } catch (err) {
+    console.error('[×] logs size check error:', err instanceof Error ? err.message : String(err))
   }
 }
 
-export async function saveLogCSV(log: any, fileName: string) {
+export async function saveLogCSV(log: Record<string, unknown>, fileName: string) {
   try {
     const normalized = normalizeCsvFileName(fileName)
     const datedName = buildDatedFileName(normalized)
@@ -133,7 +133,7 @@ export async function saveLogCSV(log: any, fileName: string) {
     // fire and forget; no await to avoid blocking hot paths
     // but we still catch inside the function
     checkLogsFolderSizeAndAlert(logsDir)
-  } catch (err: any) {
-    console.error('[×] CSV log save error:', err.message)
+  } catch (err) {
+    console.error('[×] CSV log save error:', err instanceof Error ? err.message : String(err))
   }
 }

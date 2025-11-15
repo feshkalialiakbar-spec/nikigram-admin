@@ -12,6 +12,8 @@ import {
   CooperationRequestDetails,
   ApiTemplateRequestResponse,
   TemplateRequestDetails,
+  ApiTicketRequestResponse,
+  TicketRequestDetails,
 } from '@/components/tasks/types';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
 
@@ -509,6 +511,45 @@ export const mapTemplateRequestToComponent = (
     userName: `کاربر ${apiResponse.user_id}`, // You might want to get actual user name from another API
     userAvatar: undefined, // Not provided in this API response
     isVerified: apiResponse.is_verified === 1,
+  };
+
+  return request;
+};
+
+/**
+ * Map ticket request API response to TicketRequestDetails component props
+ */
+export const mapTicketRequestToComponent = (
+  apiResponse: ApiTicketRequestResponse
+): TicketRequestDetails => {
+  const { task_details, ticket_details } = apiResponse;
+
+  if (!task_details || !ticket_details) {
+    console.warn('[taskMappers] ticket request mapper received incomplete payload', {
+      hasTask: Boolean(task_details),
+      hasTicketDetails: Boolean(ticket_details),
+    });
+    return {
+      id: task_details?.task_id?.toString() || 'unknown',
+      requestDate: task_details?.created_at ? formatDate(task_details.created_at) : '—',
+      ticket_id: ticket_details?.ticket_id || 0,
+      ticket_number: ticket_details?.ticket_number || '—',
+      subject: ticket_details?.subject || '—',
+      category_name: ticket_details?.category_name || '—',
+      status_value: ticket_details?.status_value || '—',
+      conversation_id: ticket_details?.conversation_id || 0,
+    };
+  }
+
+  const request: TicketRequestDetails = {
+    id: task_details.task_id?.toString() || 'unknown',
+    requestDate: formatDate(task_details.created_at || new Date().toISOString()),
+    ticket_id: ticket_details.ticket_id,
+    ticket_number: ticket_details.ticket_number,
+    subject: ticket_details.subject,
+    category_name: ticket_details.category_name,
+    status_value: ticket_details.status_value,
+    conversation_id: ticket_details.conversation_id,
   };
 
   return request;

@@ -112,6 +112,8 @@ export const TASK_TYPES = {
   REF_TYPE_PROJECT_TASKS: 3, // تسک های مربوط به انجام پروژه
   REF_TYPE_REQUEST_PROJECT_TEMPLATE: 4, // تسک درخواست ایجاد تمپلیت
   REF_TYPE_COOPERATION_REQUEST: 5, // تسک درخواست همکاری
+  REF_TYPE_TICKET: 6,
+  REF_TYPE_BUSINESS_CHANGE_REQUEST: 7
 } as const;
 
 export type TaskType = typeof TASK_TYPES[keyof typeof TASK_TYPES];
@@ -127,8 +129,8 @@ export interface ProfileDocument {
   version?: number;
   url?: string;
   filename?: string;
-  file_extension: string
-  file_size: number
+  file_extension: string;
+  file_size: number;
 
   id?: string;
   fileType?: 'jpg' | 'pdf' | 'png';
@@ -516,3 +518,95 @@ export interface ApiTemplateRequestResponse {
   verified_at: string | null;
 }
 
+// Ticket Request Types
+export interface TicketRequestDetails {
+  id: string;
+  requestDate: string;
+  ticket_id: number;
+  ticket_number: string;
+  subject: string;
+  category_name: string;
+  status_value: string;
+  conversation_id: number;
+}
+
+export interface TicketRequestApprovalProps {
+  request: TicketRequestDetails;
+  rawApiData?: ApiTicketRequestResponse;
+  onApprove: (requestId: string) => void;
+  onReject: (requestId: string) => void;
+  className?: string;
+}
+
+// API Response Types for Ticket Request
+export interface ApiTicketRequestResponse {
+  task_details: {
+    task_id: number;
+    task_title: string;
+    task_description: string;
+    ref_type: number;
+    ref_id: number;
+    status_id: number;
+    status_name: string;
+    created_at: string;
+    source_template_id: number | null;
+    parent_task_id: number | null;
+  };
+  ticket_details: {
+    ticket_id: number;
+    ticket_number: string;
+    subject: string;
+    category_id: number;
+    category_name: string;
+    status_id: number;
+    status_value: string;
+    conversation_id: number;
+    created_at: string;
+    updated_at: string;
+  };
+  // Optional chat history data (included when fetched from API route)
+  chat_history?: {
+    header: {
+      ticket_id: number;
+      ticket_number: string;
+      subject: string;
+      status_id: number;
+      status_value: string;
+      conversation_id: number;
+    };
+    participants: Array<{
+      user_id: number;
+      cust_id: number;
+      FirstName: string | null;
+      LastName: string | null;
+      FullName: string | null;
+      ProfileImage: string | null;
+      joined_at: string;
+      is_support_agent: boolean;
+      agent_id: number | null;
+    }>;
+    total_count: number;
+    messages: Array<{
+      message_id: number;
+      user_id: number;
+      cust_id: number;
+      content: string | null;
+      message_type: string;
+      attachment_url: string | null;
+      file_extension: string | null;
+      file_size: number | null;
+      sent_at: string;
+      reply_to_message_id: number | null;
+      is_mine: boolean;
+      is_read: boolean;
+      attachments: Array<{
+        file_uid: string;
+        file_name: string;
+        file_extension: string;
+        file_size: number;
+      }> | null;
+    }>;
+    limit: number;
+    offset: number;
+  };
+}

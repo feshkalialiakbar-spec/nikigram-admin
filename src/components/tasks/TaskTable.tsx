@@ -55,7 +55,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
     } finally {
       setPendingTaskId(null);
     }
-  }, [navigateToTask, onOperationClick, showError, showSuccess]);
+  }, [navigateToTask, onOperationClick, showError, showSuccess, isAssignable]);
 
   if (tasks.length === 0) {
     return (

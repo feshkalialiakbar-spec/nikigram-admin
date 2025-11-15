@@ -7,16 +7,18 @@ import IndividualProfileApproval from '@/components/tasks/types/profile/Individu
 import HelpRequestApproval from '@/components/tasks/types/HelpRequestApproval';
 import CooperationRequestApproval from '@/components/tasks/types/CooperationRequestApproval';
 import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApproval';
+import TicketRequestApproval from '@/components/tasks/types/TicketRequestApproval';
 import TaskLayout from '@/components/tasks/detail/TaskLayout';
 import { ConfirmationModal, useToast } from '@/components/ui';
 import TaskDetailSkeleton from '@/components/tasks/detail/TaskDetailSkeleton';
 import Button from '@/components/ui/actions/button/Button';
-import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent, mapHelpRequestToComponent } from '@/utils/taskMappers';
+import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent, mapHelpRequestToComponent, mapTicketRequestToComponent } from '@/utils/taskMappers';
 import {
   ApiProfileChangeRequestResponse,
   ApiHelpRequestResponse,
   ApiCooperationRequestResponse,
   ApiTemplateRequestResponse,
+  ApiTicketRequestResponse,
 } from '@/components/tasks/types';
 import {
   fetchTaskDetail,
@@ -32,7 +34,6 @@ const TaskDetailPage: React.FC = () => {
   const router = useRouter();
   const { showSuccess, showError } = useToast();
   const taskId = params.id as string;
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [taskData, setTaskData] = useState<
@@ -40,6 +41,7 @@ const TaskDetailPage: React.FC = () => {
     | ApiHelpRequestResponse
     | ApiCooperationRequestResponse
     | ApiTemplateRequestResponse
+    | ApiTicketRequestResponse
     | null
   >(null);
   const [taskType, setTaskType] = useState<'regular-profile' | 'individual-profile' | 'help' | 'template' | 'cooperation' | 'ticket' | null>(null);
@@ -390,6 +392,47 @@ const TaskDetailPage: React.FC = () => {
           <TemplateRequestApproval
             request={templateRequest}
             rawApiData={taskData as ApiTemplateRequestResponse}
+            onApprove={handleApprove}
+            onReject={handleReject}
+          />
+        </TaskLayout>
+
+        {/* Confirmation Modals */}
+        <ConfirmationModal
+          isOpen={showApproveModal}
+          onClose={() => setShowApproveModal(false)}
+          onConfirm={() => confirmApprove(true)}
+          title="تایید درخواست"
+          message="آیا از تایید این درخواست اطمینان دارید؟"
+          confirmText="تایید"
+          type="approve"
+          loading={actionLoading}
+        />
+
+        <ConfirmationModal
+          isOpen={showRejectModal}
+          onClose={() => setShowRejectModal(false)}
+          onConfirm={() => confirmApprove(false)}
+          title="رد درخواست"
+          message="آیا از رد این درخواست اطمینان دارید؟"
+          confirmText="رد"
+          type="reject"
+          loading={actionLoading}
+        />
+      </>
+    );
+  }
+
+  if (taskType === 'ticket' && taskData) {
+    const ticketRequest = mapTicketRequestToComponent(
+      taskData as ApiTicketRequestResponse
+    );
+    return (
+      <>
+        <TaskLayout>
+          <TicketRequestApproval
+            request={ticketRequest}
+            rawApiData={taskData as ApiTicketRequestResponse}
             onApprove={handleApprove}
             onReject={handleReject}
           />

@@ -138,7 +138,7 @@ export default function FileUpload({
       items = [...items, meta];
       setCookie(cookieKey, JSON.stringify(items), { path: "/", maxAge: 60 * 60 * 24 * 30 }); // 30 روز
       return meta;
-    } catch (e) {
+    } catch {
       // در خطا هم رفتار اپ پابرجا می‌ماند و فقط آپلود شکست می‌خورد
       // عمداً لاگ نهایی در کلاینت زده نمی‌شود تا UI بهم نخورد
       return undefined;

@@ -6,7 +6,7 @@ import {
   fetchProjectTemplateDetail,
   ProjectTemplateDetailResponse,
 } from '@/services/projectTemplate';
-import { useToast } from '@/components/ui';
+import { useToast, ConfirmationModal } from '@/components/ui';
 import TemplateCard from './TemplateCard/TemplateCard';
 import styles from './TemplateSelector.module.scss';
 
@@ -33,6 +33,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null);
   const [detailsCache, setDetailsCache] = useState<Record<number, ProjectTemplateDetailResponse>>({});
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingTemplate, setPendingTemplate] = useState<ProjectTemplateDetailResponse | null>(null);
+  const [isConfirming, setIsConfirming] = useState(false);
 
   const loadTemplates = useCallback(async () => {
     setIsLoading(true);
@@ -88,66 +91,103 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       const templateId = template.template_detail.project_temp_id;
       setSelectedTemplateId(templateId);
 
+      let detail: ProjectTemplateDetailResponse;
       const cachedDetail = detailsCache[templateId];
+      
       if (cachedDetail) {
-        await onConfirmTemplate(cachedDetail);
-        return;
+        detail = cachedDetail;
+      } else {
+        try {
+          detail = await fetchProjectTemplateDetail(templateId);
+          setDetailsCache(prev => ({ ...prev, [templateId]: detail }));
+        } catch (error) {
+          console.error('Failed to confirm template:', error);
+          showError('خطا در دریافت جزئیات تمپلیت');
+          return;
+        }
       }
 
-      try {
-        const detail = await fetchProjectTemplateDetail(templateId);
-        setDetailsCache(prev => ({ ...prev, [templateId]: detail }));
-        await onConfirmTemplate(detail);
-      } catch (error) {
-        console.error('Failed to confirm template:', error);
-        showError('خطا در دریافت جزئیات تمپلیت');
-      }
+      // Show confirmation modal before proceeding
+      setPendingTemplate(detail);
+      setShowConfirmModal(true);
     },
-    [detailsCache, onConfirmTemplate, showError]
+    [detailsCache, showError]
   );
 
+  const handleConfirmModalConfirm = useCallback(async () => {
+    if (!pendingTemplate) return;
+    
+    setIsConfirming(true);
+    try {
+      await onConfirmTemplate(pendingTemplate);
+      setShowConfirmModal(false);
+      setPendingTemplate(null);
+    } catch (error) {
+      console.error('Failed to confirm template:', error);
+      showError('خطا در تایید تمپلیت');
+    } finally {
+      setIsConfirming(false);
+    }
+  }, [pendingTemplate, onConfirmTemplate, showError]);
+
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>تمپلیت‌های پیشنهادی</h2>
-        <button
-          type="button"
-          className={styles.rejectButton}
-          onClick={() => void onTemplateReject()}
-          disabled={isRejecting || isProcessing}
-        >
-          <CloseCircle size={20} color="#E70218" variant="Bulk" />
-          <span>{isRejecting ? 'در حال ارسال...' : 'عدم تایید تمپلیت'}</span>
-        </button>
+    <>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>تمپلیت‌های پیشنهادی</h2>
+          <button
+            type="button"
+            className={styles.rejectButton}
+            onClick={() => void onTemplateReject()}
+            disabled={isRejecting || isProcessing}
+          >
+            <CloseCircle size={20} color="#E70218" variant="Bulk" />
+            <span>{isRejecting ? 'در حال ارسال...' : 'عدم تایید تمپلیت'}</span>
+          </button>
+        </div>
+
+        <div className={styles.cardsGrid}>
+          {isLoading ? (
+            <div className={styles.loadingState}>در حال بارگذاری...</div>
+          ) : templates.length === 0 ? (
+            <div className={styles.emptyState}>هیچ تمپلیتی یافت نشد.</div>
+          ) : (
+            templates.map(template => {
+              const templateId = template.template_detail.project_temp_id;
+              const cachedDetail = detailsCache[templateId];
+              const isTemplateLoading = (isProcessing || isConfirming) && selectedTemplateId === templateId;
+
+              return (
+                <TemplateCard
+                  key={templateId}
+                  template={template}
+                  isSelected={selectedTemplateId === templateId}
+                  isDisabled={isProcessing || isConfirming}
+                  isLoading={isTemplateLoading}
+                  onSelect={() => void handleConfirmTemplate(template)}
+                  formatDate={formatDate}
+                  phaseCount={cachedDetail?.phases?.length ?? null}
+                />
+              );
+            })
+          )}
+        </div>
       </div>
 
-      <div className={styles.cardsGrid}>
-        {isLoading ? (
-          <div className={styles.loadingState}>در حال بارگذاری...</div>
-        ) : templates.length === 0 ? (
-          <div className={styles.emptyState}>هیچ تمپلیتی یافت نشد.</div>
-        ) : (
-          templates.map(template => {
-            const templateId = template.template_detail.project_temp_id;
-            const cachedDetail = detailsCache[templateId];
-            const isTemplateLoading = isProcessing && selectedTemplateId === templateId;
-
-            return (
-              <TemplateCard
-                key={templateId}
-                template={template}
-                isSelected={selectedTemplateId === templateId}
-                isDisabled={isProcessing}
-                isLoading={isTemplateLoading}
-                onSelect={() => void handleConfirmTemplate(template)}
-                formatDate={formatDate}
-                phaseCount={cachedDetail?.phases?.length ?? null}
-              />
-            );
-          })
-        )}
-      </div>
-    </div>
+      <ConfirmationModal
+        isOpen={showConfirmModal}
+        onClose={() => {
+          setShowConfirmModal(false);
+          setPendingTemplate(null);
+        }}
+        onConfirm={handleConfirmModalConfirm}
+        title="تایید درخواست"
+        message="آیا از تایید این درخواست اطمینان دارید؟"
+        confirmText="تایید"
+        type="approve"
+        loading={isConfirming}
+      />
+    </>
   );
 };
 

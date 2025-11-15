@@ -39,7 +39,7 @@ export default function LoadingModal({
   description,
   showButton = false,
   buttonText = "بستن",
-  buttonVariant = "primary",
+  buttonVariant: _buttonVariant = "primary",
   onButtonClick,
   loadingType = 5,
 }: LoadingModalProps) {

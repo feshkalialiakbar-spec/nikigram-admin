@@ -24,6 +24,8 @@ import {
   clearTaskAssignmentsCookie,
   type TaskAssignmentCookieData,
 } from '@/utils/taskAssignmentCookies';
+import Image from 'next/image';
+import { buildDocDownloadUrl } from '@/utils/docUrl';
 
 interface SelectedTemplateOverviewProps {
   template: ProjectTemplateDetailResponse;
@@ -33,6 +35,7 @@ interface SelectedTemplateOverviewProps {
   isLoading?: boolean;
   onOpenActionSidebar?: (payload: PhaseActionPayload) => void;
   requestId?: number;
+  onVerificationComplete?: () => void;
 }
 
  
@@ -53,11 +56,12 @@ const getSafeText = (value?: string | null, fallback = '—') =>
 const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
   template: initialTemplate,
   workflow,
-  onChangeTemplate,
+  onChangeTemplate: _onChangeTemplate,
   onPhaseStatusChange,
   isLoading: externalLoading,
   onOpenActionSidebar,
   requestId,
+  onVerificationComplete,
 }) => {
   void onPhaseStatusChange;
   const { showError, showSuccess } = useToast();
@@ -136,6 +140,7 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
 
   const activePhase = useMemo(() => {
     if (!assignmentState.payload?.phaseId) return undefined;
+
     return template.phases?.find((phase) => phase.phase_id === assignmentState.payload?.phaseId);
   }, [assignmentState.payload?.phaseId, template.phases]);
 
@@ -177,6 +182,20 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
     setTaskAssignments(updatedAssignments);
     showSuccess('تسک با موفقیت اختصاص داده شد');
   }, [taskAssignments, showError, showSuccess]);
+
+  // Validate that all tasks are assigned
+  const validateAllTasksAssigned = useCallback(() => {
+    const allTasks = template.phases?.flatMap((phase) => phase.tasks ?? []) ?? [];
+    const assignedTaskIds = new Set(taskAssignments.map((a) => a.temp_task_id));
+    const unassignedTasks = allTasks.filter((task) => !assignedTaskIds.has(task.task_id));
+    
+    return {
+      isValid: unassignedTasks.length === 0,
+      unassignedTasks,
+      totalTasks: allTasks.length,
+      assignedTasks: taskAssignments.length,
+    };
+  }, [template.phases, taskAssignments]);
 
   if (externalLoading || isLoading) return <SelectedTemplateSkeleton />;
 
@@ -221,9 +240,11 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
                       <div className={statsStyles.statsLeft}>
                         <div className={statsStyles.statsIcon}>
                           {template.category_detail?.fund_logo ? (
-                            <img
-                              src={template.category_detail.fund_logo}
+                            <Image
+                              src={buildDocDownloadUrl(template.category_detail.fund_logo)}
                               alt={fundName}
+                              width={100}
+                              height={100}
                               style={{
                                 width: '100%',
                                 height: '100%',
@@ -286,12 +307,51 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
       </div>
 
       <div className={styles.createProjectSection}>
+        {(() => {
+          const validation = validateAllTasksAssigned();
+          const allTasksCount = validation.totalTasks;
+          const assignedCount = validation.assignedTasks;
+          const unassignedCount = validation.unassignedTasks.length;
+          const isComplete = validation.isValid && assignedCount > 0;
+          
+          return (
+            <div className={styles.validationSummary}>
+              <div className={styles.validationInfo}>
+                <span className={styles.validationLabel}>وضعیت اختصاص تسک‌ها:</span>
+                <span className={isComplete ? styles.validationSuccess : styles.validationWarning}>
+                  {assignedCount} از {allTasksCount} تسک اختصاص داده شده
+                  {unassignedCount > 0 && ` (${unassignedCount} تسک باقی مانده)`}
+                </span>
+              </div>
+              {!isComplete && (
+                <div className={styles.validationHint}>
+                  لطفا تمام تسک‌ها را به کاربران اختصاص دهید تا بتوانید پروژه را ایجاد کنید.
+                </div>
+              )}
+            </div>
+          );
+        })()}
         <button
           type="button"
           className={styles.createProjectButton}
           onClick={async () => {
             if (!requestId) {
               showError('شناسه درخواست موجود نیست');
+              return;
+            }
+
+            // Validate all tasks are assigned
+            const validation = validateAllTasksAssigned();
+            if (!validation.isValid) {
+              const unassignedCount = validation.unassignedTasks.length;
+              const taskNames = validation.unassignedTasks
+                .map((task) => task.task_title)
+                .slice(0, 3)
+                .join('، ');
+              const moreText = unassignedCount > 3 ? ` و ${unassignedCount - 3} تسک دیگر` : '';
+              showError(
+                `لطفا تمام تسک‌ها را به کاربر اختصاص دهید. ${unassignedCount} تسک بدون اختصاص باقی مانده است: ${taskNames}${moreText}`
+              );
               return;
             }
 
@@ -314,6 +374,9 @@ const SelectedTemplateOverview: FC<SelectedTemplateOverviewProps> = ({
               // Clear cookie after successful verification
               clearTaskAssignmentsCookie();
               setTaskAssignments([]);
+              
+              // Notify parent component to reset to initial state
+              onVerificationComplete?.();
             } catch (error) {
               const message = error instanceof Error ? error.message : 'خطا در ایجاد پروژه';
               showError(message);

@@ -28,7 +28,9 @@ const ProfileSubmissionTestPage: React.FC = () => {
           status_id: 1,
           version: 1,
           url: '/api/files/file1',
-          filename: 'کارت ملی.jpg'
+          filename: 'کارت ملی.jpg',
+          file_extension: 'jpg',
+          file_size: 2621440
         }
       ]
     },
@@ -48,7 +50,9 @@ const ProfileSubmissionTestPage: React.FC = () => {
           status_id: 1,
           version: 1,
           url: '/api/files/file2',
-          filename: 'مدرک آگهی تاسیس.pdf'
+          filename: 'مدرک آگهی تاسیس.pdf',
+          file_extension: 'pdf',
+          file_size: 1258291
         },
         {
           document_id: 3,
@@ -59,7 +63,9 @@ const ProfileSubmissionTestPage: React.FC = () => {
           status_id: 1,
           version: 1,
           url: '/api/files/file3',
-          filename: 'مدرک آگهی آخرین تغییرات.pdf'
+          filename: 'مدرک آگهی آخرین تغییرات.pdf',
+          file_extension: 'pdf',
+          file_size: 1572864
         },
         {
           document_id: 4,
@@ -70,7 +76,9 @@ const ProfileSubmissionTestPage: React.FC = () => {
           status_id: 1,
           version: 1,
           url: '/api/files/file4',
-          filename: 'مدرک روزنامه رسمی.pdf'
+          filename: 'مدرک روزنامه رسمی.pdf',
+          file_extension: 'pdf',
+          file_size: 838860
         }
       ]
     },
@@ -89,7 +97,9 @@ const ProfileSubmissionTestPage: React.FC = () => {
           status_id: 1,
           version: 1,
           url: '/api/files/file5',
-          filename: 'مدرک روزنامه رسمی.pdf'
+          filename: 'مدرک روزنامه رسمی.pdf',
+          file_extension: 'pdf',
+          file_size: 943718
         }
       },
       {
@@ -106,7 +116,9 @@ const ProfileSubmissionTestPage: React.FC = () => {
           status_id: 1,
           version: 1,
           url: '/api/files/file6',
-          filename: 'مدرک روزنامه رسمی.pdf'
+          filename: 'مدرک روزنامه رسمی.pdf',
+          file_extension: 'pdf',
+          file_size: 1048576
         }
       }
     ],

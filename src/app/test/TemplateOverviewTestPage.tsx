@@ -252,7 +252,7 @@ const samplePhases: TemplatePhase[] = [
   },
 ];
 
-export default function TemplateOverviewTestPage(_: TemplateOverviewTestPageProps) {
+export default function TemplateOverviewTestPage(_props?: TemplateOverviewTestPageProps) {
   const [expandedPhases, setExpandedPhases] = useState<Record<number, boolean>>({
     1: true,
     2: true,

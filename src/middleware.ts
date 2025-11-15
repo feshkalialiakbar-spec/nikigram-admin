@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const isAuthenticated = request.cookies.has('34a435y6546pr656rj67gm789peua677689awe890rguy987e89r69gr890rtk6mg5ps447e')
+  const isAuthenticated = request.cookies.has(`${process.env.NEXT_PUBLIC_TOKEN_NAME}`)
   const userStatus = request.cookies.get('user_status')?.value
 
   if (

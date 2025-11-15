@@ -566,10 +566,56 @@
 
 .createProjectSection {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   width: 100%;
   max-width: 960px;
   margin-top: 24px;
+}
+
+.validationSummary {
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(235, 241, 248, 0.6);
+  border: 1px solid rgba(209, 225, 242, 0.8);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.validationInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.validationLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #435a73;
+}
+
+.validationSuccess {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f7634;
+}
+
+.validationWarning {
+  font-size: 14px;
+  font-weight: 600;
+  color: #d97706;
+}
+
+.validationHint {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-top: 4px;
 }
 
 .createProjectButton {

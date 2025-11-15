@@ -2,7 +2,19 @@ import fs from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 const logFilePath = path.join(process.cwd(), 'logs', 'logs.json')
-function saveLog(log: any) {
+interface LogEntry {
+  timestamp: string
+  url: string
+  method: string
+  status: number
+  request: {
+    headers: Record<string, string>
+    body: unknown
+  }
+  response: unknown
+}
+
+function saveLog(log: LogEntry) {
   try {
     const logsDir = path.dirname(logFilePath)
 
@@ -13,8 +25,8 @@ function saveLog(log: any) {
     }
 
     // اگر فایل وجود دارد بخوان، وگرنه آرایه خالی
-    const logs = fs.existsSync(logFilePath)
-      ? JSON.parse(fs.readFileSync(logFilePath, 'utf-8') || '[]')
+    const logs: LogEntry[] = fs.existsSync(logFilePath)
+      ? (JSON.parse(fs.readFileSync(logFilePath, 'utf-8') || '[]') as LogEntry[])
       : []
 
     // اضافه کردن لاگ جدید
@@ -24,8 +36,8 @@ function saveLog(log: any) {
     fs.writeFileSync(logFilePath, JSON.stringify(logs, null, 2), 'utf-8')
 
     console.info('[✔] Log saved successfully.')
-  } catch (err: any) {
-    console.error('[×] Error while saving log:', err.message)
+  } catch (err) {
+    console.error('[×] Error while saving log:', err instanceof Error ? err.message : String(err))
   }
 }
 
@@ -59,9 +71,9 @@ export async function POST(req: NextRequest) {
       success: true,
       data: responseData,
     })
-  } catch (err: any) {
+  } catch (err) {
     return NextResponse.json(
-      { success: false, error: err.message },
+      { success: false, error: err instanceof Error ? err.message : String(err) },
       { status: 500 }
     )
   }

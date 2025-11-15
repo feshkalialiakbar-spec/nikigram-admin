@@ -12,7 +12,6 @@ import {
 } from '@/services/staff';
 import {
   getTaskAssignmentsFromCookie,
-  type TaskAssignmentCookieData,
 } from '@/utils/taskAssignmentCookies';
 import styles from './styles/TaskAssignmentDrawer.module.scss';
 

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       timestamp = new Date().toISOString(),
       filekoin,
     } = await req.json()
-    let normalizedLog: any = log
+    let normalizedLog: unknown = log
     if (typeof normalizedLog === 'string') {
       const trimmed = normalizedLog.trim()
       if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
@@ -33,10 +33,10 @@ export async function POST(req: NextRequest) {
     // normalize filename on server side as well; async write
     await saveLogCSV(logEntry, filekoin)
     return NextResponse.json({ success: true })
-  } catch (err: any) {
+  } catch (err) {
     console.error('logproxy POST error:', err)
     return NextResponse.json(
-      { success: false, error: err.message },
+      { success: false, error: err instanceof Error ? err.message : String(err) },
       { status: 500 }
     )
   }

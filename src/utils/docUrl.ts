@@ -7,10 +7,8 @@ type Protocol = "http" | "https";
 const getRawDocUrl = (): string => {
   const docUrl = process.env.NEXT_PUBLIC_DOC_URL?.trim();
   if (docUrl) return docUrl;
-
   const apiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
   if (apiUrl) return apiUrl;
-
   return "";
 };
 

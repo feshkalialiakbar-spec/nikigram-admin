@@ -6,9 +6,9 @@ import {
 } from '@/services/projectTemplate';
 
 interface TestPageProps {
-  searchParams?: {
+  searchParams?: Promise<{
     templateId?: string;
-  };
+  }>;
 }
 
 const buildTemplateOptions = (items: Awaited<ReturnType<typeof fetchProjectTemplateList>>['items']) =>
@@ -19,9 +19,10 @@ const buildTemplateOptions = (items: Awaited<ReturnType<typeof fetchProjectTempl
   }));
 
 export default async function TestPage({ searchParams }: TestPageProps) {
+  const resolvedSearchParams = await searchParams;
   let templateDetail: ProjectTemplateDetailResponse | null = null;
   let templateOptions: Array<{ id: string; title: string; fundName: string }> = [];
-  let resolvedTemplateId = searchParams?.templateId ?? null;
+  let resolvedTemplateId = resolvedSearchParams?.templateId ?? null;
   let listError: string | null = null;
   let detailError: string | null = null;
 

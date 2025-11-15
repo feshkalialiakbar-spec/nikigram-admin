@@ -4,7 +4,18 @@ import path from 'path'
 
 const logFilePath = path.join(process.cwd(), 'logs', 'logs.json')
 
-function toCSV(logs: any[]) {
+interface LogEntry {
+  timestamp: string
+  url: string
+  method: string
+  status: number
+  request: {
+    body: unknown
+  }
+  response: unknown
+}
+
+function toCSV(logs: LogEntry[]) {
   const header = [
     'timestamp',
     'url',
@@ -38,27 +49,30 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    const logs = fs.existsSync(logFilePath)
-      ? JSON.parse(fs.readFileSync(logFilePath, 'utf-8'))
+    const logs: LogEntry[] = fs.existsSync(logFilePath)
+      ? (JSON.parse(fs.readFileSync(logFilePath, 'utf-8')) as LogEntry[])
       : []
 
-    const filteredLogs = logs.filter((log: any) => {
+    const filteredLogs = logs.filter((log: LogEntry) => {
       const date = new Date(log.timestamp)
       return date >= new Date(start) && date <= new Date(end)
     })
 
     const csv = toCSV(filteredLogs)
 
+    const now = new Date()
+    const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0, -5)
     return new NextResponse(csv, {
       status: 200,
       headers: {
         'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment; filename="logs-${
-          (new Date(), 'yyyyMMdd-HHmmss')
-        }.csv"`,
+        'Content-Disposition': `attachment; filename="logs-${dateStr}.csv"`,
       },
     })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : String(err) },
+      { status: 500 }
+    )
   }
 }

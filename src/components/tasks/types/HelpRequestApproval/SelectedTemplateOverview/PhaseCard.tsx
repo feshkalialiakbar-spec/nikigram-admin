@@ -112,7 +112,7 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, position, onOpenActionSide
   const [isExpanded, setIsExpanded] = useState(true);
   const tasks = phase.tasks ?? [];
 
-  const getTaskStatus = (task: ProjectTemplatePhaseTask): TemplatePhaseTaskStatus => {
+  const getTaskStatus = (_task: ProjectTemplatePhaseTask): TemplatePhaseTaskStatus => {
     // You can customize this based on your business logic
     // For now, we'll use a simple check
     return 'done'; // or 'blocked'

@@ -22,7 +22,7 @@ import type { DocumentSubmissionForm } from '../lib/types';
 const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
-  onReject,
+  onReject: _onReject,
   className,
   rawApiData,
 }) => {
@@ -156,7 +156,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     [modalState.approved, taskId, showError, showSuccess]
   );
 
-  const handleTemplateReject = useCallback(async () => {
+  const _handleTemplateReject = useCallback(async () => {
     setModalState((s) => ({ ...s, rejectingTemplate: true }));
     const notes = lastDescription.trim() || 'درخواست ایجاد تمپلیت جدید';
     try {
@@ -180,7 +180,7 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
     }
   }, [request.id, lastDescription, showError, showSuccess]);
 
-  const handleTemplateConfirm = useCallback(
+  const _handleTemplateConfirm = useCallback(
     async (detail: ProjectTemplateDetailResponse) => {
       setModalState((s) => ({ ...s, verifyingTemplate: true }));
       const desc = lastDescription || detail.description || '';

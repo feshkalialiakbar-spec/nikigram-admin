@@ -26,7 +26,7 @@ import SelectedTemplateOverview from './SelectedTemplateOverview';
 const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
   request,
   onApprove,
-  onReject,
+  onReject: _onReject,
   className,
   rawApiData,
 }) => {
@@ -285,15 +285,19 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
         persistSelectedTemplate(detail);
         setLastDescription('');
         showSuccess('تمپلیت انتخاب‌شده ذخیره شد.');
+       
+        setApprovalWorkflow((prev) => ({
+          ...prev,
+          currentStage: 'completed',
+        }));
+        
+        // Close template selector modal after confirmation
         setModalState((s) => ({
           ...s,
           verifyingTemplate: false,
           templateOpen: false,
         }));
-        setApprovalWorkflow((prev) => ({
-          ...prev,
-          currentStage: 'completed',
-        }));
+        
         onApprove?.(request.id);
       } catch (err) {
         console.error('Failed to store selected template detail', err);
@@ -341,6 +345,22 @@ const HelpRequestApproval: React.FC<HelpRequestApprovalProps> = ({
           onPhaseStatusChange={handlePhaseStatusChange}
           isLoading={modalState.verifyingTemplate}
           requestId={typeof taskId === 'number' ? taskId : Number(taskId)}
+          onVerificationComplete={() => {
+            // Reset to initial state after successful verification
+            clearPersistedTemplate();
+            setSelectedTemplate(null);
+            setApprovalWorkflow({
+              currentStage: 'review',
+              phases: [],
+            });
+            setModalState((s) => ({
+              ...s,
+              templateOpen: false,
+              verifyingTemplate: false,
+              rejectingTemplate: false,
+            }));
+            setLastDescription('');
+          }}
         />
       )
       }
