@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Ticket from './Ticket';
 import { TicketRequestApprovalProps } from '@/components/tasks/types';
 

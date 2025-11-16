@@ -7,18 +7,19 @@
   padding: 0;
   gap: 0;
   overflow: hidden;
+  border-bottom: 1px solid var(--gray-200);
 
   &__header {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 16px;
-    border-bottom: 1px solid var(--gray-200);
     position: sticky;
     top: 0;
     background-color: var(--main-white);
     z-index: 10;
     flex-shrink: 0;
+    color: #2D59C8;
   }
 
   &__messages {

@@ -13,6 +13,7 @@ import {
   TicketParticipantDto,
   ChatMessage,
 } from './lib/types';
+
 type RawTicketData = {
   ticket_details?: {
     subject: string;
@@ -189,7 +190,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
         file_extension: null,
         file_size: null,
         sent_at: new Date().toISOString(),
-         is_mine: true,
+        is_mine: true,
         is_read: null,
         attachments: [],
       };
@@ -209,11 +210,13 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
     });
     try {
       const sendToken = await getoken('TICKETS') || '';
+
       await sendTextMessage({
         ticketId: ticket?.ticket_id ?? ticketId,
         content: trimmed,
         token: sendToken,
       });
+
     } catch {
       // revert optimistic on failure
       if (ticketMessages.length > 0) {
@@ -293,15 +296,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
     [ticketMessages.length, ticket, ticketId]
   );
 
-  const onKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    },
-    [handleSend]
-  );
+
 
   const getParticipantInfo = useCallback(
     (userId: number, custId: number): TicketParticipantDto | null => {
@@ -362,7 +357,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
               file_extension: null,
               file_size: null,
               sent_at: m.created_at,
-               is_mine: m.sender === 'user',
+              is_mine: m.sender === 'user',
               is_read: null,
               attachments: (m.attachments || []).map(a => ({
                 file_uid: a.file_uid,
