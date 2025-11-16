@@ -1,0 +1,21 @@
+.ticket-message-input {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.ticket-message-input__icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+// کنترل رفتار textarea داخلی
+.ticket-message-input__textarea {
+  resize: none !important;
+  overflow-y: auto;
+  max-height: 200px;
+  line-height: 1.5;
+}

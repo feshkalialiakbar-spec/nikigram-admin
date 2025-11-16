@@ -596,8 +596,7 @@ export interface ApiTicketRequestResponse {
       file_extension: string | null;
       file_size: number | null;
       sent_at: string;
-      reply_to_message_id: number | null;
-      is_mine: boolean;
+       is_mine: boolean;
       is_read: boolean;
       attachments: Array<{
         file_uid: string;
