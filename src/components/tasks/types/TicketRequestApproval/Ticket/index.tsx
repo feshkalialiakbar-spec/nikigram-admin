@@ -33,6 +33,13 @@ type RawTicketData = {
 
 
 
+const CLOSED_TOKENS = ['closed', 'close', 'بسته', 'بسته شده', 'closed_ticket'];
+
+const isClosedStatus = (value?: string | null): boolean => {
+  if (!value) return false;
+  return CLOSED_TOKENS.includes(value.trim().toLowerCase());
+};
+
 export default function App(props: Partial<TicketRequestApprovalProps>) {
   const [ticket, setTicket] = useState<TicketLite | null>(null);
   const [loadingTicket, setLoadingTicket] = useState(true);
@@ -48,6 +55,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
   const listRef = useRef<HTMLDivElement | null>(null);
   const ticketId = props.rawApiData?.ticket_details?.ticket_id ?? props.request?.ticket_id ?? 8;
   const pageSize = 30;
+  const isTicketClosed = isClosedStatus(ticket?.status_value);
 
   useEffect(() => {
     const loadTicket = async () => {
@@ -177,6 +185,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
   }, [fetchOlder]);
 
   const handleSend = useCallback(async () => {
+    if (isTicketClosed) return;
     const trimmed = inputValue.trim();
     if (!trimmed) return;
     // If we have rich chat, append to TicketMessageDto list optimistically, else to simple list
@@ -227,10 +236,11 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
       }
       setInputValue(trimmed);
     }
-  }, [inputValue, ticket, ticketId, ticketMessages.length]);
+  }, [inputValue, ticket, ticketId, ticketMessages.length, isTicketClosed]);
 
   const handleFileSelected = useCallback(
     async (file: File) => {
+      if (isTicketClosed) return;
       try {
         const token = (await getoken('TICKETS')) || '';
         const meta: UploadedFileMeta = await uploadFile({
@@ -294,7 +304,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
         }
       }
     },
-    [ticketMessages.length, ticket, ticketId]
+    [ticketMessages.length, ticket, ticketId, isTicketClosed]
   );
 
 
@@ -306,6 +316,24 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
     },
     [participants]
   );
+
+  const handleTicketStatusChange = useCallback((nextStatus: string) => {
+    setTicket((prev) => (prev ? { ...prev, status_value: nextStatus } : prev));
+  }, []);
+
+  const inputAreaClassName = [
+    styles['ticket-detail__input-area'],
+    isTicketClosed ? styles['ticket-detail__input-area--disabled'] : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const inputIconsClassName = [
+    styles['ticket-detail__input-icons'],
+    isTicketClosed ? styles['ticket-detail__input-icons--disabled'] : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={styles["ticket-system-container"]}>
@@ -384,15 +412,16 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
           onSend={handleSend}
           isDesktop={true}
           onFileSelected={handleFileSelected}
-          className={styles["ticket-detail__input-area"]}
-          iconsClassName={styles["ticket-detail__input-icons"]}
-          disabled={false}
+          className={inputAreaClassName}
+          iconsClassName={inputIconsClassName}
+          disabled={isTicketClosed}
         />
       </div>
       <TicketBar
         ticket={ticket}
         loading={loadingTicket}
         className={styles['ticket-sidebar']}
+        onTicketStatusChange={handleTicketStatusChange}
       />
     </div>
   );

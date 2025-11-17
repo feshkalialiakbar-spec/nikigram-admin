@@ -102,10 +102,30 @@ export async function sendFileMessage(params: {
   }
 }
 
+const extractApiMessage = (rawPayload: string | null): string => {
+  if (!rawPayload) return '';
+  const trimmed = rawPayload.trim();
+  if (!trimmed) return '';
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (typeof parsed === 'string') return parsed;
+    if (parsed && typeof parsed === 'object') {
+      return (
+        (typeof parsed.message === 'string' && parsed.message) ||
+        (typeof parsed.detail === 'string' && parsed.detail) ||
+        ''
+      );
+    }
+  } catch {
+    // fall through to return the raw string
+  }
+  return trimmed;
+};
+
 export async function closeTicket(params: {
   ticketId: number | string;
   token: string;
-}): Promise<void> {
+}): Promise<string> {
   const base = getApiBaseUrl();
   const url = `${base}/api/ticket/chat/close-ticket/${params.ticketId}`;
   const res = await fetch(url, {
@@ -115,10 +135,12 @@ export async function closeTicket(params: {
       Authorization: `Bearer ${params.token}`,
     },
   });
+  const payload = await res.text().catch(() => '');
+  const message = extractApiMessage(payload);
   if (!res.ok) {
-    const message = await res.text().catch(() => '');
     throw new Error(message || `Failed to close ticket: ${res.status}`);
   }
+  return message || 'تیکت با موفقیت بسته شد.';
 }
 
 

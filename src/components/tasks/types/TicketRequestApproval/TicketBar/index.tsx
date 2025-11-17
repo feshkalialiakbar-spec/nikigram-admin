@@ -19,9 +19,12 @@ interface TicketBarProps {
   ticket: TicketInfo | null;
   loading: boolean;
   className?: string;
+  onTicketStatusChange?: (nextStatus: string) => void;
 }
 
-export default function TicketBar({ ticket, loading, className }: TicketBarProps) {
+const CLOSED_TOKENS = ['closed', 'close', 'بسته', 'بسته شده', 'closed_ticket'];
+
+export default function TicketBar({ ticket, loading, className, onTicketStatusChange }: TicketBarProps) {
   const { showSuccess, showError } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -42,7 +45,11 @@ export default function TicketBar({ ticket, loading, className }: TicketBarProps
     return `${dt.toLocaleDateString('fa-IR')} ${dt.toLocaleTimeString('fa-IR')}`;
   }, []);
 
-  const disableClose = !ticket?.ticket_id || isProcessing;
+  const normalizedStatus = (ticket?.status_value || '').trim().toLowerCase();
+  const isClosed = CLOSED_TOKENS.includes(normalizedStatus);
+  const disableClose = !ticket?.ticket_id || isProcessing || isClosed;
+  const statusText = isClosed ? 'بسته شده' : (ticket?.status_value ?? '-');
+  const statusValueClassName = isClosed ? styles.ticketInfoValueDanger : styles.ticketInfoValueSuccess;
 
   const handleConfirmClose = useCallback(async () => {
     if (!ticket?.ticket_id) return;
@@ -52,10 +59,13 @@ export default function TicketBar({ ticket, loading, className }: TicketBarProps
       if (!token) {
         throw new Error('Missing auth token');
       }
-      await closeTicket({ ticketId: ticket.ticket_id, token });
-      showSuccess('تیکت با موفقیت بسته شد.');
+      const message = await closeTicket({ ticketId: ticket.ticket_id, token });
+      showSuccess(message || 'تیکت با موفقیت بسته شد.');
+      onTicketStatusChange?.('closed');
     } catch (error) {
-      showError('بستن تیکت با خطا مواجه شد.');
+      const description =
+        (error instanceof Error && error.message) || 'بستن تیکت با خطا مواجه شد.';
+      showError(description);
     } finally {
       setIsProcessing(false);
       setIsModalOpen(false);
@@ -138,8 +148,8 @@ export default function TicketBar({ ticket, loading, className }: TicketBarProps
                   </p>
                 </div>
                 <div className={styles.ticketInfoRow}>
-                  <p className={styles.ticketInfoValueSuccess} dir="auto">
-                    {ticket.status_value}
+                  <p className={statusValueClassName} dir="auto">
+                    {statusText}
                   </p>
                   <p className={styles.ticketInfoLabel} dir="auto">
                     وضعیت
