@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import type { ProjectTemplatePhase, ProjectTemplatePhaseTask } from '@/services/projectTemplate';
 import { safeText } from '@/hooks/texedit';
-import phaseStyles from '../../../../../app/test/styles/Phase.module.css';
-import taskStyles from '../../../../../app/test/styles/Task.module.css';
-import badgeStyles from '../../../../../app/test/styles/Badge.module.css';
-import svgPaths from '../../../../../app/test/imports/svg-x98sifuilj';
+import phaseStyles from './styles/Phase.module.scss';
+import taskStyles from './styles/Task.module.scss';
+import badgeStyles from './styles/Badge.module.scss';
+import { ArrowUp2, Edit2, TickSquare, CloseSquare } from 'iconsax-react';
 
 export type TemplatePhaseTaskStatus = 'done' | 'blocked';
 
@@ -33,64 +33,33 @@ interface PhaseCardProps {
 
 const PhaseToggleButton: React.FC<{ isExpanded: boolean; onClick: () => void }> = ({ isExpanded, onClick }) => (
   <button
+    type="button"
     onClick={onClick}
-    className={`${phaseStyles.toggleButton} ${isExpanded ? phaseStyles.expanded : phaseStyles.collapsed}`}
-    data-name="vuesax/bulk/arrow-up"
+    className={phaseStyles.toggleButton}
+    aria-expanded={isExpanded}
+    aria-label={isExpanded ? 'بستن فاز' : 'باز کردن فاز'}
+    data-expanded={isExpanded ? 'true' : 'false'}
   >
-    <div className="absolute contents inset-0">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-        <g id="arrow-up">
-          <path d={svgPaths.p9f39700} fill="var(--fill-0, #007BFF)" id="Vector" />
-          <path d={svgPaths.p369d6c00} fill="var(--fill-0, #007BFF)" id="Vector_2" opacity="0.4" />
-        </g>
-      </svg>
-    </div>
+    <ArrowUp2 size={22} color="var(--primary-600, #007BFF)" variant="Bold" />
   </button>
 );
 
 const EditButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <div data-name="Component 4">
-    <div className={taskStyles.editButton} data-name="vuesax/bulk/edit-2" onClick={onClick}>
-      <div className="absolute contents inset-0">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-          <g id="edit-2">
-            <path d={svgPaths.p3dd95700} fill="var(--fill-0, #007BFF)" id="Vector" opacity="0.4" />
-            <path d={svgPaths.p33964d80} fill="var(--fill-0, #007BFF)" id="Vector_2" opacity="0.4" />
-            <path d={svgPaths.p10a34900} fill="var(--fill-0, #007BFF)" id="Vector_3" />
-          </g>
-        </svg>
-      </div>
-    </div>
-  </div>
+  <button type="button" className={taskStyles.editButton} onClick={onClick} aria-label="اختصاص تسک">
+    <Edit2 size={22} color="var(--primary-600, #2F6AFF)" variant="Bulk" />
+  </button>
 );
 
 const StatusIcon: React.FC<{ status: TemplatePhaseTaskStatus }> = ({ status }) => {
   const isDone = status === 'done';
 
   return (
-    <div className={taskStyles.statusIcon}>
-      <div
-        className={taskStyles.icon}
-        data-name={isDone ? 'vuesax/bulk/tick-square' : 'vuesax/bulk/close-square'}
-      >
-        <div className="absolute contents inset-0">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-            <g id={isDone ? 'tick-square' : 'close-square'}>
-              <path
-                d={svgPaths.pd3eef80}
-                fill={isDone ? 'var(--fill-0, #28A745)' : 'var(--fill-0, #E70218)'}
-                id="Vector"
-                opacity="0.4"
-              />
-              <path
-                d={isDone ? svgPaths.p1b028e00 : svgPaths.p2bbbf000}
-                fill={isDone ? 'var(--fill-0, #28A745)' : 'var(--fill-0, #E70218)'}
-                id="Vector_2"
-              />
-            </g>
-          </svg>
-        </div>
-      </div>
+    <div className={taskStyles.statusIcon} data-status={status}>
+      {isDone ? (
+        <TickSquare size={26} color="var(--success-600, #28A745)" variant="Bulk" />
+      ) : (
+        <CloseSquare size={26} color="var(--danger-600, #E70218)" variant="Bulk" />
+      )}
     </div>
   );
 };

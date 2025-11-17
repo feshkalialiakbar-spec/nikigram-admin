@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import styles from "./TicketMessageCard.module.scss";
 import Text from "@/components/ui/text/Text";
 
@@ -52,7 +53,7 @@ export default function TicketMessageCard({
       }).format(messageDate);
 
       return `${datePart}، ${time}`;
-    } catch (error) {
+    } catch (_error) {
       return dateString;
     }
   };
@@ -78,8 +79,6 @@ export default function TicketMessageCard({
 
   const displayName = getDisplayName(participant, message.is_mine);
   const hasAttachment = message.attachments && message.attachments.length > 0;
-  // در آینده می‌توان از API فیلد is_edited را دریافت کرد
-  const isEdited = false; // message.is_edited || false;
 
   // تابع برای ساخت URL فایل
   const getFileUrl = (fileUid: string): string => {
@@ -95,16 +94,23 @@ export default function TicketMessageCard({
     >
       <div className={styles["ticket-message-card__header"]}>
         <div className={styles["ticket-message-card__header-avatar"]}>
-          <img
+          <Image
             src={avatarSrc}
             alt={displayName}
             width={24}
             height={24}
+            unoptimized
             referrerPolicy="no-referrer"
             onError={() => {
               if (avatarSrc !== fallbackAvatar) {
                 setAvatarSrc(fallbackAvatar);
               }
+            }}
+            style={{
+              width: 24,
+              height: 24,
+              borderRadius: "50%",
+              objectFit: "cover",
             }}
           />
         </div>

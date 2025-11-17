@@ -70,7 +70,7 @@ export default function TicketBar({ ticket, loading, className, onTicketStatusCh
       setIsProcessing(false);
       setIsModalOpen(false);
     }
-  }, [showError, showSuccess, ticket?.ticket_id]);
+  }, [showError, showSuccess, ticket?.ticket_id, onTicketStatusChange]);
 
   return (
     <>

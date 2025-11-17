@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import styles from './styles/SelectedTemplateOverview.module.scss';
-import headerStyles from '../../../../../app/test/styles/Header.module.css';
+import headerStyles from './styles/Header.module.scss';
 
 const placeholderPhases = Array.from({ length: 3 });
 

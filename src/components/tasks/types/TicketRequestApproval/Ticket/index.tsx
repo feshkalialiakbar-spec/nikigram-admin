@@ -40,6 +40,15 @@ const isClosedStatus = (value?: string | null): boolean => {
   return CLOSED_TOKENS.includes(value.trim().toLowerCase());
 };
 
+type ChatPageItemLite = {
+  id?: number | string;
+  description?: string;
+  text?: string;
+  created_at?: string;
+  is_owner?: boolean;
+  sender_name?: string;
+};
+
 export default function App(props: Partial<TicketRequestApprovalProps>) {
   const [ticket, setTicket] = useState<TicketLite | null>(null);
   const [loadingTicket, setLoadingTicket] = useState(true);
@@ -100,7 +109,7 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
           status_value: first?.status_value || 'پاسخ داده شده',
           ticket_id: first?.ticket_id ?? ticketId,
         });
-      } catch (e) {
+      } catch (_error) {
         setTicket({
           subject: 'تیکت به پشتیبانی',
           created_at: new Date().toISOString(),
@@ -114,11 +123,11 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
       }
     };
     loadTicket();
-  }, []);
+  }, [props.rawApiData, ticketId]);
 
   // no date utilities needed here (cards format their own time)
 
-  const mapApiMessages = (apiItems: any[]): ChatMessage[] =>
+  const mapApiMessages = (apiItems: ChatPageItemLite[] = []): ChatMessage[] =>
     (apiItems || []).map((m) => ({
       id: m.id ?? `${m.created_at}-${Math.random()}`,
       text: m.description || m.text || '',

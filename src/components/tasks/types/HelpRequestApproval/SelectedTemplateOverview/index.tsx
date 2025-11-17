@@ -16,8 +16,8 @@ import PhaseCard, { type PhaseActionPayload } from './PhaseCard';
 import TaskAssignmentDrawer, {
   type TaskAssignmentSubmitPayload,
 } from './TaskAssignmentDrawer';
-import headerStyles from '../../../../../app/test/styles/Header.module.css';
-import statsStyles from '../../../../../app/test/styles/Stats.module.css';
+import headerStyles from './styles/Header.module.scss';
+import statsStyles from './styles/Stats.module.scss';
 import {
   getTaskAssignmentsFromCookie,
   saveTaskAssignmentToCookie,
