@@ -13,6 +13,7 @@ import {
   TicketParticipantDto,
   ChatMessage,
 } from './lib/types';
+import TicketBar from '../TicketBar';
 
 type RawTicketData = {
   ticket_details?: {
@@ -307,84 +308,91 @@ export default function App(props: Partial<TicketRequestApprovalProps>) {
   );
 
   return (
-    <div className={styles["ticket-detail"]}>
-      <div className={styles["ticket-detail__header"]}>
-        <p dir="auto" style={{ margin: 0 }}>{ticket?.subject || 'تیکت به پشتیبانی'}</p>
-      </div>
+    <div className={styles["ticket-system-container"]}>
+      <div className={styles["ticket-detail"]}>
+        <div className={styles["ticket-detail__header"]}>
+          <p dir="auto" style={{ margin: 0 }}>{ticket?.subject || 'تیکت به پشتیبانی'}</p>
+        </div>
 
-      <div ref={listRef} className={styles["ticket-detail__messages"]} style={{ position: 'relative' }}>
-        {booting && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8))',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-              padding: 16,
-              zIndex: 1,
-            }}
-          >
-            <div style={{ width: '60%', height: 16, borderRadius: 8, background: 'var(--gray-100)' }} />
-            <div style={{ width: '75%', height: 48, borderRadius: 12, background: 'var(--gray-100)' }} />
-            <div style={{ alignSelf: 'flex-end', width: '55%', height: 16, borderRadius: 8, background: 'var(--gray-100)' }} />
-            <div style={{ alignSelf: 'flex-end', width: '70%', height: 40, borderRadius: 12, background: 'var(--gray-100)' }} />
-            <div style={{ width: '65%', height: 16, borderRadius: 8, background: 'var(--gray-100)' }} />
-          </div>
-        )}
-        <div ref={topSentinelRef} />
-        {ticketMessages.length > 0
-          ? ticketMessages.map((msg) => {
-            const participant = getParticipantInfo(msg.user_id, msg.cust_id);
-            return (
-              <TicketMessageCard
-                key={String(msg.message_id)}
-                message={msg}
-                participant={participant}
-              />
-            );
-          })
-          : simpleMessages.map((m) => {
-            const numericId = typeof m.id === 'number' ? m.id : Number.parseInt(String(m.id).replace(/\D/g, '')) || Date.now();
-            const fake: TicketMessageDto = {
-              message_id: numericId,
-              user_id: m.sender === 'user' ? 0 : 1,
-              cust_id: 0,
-              content: m.text,
-              message_type: "text",
-              attachment_url: "",
-              file_extension: null,
-              file_size: null,
-              sent_at: m.created_at,
-              is_mine: m.sender === 'user',
-              is_read: null,
-              attachments: (m.attachments || []).map(a => ({
-                file_uid: a.file_uid,
-                file_name: a.file_name || '',
-                file_extension: (a.file_extension || '').toString(),
-                file_size: typeof a.file_size === 'number' ? a.file_size : 0,
-              })),
-            };
-            return (
-              <TicketMessageCard
-                key={String(m.id)}
-                message={fake}
-                participant={null}
-              />
-            );
-          })}
-      </div>
+        <div ref={listRef} className={styles["ticket-detail__messages"]} style={{ position: 'relative' }}>
+          {booting && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8))',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+                padding: 16,
+                zIndex: 1,
+              }}
+            >
+              <div style={{ width: '60%', height: 16, borderRadius: 8, background: 'var(--gray-100)' }} />
+              <div style={{ width: '75%', height: 48, borderRadius: 12, background: 'var(--gray-100)' }} />
+              <div style={{ alignSelf: 'flex-end', width: '55%', height: 16, borderRadius: 8, background: 'var(--gray-100)' }} />
+              <div style={{ alignSelf: 'flex-end', width: '70%', height: 40, borderRadius: 12, background: 'var(--gray-100)' }} />
+              <div style={{ width: '65%', height: 16, borderRadius: 8, background: 'var(--gray-100)' }} />
+            </div>
+          )}
+          <div ref={topSentinelRef} />
+          {ticketMessages.length > 0
+            ? ticketMessages.map((msg) => {
+              const participant = getParticipantInfo(msg.user_id, msg.cust_id);
+              return (
+                <TicketMessageCard
+                  key={String(msg.message_id)}
+                  message={msg}
+                  participant={participant}
+                />
+              );
+            })
+            : simpleMessages.map((m) => {
+              const numericId = typeof m.id === 'number' ? m.id : Number.parseInt(String(m.id).replace(/\D/g, '')) || Date.now();
+              const fake: TicketMessageDto = {
+                message_id: numericId,
+                user_id: m.sender === 'user' ? 0 : 1,
+                cust_id: 0,
+                content: m.text,
+                message_type: "text",
+                attachment_url: "",
+                file_extension: null,
+                file_size: null,
+                sent_at: m.created_at,
+                is_mine: m.sender === 'user',
+                is_read: null,
+                attachments: (m.attachments || []).map(a => ({
+                  file_uid: a.file_uid,
+                  file_name: a.file_name || '',
+                  file_extension: (a.file_extension || '').toString(),
+                  file_size: typeof a.file_size === 'number' ? a.file_size : 0,
+                })),
+              };
+              return (
+                <TicketMessageCard
+                  key={String(m.id)}
+                  message={fake}
+                  participant={null}
+                />
+              );
+            })}
+        </div>
 
-      <TicketMessageInput
-        value={inputValue}
-        onChange={setInputValue}
-        onSend={handleSend}
-        isDesktop={true}
-        onFileSelected={handleFileSelected}
-        className={styles["ticket-detail__input-area"]}
-        iconsClassName={styles["ticket-detail__input-icons"]}
-        disabled={false}
+        <TicketMessageInput
+          value={inputValue}
+          onChange={setInputValue}
+          onSend={handleSend}
+          isDesktop={true}
+          onFileSelected={handleFileSelected}
+          className={styles["ticket-detail__input-area"]}
+          iconsClassName={styles["ticket-detail__input-icons"]}
+          disabled={false}
+        />
+      </div>
+      <TicketBar
+        ticket={ticket}
+        loading={loadingTicket}
+        className={styles['ticket-sidebar']}
       />
     </div>
   );

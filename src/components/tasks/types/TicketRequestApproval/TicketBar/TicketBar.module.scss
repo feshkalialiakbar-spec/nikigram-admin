@@ -1,0 +1,184 @@
+.profileSidebar {
+  background: #dee9f4;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 16px;
+  border-radius: 20px;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  color: #435a73;
+}
+
+.ticketInfoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.profileHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.profileIcon {
+  width: 40px;
+  height: 40px;
+}
+
+.profileText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-iran-sans, 'IRANSansXFaNum', sans-serif);
+}
+
+.profileName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #435a73;
+}
+
+.profileRole {
+  font-size: 12px;
+  color: #5e758e;
+}
+
+.ticketDetailsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.ticketDetailsTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5e758e;
+  text-align: center;
+}
+
+.ticketInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.ticketInfoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 13px;
+  color: #435a73;
+  gap: 12px;
+}
+
+.ticketInfoLabel {
+  color: #5e758e;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.ticketInfoValue {
+  font-weight: 600;
+  color: #334558;
+  text-align: left;
+}
+
+.ticketInfoValueSuccess {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.closeTicketSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.closeTicketInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: right;
+}
+
+.closeTicketTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334558;
+}
+
+.closeTicketDescription {
+  font-size: 12px;
+  color: #435a73;
+  line-height: 1.6;
+}
+
+.closeButton {
+  position: relative;
+  width: 100%;
+  border-radius: 24px;
+  border: 2px solid #e70218;
+  color: #e70218;
+  padding: 10px 24px;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  background: transparent;
+}
+
+.closeButton:disabled,
+.closeButton[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.closeButton:not(:disabled):hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.loadingText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  width: 100%;
+  font-size: 12px;
+  color: #5e758e;
+}
+
+@media (max-width: 1280px) {
+  .profileSidebar {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .profileSidebar {
+    border-radius: 16px;
+    background: var(--main-white, #fff);
+    box-shadow: 0 12px 24px rgba(32, 55, 90, 0.08);
+    padding: 20px 16px;
+  }
+
+  .ticketInfoRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+

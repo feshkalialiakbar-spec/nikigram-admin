@@ -102,4 +102,23 @@ export async function sendFileMessage(params: {
   }
 }
 
+export async function closeTicket(params: {
+  ticketId: number | string;
+  token: string;
+}): Promise<void> {
+  const base = getApiBaseUrl();
+  const url = `${base}/api/ticket/chat/close-ticket/${params.ticketId}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${params.token}`,
+    },
+  });
+  if (!res.ok) {
+    const message = await res.text().catch(() => '');
+    throw new Error(message || `Failed to close ticket: ${res.status}`);
+  }
+}
+
 
