@@ -59,7 +59,7 @@ export default function TicketBar({ ticket, loading, className, onTicketStatusCh
       if (!token) {
         throw new Error('Missing auth token');
       }
-      const message = await closeTicket({ ticketId: ticket.ticket_id, token });
+      const message = await closeTicket({ ticketId: location.pathname.split('/')[3], token });
       showSuccess(message || 'تیکت با موفقیت بسته شد.');
       onTicketStatusChange?.('closed');
     } catch (error) {

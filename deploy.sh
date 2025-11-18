@@ -81,18 +81,11 @@ ssh -p "$SERVER_PORT" "$SERVER_USER@$SERVER_IP" "
     START_COMMAND='npm run start'
   fi
 
-  for i in {1..30}; do
-    echo \"Deleting PM2 process $i if it exists...\"
-    pm2 delete \$i >/dev/null 2>&1 || true
-  done
-
-  echo 'Restarting PM2...'
-
   if pm2 info next-app >/dev/null 2>&1; then
     pm2 delete next-app
   fi
 
-  pm2 start bash --name next-app -- -lc \"\$START_COMMAND\"
+  pm2 start bash --name next-app  -- -lc \"\$START_COMMAND\"
 
   pm2 save
 "

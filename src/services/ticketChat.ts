@@ -127,7 +127,7 @@ export async function closeTicket(params: {
   token: string;
 }): Promise<string> {
   const base = getApiBaseUrl();
-  const url = `${base}/api/ticket/chat/close-ticket/${params.ticketId}`;
+  const url = `${base}/api/admin/task/ticket/close-ticket/${params.ticketId}`;
   const res = await fetch(url, {
     method: 'POST',
     headers: {
