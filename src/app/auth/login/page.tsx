@@ -146,7 +146,6 @@ export default function Signin() {
                   type="button"
                   buttonClassName={styles["signin__forgot-password"]}
                   onClick={() => {
-                    console.log("Forgot password clicked");
                   }}
                   ariaLabel="بازیابی رمز عبور"
                 >

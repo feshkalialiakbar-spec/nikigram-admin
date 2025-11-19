@@ -81,7 +81,7 @@ prepare_upload() {
         name=$(basename "$item")
         
         case "$name" in
-            node_modules|.git|.github|.next|document)
+            node_modules|.git|.github|.next|document|logs)
                 log_warn "Skipping folder: $name"
                 ((skipped_count++))
                 continue

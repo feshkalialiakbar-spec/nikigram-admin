@@ -20,8 +20,8 @@ const IndividualProfileApproval: React.FC<ProfileChangeApprovalProps> = ({
     { id: 'profileType', label: 'نوع پروفایل', oldValue: request.realProfile.profileType, newValue: request.realProfile.profileType },
   ];
 
-  const handleApproveRow = (id: string) => console.log('Approve:', id);
-  const handleRejectRow = (id: string) => console.log('Reject:', id);
+  const handleApproveRow = (_id: string) => {};
+  const handleRejectRow = (_id: string) => {};
 
   return (
     <div className={`${styles.container} ${className || ''}`}>

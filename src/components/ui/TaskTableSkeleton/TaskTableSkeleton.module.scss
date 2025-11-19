@@ -268,40 +268,4 @@
     font-size: 16px;
   }
 }
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-  .tableSkeletonContainer {
-    background: var(--main-white-dark, #1f2937);
-    border-color: var(--gray-200-dark, #374151);
-  }
-  
-  .filterSkeleton {
-    background: var(--filter-bg-dark, #374151);
-    border-bottom-color: var(--gray-200-dark, #374151);
-  }
-  
-  .tableHeader {
-    background: var(--header-bg-dark, #374151);
-    border-bottom-color: var(--border-dark, #4b5563);
-    color: var(--text-dark, #f9fafb);
-  }
-  
-  .tableRow {
-    border-bottom-color: var(--border-dark, #4b5563);
-    
-    &:hover {
-      background-color: var(--hover-bg-dark, #374151);
-    }
-    
-    &:nth-child(even) {
-      background-color: var(--even-bg-dark, #374151);
-    }
-  }
-  
-  .paginationSkeleton {
-    background: var(--pagination-bg-dark, #374151);
-    border-top-color: var(--gray-200-dark, #374151);
-  }
-}
-
+ 

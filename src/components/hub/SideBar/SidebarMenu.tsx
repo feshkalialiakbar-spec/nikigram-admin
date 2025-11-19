@@ -33,8 +33,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   const [isDesktop, setIsDesktop] = useState<boolean>(false)
   const [selectedParent, setSelectedParent] = useState<TaskMenuItem | null>(null)
 
-  const handleItemClick = useCallback((href: string, _label?: string) => {
-    console.log(_label)
+  const handleItemClick = useCallback((href: string) => {
     setActiveItem(href)
     router.push(href)
     // Close children dock when navigating to a child item
@@ -73,7 +72,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
       }
     } else {
       // Navigate if no children
-      handleItemClick(action.href, action.label)
+      handleItemClick(action.href)
       setSelectedParent(null)
     }
   }, [selectedParent, expandedParents, handleParentToggle, handleItemClick])
@@ -270,7 +269,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                           href={child.href}
                           onClick={(e) => {
                             e.preventDefault()
-                            handleItemClick(child.href, child.label)
+                            handleItemClick(child.href)
                           }}
                         >
                           <span>{child.label}</span>

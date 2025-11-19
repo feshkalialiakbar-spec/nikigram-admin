@@ -93,21 +93,4 @@
     padding: 12px;
   }
 }
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-  .sidebarSkeleton {
-    background: var(--sidebar-bg-dark, #1f2937);
-    border-left-color: var(--border-color-dark, #374151);
-  }
-  
-  .logoSection {
-    border-bottom-color: var(--border-color-dark, #374151);
-  }
-  
-  .userSection {
-    background: var(--user-section-bg-dark, #374151);
-    border-color: var(--border-color-dark, #374151);
-  }
-}
-
+ 

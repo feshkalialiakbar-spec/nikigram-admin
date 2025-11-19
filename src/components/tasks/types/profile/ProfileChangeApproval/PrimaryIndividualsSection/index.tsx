@@ -18,10 +18,6 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
   onSelectPrimary,
   className
 }) => {
-  const handleDocumentDownload = (document: PrimaryIndividual['document']) => {
-    console.log('Download document:', document);
-    // The actual download is handled by the Link component in FileDownload
-  };
 
   return (
     <div className={`${styles.primaryIndividualsSection} ${className || ''}`}>
@@ -69,7 +65,6 @@ const PrimaryIndividualsSection: React.FC<PrimaryIndividualsSectionProps> = ({
                 fileUrl={(individual.document.url || '') as string}
                 fileName={individual.document.filename || 'document'}
                 title={individual.document.filename || 'document'}
-                onDownload={() => handleDocumentDownload(individual.document)}
               />
             </div>
           </div>

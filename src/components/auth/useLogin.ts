@@ -94,8 +94,6 @@ export const useLogin = (): UseLoginReturn => {
         auth: 'username_password'
       });
 
-      console.log('Login API response:', response);
-
       const isSuccess =
         response?.success === true ||
         response?.status === '1' ||
@@ -130,9 +128,8 @@ export const useLogin = (): UseLoginReturn => {
       router.refresh();
 
     } catch (error) {
-      console.error('Login error:', error);
       setErrors({
-        general: 'خطا در اتصال به سرور. لطفاً مجدداً تلاش کنید.'
+        general: 'خطا در اتصال به سرور. لطفاً مجدداً تلاش کنید.'+error
       });
     } finally {
       setIsLoading(false);
@@ -157,8 +154,6 @@ export const useLogin = (): UseLoginReturn => {
         otptype: 'login'
       });
 
-      console.log('OTP request response:', otpResponse); // Debug log
-
       if (otpResponse && otpResponse.success === true) {
         // Show OTP input modal or redirect to OTP page
         const otp = prompt('کد یکبار مصرف ارسال شده را وارد کنید:');
@@ -167,8 +162,6 @@ export const useLogin = (): UseLoginReturn => {
             mobile: values.phone,
             otp: otp
           });
-
-          console.log('OTP login response:', loginResponse); // Debug log
 
           // Check if OTP login is successful
           const isSuccess = loginResponse && (loginResponse.success === true || !!(loginResponse.token || loginResponse.access_token));
@@ -196,8 +189,7 @@ export const useLogin = (): UseLoginReturn => {
         setErrors({ general: otpResponse?.message || 'خطا در ارسال کد. لطفاً مجدداً تلاش کنید.' });
       }
     } catch (error) {
-      console.error('OTP login error:', error);
-      setErrors({ general: 'خطا در اتصال به سرور. لطفاً مجدداً تلاش کنید.' });
+      setErrors({ general: 'خطا در اتصال به سرور. لطفاً مجدداً تلاش کنید.' + error });
     } finally {
       setIsOtpLoading(false);
     }

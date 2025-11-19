@@ -126,17 +126,14 @@ const ProfileSubmissionTestPage: React.FC = () => {
   };
 
   const handleApprove = (requestId: string) => {
-    console.log('Approving request:', requestId);
-    alert('درخواست تایید شد');
+    alert(`درخواست ${requestId} تایید شد`);
   };
 
   const handleReject = (requestId: string) => {
-    console.log('Rejecting request:', requestId);
-    alert('درخواست رد شد');
+    alert(`درخواست ${requestId} رد شد`);
   };
 
   const handleSelectPrimary = (individualId: string) => {
-    console.log('Selecting primary individual:', individualId);
     alert(`فرد اصلی انتخاب شد: ${individualId}`);
   };
 

@@ -26,11 +26,7 @@ const safeBuildDocDownloadUrl = (value?: string | null): string | undefined => {
     if (resolved) {
       return resolved;
     }
-  } catch (error) {
-    console.warn('[taskMappers] buildDocDownloadUrl failed, fallback in use', {
-      value,
-      error,
-    });
+  } catch {
   }
   const sanitized = String(value).replace(/^\/+/, '');
   const envBase = process.env.NEXT_PUBLIC_DOC_URL?.replace(/\/$/, '');
@@ -117,15 +113,10 @@ const mapPartyDocsToProfileDocuments = (
 export const mapProfileChangeRequestToComponent = (
   apiResponse: ApiProfileChangeRequestResponse
 ): ProfileChangeRequest => {
-  console.log('Mapping profile change request:', apiResponse);
 
   const { task_details, party_request_details, party_docs_data, changed_fields } = apiResponse;
 
   if (!task_details || !party_request_details) {
-    console.warn('[taskMappers] profile change mapper received incomplete payload', {
-      hasTask: Boolean(task_details),
-      hasPartyDetails: Boolean(party_request_details),
-    });
     return {
       id: task_details?.task_id?.toString() || 'unknown',
       requestDate: task_details?.created_at ? formatDate(task_details.created_at) : '—',
@@ -348,10 +339,6 @@ export const mapHelpRequestToComponent = (
   const { task_details, project_request_details } = apiResponse;
 
   if (!task_details || !project_request_details) {
-    console.warn('[taskMappers] help request mapper received incomplete payload', {
-      hasTask: Boolean(task_details),
-      hasProjectDetails: Boolean(project_request_details),
-    });
     return buildFallbackHelpRequest(task_details, options?.fallbackTaskId);
   }
 
@@ -461,7 +448,6 @@ const getStatusLabel = (status: number): string => {
 export const mapCooperationRequestToComponent = (
   apiResponse: ApiCooperationRequestResponse
 ): CooperationRequestDetails => {
-  console.log('Mapping cooperation request:', apiResponse);
 
   const { task_details, cooperation_request_details, specialization_details } = apiResponse;
 
@@ -525,10 +511,6 @@ export const mapTicketRequestToComponent = (
   const { task_details, ticket_details } = apiResponse;
 
   if (!task_details || !ticket_details) {
-    console.warn('[taskMappers] ticket request mapper received incomplete payload', {
-      hasTask: Boolean(task_details),
-      hasTicketDetails: Boolean(ticket_details),
-    });
     return {
       id: task_details?.task_id?.toString() || 'unknown',
       requestDate: task_details?.created_at ? formatDate(task_details.created_at) : '—',

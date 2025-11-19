@@ -68,13 +68,7 @@ export const fetchMyTasks = async (
   const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
   const offset = params?.offset ?? 0;
   const fallbackData = createFallbackPagination({ limit, offset });
-console.log('params', params);
-console.log('limit', limit);
-console.log('offset', offset);
-console.log('fallbackData', fallbackData);
-console.log('process.env.NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
-console.log('headers', 'as;kklgdihlsdkeirghbiwerghi uds fvnskdfghb7ertghnee lrty295t wne vbgnw56trq83 bfxqmsdvf v6 SZRDFGB 9AHXCVUXBVZ Isf HBLSZY');
-  try {
+   try {
     const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?limit=${limit}&offset=${offset}`,
@@ -161,7 +155,52 @@ export const fetchUnassignedTasks = async (
     };
   }
 };
+export const fetchTickets = async (
+  params?: PaginationParams
+): Promise<TaskServiceResult<PaginatedResponse<TaskInterface>>> => {
+  const limit = params?.limit ?? TASK_DEFAULT_LIMIT;
+  const offset = params?.offset ?? 0;
+  const fallbackData = createFallbackPagination({ limit, offset });
 
+  try {
+    const headers = await getAuthorizationHeaders();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/all_tasks/?ref_type=6&limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+        headers,
+      }
+    );
+    const payload = await fetchJsonSafely(response);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        status: response.status,
+        message: parseErrorMessage(payload, 'خطا در دریافت تسک‌های بدون مسئول'),
+        data: fallbackData,
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        tasks: payload?.tasks ?? [],
+        total: (payload?.total_count ?? payload?.total) ?? 0,
+        limit,
+        offset,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching unassigned tasks:', error);
+    return {
+      success: false,
+      message: 'خطا در ارتباط با سرور',
+      error,
+      data: fallbackData,
+    };
+  }
+};
 export const fetchTasksByStatus = async (
   statusId: number,
   params?: PaginationParams
@@ -171,6 +210,11 @@ export const fetchTasksByStatus = async (
   const fallbackData = createFallbackPagination({ limit, offset });
 
   try {
+    console.log('statusId', statusId);
+    console.log('limit', limit);
+    console.log('offset', offset);
+    console.log('process.env.NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
+    console.log('headers', 'as;kklgdihlsdkeirghbiwerghi uds fvnskdfghb7ertghnee lrty295t wne vbgnw56trq83 bfxqmsdvf v6 SZRDFGB 9AHXCVUXBVZ Isf HBLSZY');
     const headers = await getAuthorizationHeaders();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/my_list/?status_id=${statusId}&limit=${limit}&offset=${offset}`,
@@ -252,7 +296,7 @@ export const fetchSharedPoolTasks = async (
   try {
     const headers = await getAuthorizationHeaders();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/?has_assignment=false`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/admin/task/shared-pool/tasks/?has_assignment=false&limit=${limit}&offset=${offset}&task_status_id=37`,
       {
         method: 'GET',
         headers,

@@ -1,0 +1,77 @@
+.myTasks {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  }
+
+.header {
+  background: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  direction: rtl;
+  text-align: right;
+}
+
+.content {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  direction: rtl;
+}
+
+.error p {
+  margin: 0 0 16px 0;
+  color: #dc3545;
+  font-size: 16px;
+  text-align: center;
+}
+
+.retryButton {
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background: #0056b3;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 16px 20px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+}

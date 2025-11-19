@@ -1,5 +1,4 @@
 'use client';
-
 import { useMemo, useState, type FC } from 'react';
 import { fetchSharedPoolTasks } from '@/services/task/taskServices';
 import { TaskDashboard } from '@/components/tasks';
@@ -8,20 +7,16 @@ import styles from './index.module.scss';
 import WithNavbarLayout from '@/components/layouts/withNavbarLayout/WithNavbarLayout';
 import Button from '@/components/ui/actions/button/Button';
 import { TaskTableSkeleton } from '@/components/ui/TaskTableSkeleton';
-
 interface SharedPoolProps {
   className?: string;
 }
-
 const SharedPool: FC<SharedPoolProps> = ({ className }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
-
   const paginationParams = useMemo(() => ({
     limit: itemsPerPage,
     offset: (currentPage - 1) * itemsPerPage,
   }), [itemsPerPage, currentPage]);
-
   const {
     tasks,
     total,
@@ -29,11 +24,9 @@ const SharedPool: FC<SharedPoolProps> = ({ className }) => {
     error,
     refetch,
   } = usePaginatedTaskService(fetchSharedPoolTasks, paginationParams);
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
   if (loading) {
     return (
       <WithNavbarLayout>
@@ -48,7 +41,6 @@ const SharedPool: FC<SharedPoolProps> = ({ className }) => {
       </WithNavbarLayout>
     );
   }
-
   if (error) {
     return (
       <div className={`${styles.SharedPool} ${className || ''}`}>
@@ -64,7 +56,6 @@ const SharedPool: FC<SharedPoolProps> = ({ className }) => {
       </div>
     );
   }
-
   return (
     <WithNavbarLayout>
       <div className={`${styles.SharedPool} ${className || ''}`}>
@@ -85,7 +76,4 @@ const SharedPool: FC<SharedPoolProps> = ({ className }) => {
     </WithNavbarLayout>
   );
 };
-
 export default SharedPool;
-
-

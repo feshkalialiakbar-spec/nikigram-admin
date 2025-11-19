@@ -67,22 +67,11 @@ export const buildDocDownloadUrl = (value?: string | null): string => {
   const docBase = buildBaseFromUrl(parsed);
   const downloadBase = ensureDownloadBase(docBase);
 
-  const isProd = process.env.NODE_ENV === "production";
-
+ 
   // استخراج slug و search
   const [pathPart, searchPart] = value.split("?");
   const slug = pathPart.replace(/^\/?api\/sys\/files\/download\/?/, "").replace(/^\/+/, "");
   const search = searchPart ? `?${searchPart}` : "";
-
-  if (!isProd) {
-    console.debug("[docUrl] buildDocDownloadUrl input", {
-      env: rawBase,
-      docBase,
-      downloadBase,
-      value,
-      slug,
-    });
-  }
 
   if (downloadBase) {
     return `${downloadBase}/${slug}${search}`;

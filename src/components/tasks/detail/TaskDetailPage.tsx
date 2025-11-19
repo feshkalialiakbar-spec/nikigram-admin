@@ -59,7 +59,6 @@ const TaskDetailPage: React.FC = () => {
         setError(null);
 
         const { taskData, redirectData } = await fetchTaskDetail(taskId);
-        console.log('API Response data:', { taskData, redirectData });
 
         // Determine task type based on ref_type
         if (redirectData.ref_type === 1) {
@@ -169,8 +168,7 @@ const TaskDetailPage: React.FC = () => {
     }
   };
 
-  const handleSelectPrimary = (individualId: string) => {
-    console.log('Selecting primary individual:', individualId);
+  const handleSelectPrimary = (_individualId: string) => {
     // TODO: Implement primary individual selection logic
   };
 

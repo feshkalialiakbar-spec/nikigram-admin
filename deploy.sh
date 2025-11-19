@@ -25,14 +25,14 @@ UPLOAD_DIR="/tmp/next-upload"
 rm -rf "$UPLOAD_DIR"
 mkdir -p "$UPLOAD_DIR"
 
-echo "Preparing clean upload directory..."
+  echo "Preparing clean upload directory..."
 
 shopt -s dotglob
 for item in ./*; do
   name=$(basename "$item")
 
   case "$name" in
-    node_modules|.git|.github|.next|document)
+    node_modules|.git|.github|.next|document|logs)
       echo "Skipping folder: $name"
       continue
       ;;

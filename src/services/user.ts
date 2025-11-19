@@ -48,7 +48,7 @@ export const GetOtpWithMobile = async ({ mobile }: { mobile: string }) => {
 
     return await response.json()
   } catch (error: unknown) {
-    console.log(error)
+    console.error('GetOtpWithMobile error:', error)
   }
 }
 
