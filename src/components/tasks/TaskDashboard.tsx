@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TaskDashboardProps } from './types';
 import { useTasksQuery, useTaskFilters, useTaskPagination } from './hooks';
 import { DEFAULT_FILTERS } from './utils';
@@ -37,7 +37,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
   );
 
   // Use external data if provided, otherwise use internal data
-  const tasks = shouldUseInternalQuery ? internalTasks : (externalTasks || []);
+  const tasks = useMemo(() => shouldUseInternalQuery ? internalTasks : (externalTasks || []), [shouldUseInternalQuery, internalTasks, externalTasks]);
   const loading = externalLoading !== undefined ? externalLoading : (shouldUseInternalQuery ? internalLoading : false);
   const error = externalError !== undefined ? externalError : (shouldUseInternalQuery ? internalError : null);
   const refetch = onRefetch || internalRefetch;
@@ -103,7 +103,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
         dateSet.add(persianDate);
       }
     });
-    
+
     // Convert to array and sort (newest first)
     const dates = Array.from(dateSet).sort((a, b) => {
       // Compare dates in format YYYY/MM/DD

@@ -1,10 +1,8 @@
  
 
 set -euo pipefail
-
 echo "Server IP: "
 read SERVER_IP
-
 echo "SSH Username: "
 read SERVER_USER
 

@@ -8,7 +8,7 @@ SERVER_IP="185.213.165.166"
 SERVER_USER="root"
 SERVER_PORT="1996"
 REMOTE_PATH="/var/www/hisabdarni"
-USE_YARN="n"  # Use npm instead of yarn
+USE_YARN="y"  # Use npm instead of yarn
 
 # Colors for output
 RED='\033[0;31m'
@@ -71,7 +71,7 @@ prepare_upload() {
         error_exit "Failed to create upload directory"
     fi
     
-    log_info "Copying files (excluding node_modules, .git, .github, .next, document)..."
+    log_info "Copying files (excluding node_modules, .git, .github, .next, document, package-lock.json)..."
     
     shopt -s dotglob
     local copied_count=0
@@ -83,6 +83,11 @@ prepare_upload() {
         case "$name" in
             node_modules|.git|.github|.next|document|logs)
                 log_warn "Skipping folder: $name"
+                ((skipped_count++))
+                continue
+                ;;
+            package-lock.json)
+                log_warn "Skipping package-lock.json (using Yarn)"
                 ((skipped_count++))
                 continue
                 ;;
@@ -138,6 +143,12 @@ cd "$REMOTE_PATH" || exit 1
 echo "[SERVER] Current directory: \$(pwd)"
 echo "[SERVER] Node version: \$(node --version 2>/dev/null || echo 'Not found')"
 echo "[SERVER] NPM version: \$(npm --version 2>/dev/null || echo 'Not found')"
+
+# Remove package-lock.json if exists (to avoid conflicts with Yarn)
+if [ "$USE_YARN" = "y" ] && [ -f "package-lock.json" ]; then
+    echo "[SERVER] Removing package-lock.json (using Yarn)..."
+    rm -f package-lock.json || true
+fi
 
 if [ "$USE_YARN" = "y" ]; then
     echo "[SERVER] Installing dependencies with Yarn..."
