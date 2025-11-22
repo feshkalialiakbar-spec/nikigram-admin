@@ -27,20 +27,15 @@ export const getStatusClass = (statusId: number): string => {
   return statusClassMap[statusId] || 'statusPending';
 };
 
-// Process options for filter dropdown
+// Process options for filter dropdown - mapped to ref_type values
 export const PROCESS_OPTIONS: { label: string; value: string }[] = [
-  { value: 'cooperation', label: 'درخواست همکاری' },
-  { value: 'help', label: 'درخواست کمک' },
-  { value: 'template', label: 'تمپلیت پروژه' },
-  { value: 'critical', label: 'بحرانی شدن پروژه' },
-  { value: 'tender', label: 'مناقصه' },
-  { value: 'comments', label: 'نظرات' },
-  { value: 'support', label: 'پشتیبانی' },
-  { value: 'sales', label: 'مدیریت فروش' },
-  { value: 'profile', label: 'پروفایل' },
-  { value: 'financial', label: 'مالی' },
-  { value: 'niki-yar', label: 'نیکی یار' },
-  { value: 'pos', label: 'درخواست پوز' },
+  { value: '1', label: 'درخواست تغییر پروفایل' },
+  { value: '2', label: 'درخواست کمک' },
+  { value: '3', label: 'تسک‌های پروژه' },
+  { value: '4', label: 'درخواست ایجاد تمپلیت' },
+  { value: '5', label: 'درخواست همکاری' },
+  { value: '6', label: 'تیکت پشتیبانی' },
+  { value: '7', label: 'درخواست تغییر اطلاعات کسب و کار' },
 ];
 
 // Personnel options for filter dropdown
@@ -51,15 +46,16 @@ export const PERSONNEL_OPTIONS = [
   { value: 'mohammad', label: 'محمد احمدی' },
 ];
 
-// Status options for filter dropdown
+// Status options for filter dropdown - mapped to status_id values
 export const STATUS_OPTIONS: { label: string; value: string }[] = [
-  { value: 'pending', label: 'در انتظار' },
-  { value: 'in_progress', label: 'در حال انجام' },
-  { value: 'completed', label: 'تکمیل شده' },
-  { value: 'approved', label: 'تایید شده' },
-  { value: 'needs_correction', label: 'نیاز به اصلاح' },
-  { value: 'rejected', label: 'رد شده' },
-  { value: 'cancelled', label: 'لغو شده' },
+  { value: '37', label: 'در انتظار انجام' },
+  { value: '38', label: 'در حال انجام' },
+  { value: '39', label: 'تکمیل شده' },
+  { value: '40', label: 'تایید شده' },
+  { value: '41', label: 'نیاز به اصلاح' },
+  { value: '43', label: 'رد شده' },
+  { value: '44', label: 'لغو شده' },
+  { value: '45', label: 'متوقف شده' },
 ];
 
 // Operation options for filter dropdown

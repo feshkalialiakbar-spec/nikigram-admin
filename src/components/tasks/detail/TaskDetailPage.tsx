@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileChangeApproval from '@/components/tasks/types/profile/ProfileChangeApproval';
 import IndividualProfileApproval from '@/components/tasks/types/profile/Individual';
+import BusinessProfileApproval from '@/components/tasks/types/profile/BusinessProfileApproval';
 import HelpRequestApproval from '@/components/tasks/types/HelpRequestApproval';
 import CooperationRequestApproval from '@/components/tasks/types/CooperationRequestApproval';
 import TemplateRequestApproval from '@/components/tasks/types/TemplateRequestApproval';
@@ -12,13 +13,14 @@ import TaskLayout from '@/components/tasks/detail/TaskLayout';
 import { ConfirmationModal, useToast } from '@/components/ui';
 import TaskDetailSkeleton from '@/components/tasks/detail/TaskDetailSkeleton';
 import Button from '@/components/ui/actions/button/Button';
-import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent, mapHelpRequestToComponent, mapTicketRequestToComponent } from '@/utils/taskMappers';
+import { mapProfileChangeRequestToComponent, mapCooperationRequestToComponent, mapTemplateRequestToComponent, mapHelpRequestToComponent, mapTicketRequestToComponent, mapBusinessProfileRequestToComponent } from '@/utils/taskMappers';
 import {
   ApiProfileChangeRequestResponse,
   ApiHelpRequestResponse,
   ApiCooperationRequestResponse,
   ApiTemplateRequestResponse,
   ApiTicketRequestResponse,
+  ApiBusinessProfileChangeRequestResponse,
 } from '@/components/tasks/types';
 import {
   fetchTaskDetail,
@@ -42,9 +44,10 @@ const TaskDetailPage: React.FC = () => {
     | ApiCooperationRequestResponse
     | ApiTemplateRequestResponse
     | ApiTicketRequestResponse
+    | ApiBusinessProfileChangeRequestResponse
     | null
   >(null);
-  const [taskType, setTaskType] = useState<'regular-profile' | 'individual-profile' | 'help' | 'template' | 'cooperation' | 'ticket' | null>(null);
+  const [taskType, setTaskType] = useState<'regular-profile' | 'individual-profile' | 'business-profile' | 'help' | 'template' | 'cooperation' | 'ticket' | null>(null);
 
   // Modal states
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -72,7 +75,7 @@ const TaskDetailPage: React.FC = () => {
         } else if (redirectData.ref_type === 6) {
           setTaskType('ticket');
         } else if (redirectData.ref_type === 7) {
-          setTaskType('regular-profile');
+          setTaskType('business-profile');
         } else {
           throw new Error(`Unknown task type: ${redirectData.ref_type}`);
         }
@@ -91,11 +94,19 @@ const TaskDetailPage: React.FC = () => {
 
   const handleApprove = async (requestId: string) => {
     setPendingRequestId(requestId);
+    if (taskType === 'business-profile') {
+      // BusinessProfileApproval handles its own drawer now
+      return;
+    }
     setShowApproveModal(true);
   };
 
   const handleReject = async (requestId: string) => {
     setPendingRequestId(requestId);
+    if (taskType === 'business-profile') {
+      // BusinessProfileApproval handles its own drawer now
+      return;
+    }
     setShowRejectModal(true);
   };
 
@@ -138,6 +149,9 @@ const TaskDetailPage: React.FC = () => {
         result = await approveCooperationRequest(pendingRequestId);
       } else if (taskType === 'ticket') {
         result = await approveTicketRequest(pendingRequestId);
+      } else if (taskType === 'business-profile') {
+        // BusinessProfileApproval handles its own API calls now
+        return;
       }
 
       const detail = typeof result?.detail === 'string' ? result.detail : undefined;
@@ -164,6 +178,7 @@ const TaskDetailPage: React.FC = () => {
     } finally {
       setActionLoading(false);
       setShowApproveModal(false);
+      setShowRejectModal(false);
       setPendingRequestId(null);
     }
   };
@@ -458,6 +473,24 @@ const TaskDetailPage: React.FC = () => {
           type="reject"
           loading={actionLoading}
         />
+      </>
+    );
+  }
+
+  if (taskType === 'business-profile' && taskData) {
+    const businessRequest = mapBusinessProfileRequestToComponent(
+      taskData as ApiBusinessProfileChangeRequestResponse
+    );
+    return (
+      <>
+        <TaskLayout>
+          <BusinessProfileApproval
+            request={businessRequest}
+            rawApiData={taskData as ApiBusinessProfileChangeRequestResponse}
+            onApprove={handleApprove}
+            onReject={handleReject}
+          />
+        </TaskLayout>
       </>
     );
   }

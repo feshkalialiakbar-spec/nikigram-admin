@@ -56,6 +56,7 @@ export interface FilterBarProps {
   filters: FilterOptions;
   onFilterChange: (filters: FilterOptions) => void;
   className?: string;
+  dateOptions?: { label: string; value: string }[];
 }
 
 export interface PaginationProps {
@@ -185,6 +186,68 @@ export interface ProfileChangeApprovalProps {
   className?: string;
 }
 
+export interface BusinessDocument {
+  id: string;
+  name: string;
+  fileType?: string;
+  fileSize?: string;
+  uploadDate?: string;
+  url?: string;
+  statusId?: number;
+  isVerified?: number;
+}
+
+export interface BusinessPlatform {
+  id: string;
+  accountName: string;
+  identifier: string;
+  platformName: string;
+  isDefault: boolean;
+  isActive: boolean;
+  isVerified: boolean;
+  link?: string;
+}
+
+export interface BusinessContactPerson {
+  fullName: string;
+  firstName?: string;
+  lastName?: string;
+  nationalId?: string;
+  mobile?: string;
+  avatar?: string;
+}
+
+export interface BusinessInfo {
+  title: string;
+  legalTitle?: string | null;
+  registrationCode?: string | null;
+  idNumber?: string | null;
+  description?: string | null;
+  address?: string | null;
+  cityId?: number | null;
+  logoUrl?: string;
+}
+
+export interface BusinessProfileRequest {
+  id: string;
+  requestDate: string;
+  taskTitle: string;
+  statusName: string;
+  businessInfo: BusinessInfo;
+  contactPerson: BusinessContactPerson;
+  documents: BusinessDocument[];
+  platforms: BusinessPlatform[];
+  notes?: string | null;
+}
+
+export interface BusinessProfileApprovalProps {
+  request: BusinessProfileRequest;
+  rawApiData?: ApiBusinessProfileChangeRequestResponse;
+  onApprove: (requestId: string) => void;
+  onReject: (requestId: string) => void;
+  className?: string;
+}
+
 // API Response Types for Profile Change Request
 export interface ApiProfileChangeRequestResponse {
   task_details: {
@@ -246,6 +309,81 @@ export interface ApiProfileChangeRequestResponse {
     platform_active: number;
     status_id: number;
   }[];
+}
+
+export interface ApiBusinessProfileChangeRequestResponse {
+  task_details: {
+    task_id: number;
+    task_title: string;
+    task_description: string;
+    ref_type: number;
+    ref_id: number;
+    status_id: number;
+    status_name: string;
+    created_at: string;
+    source_template_id: number | null;
+    parent_task_id: number | null;
+  };
+  staff_id: number;
+  business_request_details: {
+    request_id: number;
+    customer_id: number;
+    customer_uid: string;
+    user_id: number;
+    legal_relation_id: number;
+    legal_entity_id: number;
+    status: number;
+    is_canceled: number;
+    is_verified: number;
+    verified_by: number | null;
+    verified_at: string | null;
+    notes: string | null;
+    changed_fields: string[] | null;
+    created_at: string;
+    updated_at: string;
+    title: string;
+    legal_title: string | null;
+    reg_code: string | null;
+    id_number: string | null;
+    logo_uid: string | null;
+    role_id: number;
+    description: string | null;
+    city_id: number | null;
+    address_description: string | null;
+    party_id: number | null;
+    party_first_name: string | null;
+    party_last_name: string | null;
+    party_full_name: string | null;
+    party_national_id: string | null;
+    party_profile_image: string | null;
+    party_mobile: string | null;
+  };
+  business_docs_data: Array<{
+    document_id: number;
+    document_type?: number | null;
+    document_name?: string | null;
+    file_uid: string;
+    upload_date?: string | null;
+    is_verified?: number | null;
+    status_id?: number | null;
+    version?: number | null;
+    file_extension?: string | null;
+    file_size?: number | null;
+  }>;
+  business_platforms_data: Array<{
+    account_id: number;
+    account_name: string;
+    account_identifier: string;
+    is_default: number;
+    is_active: number;
+    is_workplatform: number;
+    is_verified: number;
+    platform_name: string;
+    platform_icon: string | null;
+    base_url: string | null;
+    platform_active: number;
+    status_id: number;
+  }>;
 }
 
 // Mapper: API -> internal ProfileChangeRequest

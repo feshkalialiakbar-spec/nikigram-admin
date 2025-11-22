@@ -11,6 +11,7 @@ import styles from './TaskDashboard.module.scss';
 import { TaskTableSkeleton } from '../ui/TaskTableSkeleton';
 import Button from '@/components/ui/actions/button/Button';
 import { assignSharedPoolTasks } from '@/services/task/taskServices';
+import { convertToPersianDate } from '@/utils/dateUtils';
 
 const TaskDashboard: React.FC<TaskDashboardProps> = ({
   className,
@@ -93,6 +94,31 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
     itemsPerPage: externalItemsPerPage,
   }), [currentPage, totalPages, totalItems, externalItemsPerPage]);
 
+  // Generate date options from tasks
+  const dateOptions = React.useMemo(() => {
+    const dateSet = new Set<string>();
+    tasks.forEach((task) => {
+      const persianDate = convertToPersianDate(task.created_at);
+      if (persianDate) {
+        dateSet.add(persianDate);
+      }
+    });
+    
+    // Convert to array and sort (newest first)
+    const dates = Array.from(dateSet).sort((a, b) => {
+      // Compare dates in format YYYY/MM/DD
+      return b.localeCompare(a);
+    });
+
+    return dates.map((date) => ({
+      label: date.replace(/\d/g, (d) => {
+        const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        return persianDigits[parseInt(d)];
+      }),
+      value: date,
+    }));
+  }, [tasks]);
+
   if (loading) {
     return (
       <div className={`${styles.dashboard} ${className || ''}`}>
@@ -120,6 +146,7 @@ const TaskDashboard: React.FC<TaskDashboardProps> = ({
         <FilterBar
           filters={filters}
           onFilterChange={handleFilterChange}
+          dateOptions={dateOptions}
         />
         <TaskTable
           tasks={displayTasks}

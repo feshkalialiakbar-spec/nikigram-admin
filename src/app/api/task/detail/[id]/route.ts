@@ -1,3 +1,4 @@
+import { getoken } from '@/actions/cookieToken';
 import { NextRequest, NextResponse } from 'next/server';
 export async function GET(
   request: NextRequest,
@@ -6,7 +7,7 @@ export async function GET(
   try {
     const { id } = await context.params;
     const taskId = id;
-    const token = request.cookies.get(`${process.env.NEXT_PUBLIC_TOKEN_NAME}`)?.value;
+    const token = await getoken('TASK-DETAIL');
     const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
     if (!baseUrl) {
       throw new Error('NEXT_PUBLIC_API_URL is not defined');
@@ -30,7 +31,7 @@ export async function GET(
     if (redirectData.ref_type === 6) {
       const ticketId = redirectData.ref_id || taskId;
       console.log('Fetching ticket details for task:', taskId);
-      
+
       // Fetch ticket details from the admin API
       const ticketDetailResponse = await fetch(
         `${baseUrl}/api/admin/task/ticket/${taskId}/?LAN_ID=fa`,
@@ -55,7 +56,7 @@ export async function GET(
       // Fetch chat history
       const actualTicketId = ticketDetailData.ticket_details?.ticket_id || ticketId;
       console.log('Fetching chat history for ticket:', actualTicketId);
-      
+
       const chatHistoryResponse = await fetch(
         `${baseUrl}/api/ticket/chat/page/${actualTicketId}?limit=50&offset=0`,
         {

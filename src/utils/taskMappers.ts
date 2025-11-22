@@ -14,6 +14,10 @@ import {
   TemplateRequestDetails,
   ApiTicketRequestResponse,
   TicketRequestDetails,
+  ApiBusinessProfileChangeRequestResponse,
+  BusinessProfileRequest,
+  BusinessDocument,
+  BusinessPlatform,
 } from '@/components/tasks/types';
 import { buildDocDownloadUrl } from '@/utils/docUrl';
 
@@ -180,6 +184,94 @@ export const mapProfileChangeRequestToComponent = (
     legalProfile,
     primaryIndividuals: [], // Not provided in this API response
     aiComment,
+  };
+};
+
+const mapBusinessDocsToComponent = (
+  docs?: ApiBusinessProfileChangeRequestResponse['business_docs_data']
+): BusinessDocument[] => {
+  return ensureArray(docs).map((doc, index) => ({
+    id: doc.document_id?.toString() || `doc-${index}`,
+    name: doc.document_name || `مدرک ${index + 1}`,
+    fileType: doc.file_extension || undefined,
+    fileSize: typeof doc.file_size === 'number' ? formatFileSize(doc.file_size) : undefined,
+    uploadDate: doc.upload_date ? formatDate(doc.upload_date) : undefined,
+    url: safeBuildDocDownloadUrl(doc.file_uid),
+    statusId: doc.status_id ?? undefined,
+    isVerified: doc.is_verified ?? undefined,
+  }));
+};
+
+const mapBusinessPlatformsToComponent = (
+  platforms?: ApiBusinessProfileChangeRequestResponse['business_platforms_data']
+): BusinessPlatform[] => {
+  return ensureArray(platforms).map((platform, index) => {
+    const baseUrl = platform.base_url?.replace(/\/$/, '');
+    const identifier = platform.account_identifier?.trim();
+    const link =
+      baseUrl && identifier
+        ? `${baseUrl}/${identifier}`
+        : baseUrl || undefined;
+
+    return {
+      id: platform.account_id?.toString() || `platform-${index}`,
+      accountName: platform.account_name || '—',
+      identifier: identifier || '—',
+      platformName: platform.platform_name || '—',
+      isDefault: platform.is_default === 1,
+      isActive: platform.is_active === 1,
+      isVerified: platform.is_verified === 1,
+      link,
+    };
+  });
+};
+
+export const mapBusinessProfileRequestToComponent = (
+  apiResponse: ApiBusinessProfileChangeRequestResponse
+): BusinessProfileRequest => {
+  const { task_details, business_request_details } = apiResponse;
+
+  if (!task_details || !business_request_details) {
+    throw new Error('business_request_details is missing from API response');
+  }
+
+  const businessInfo = {
+    title: business_request_details.title || '—',
+    legalTitle: business_request_details.legal_title,
+    registrationCode: business_request_details.reg_code,
+    idNumber: business_request_details.id_number,
+    description: business_request_details.description,
+    address: business_request_details.address_description,
+    cityId: business_request_details.city_id,
+    logoUrl: safeBuildDocDownloadUrl(business_request_details.logo_uid || undefined),
+  };
+
+  const fullName =
+    business_request_details.party_full_name ||
+    `${business_request_details.party_first_name || ''} ${business_request_details.party_last_name || ''}`.trim();
+
+  const contactPerson = {
+    fullName: fullName || '—',
+    firstName: business_request_details.party_first_name || undefined,
+    lastName: business_request_details.party_last_name || undefined,
+    nationalId: business_request_details.party_national_id || undefined,
+    mobile: business_request_details.party_mobile || undefined,
+    avatar: safeBuildDocDownloadUrl(business_request_details.party_profile_image || undefined),
+  };
+
+  return {
+    id:
+      task_details.task_id?.toString() ||
+      business_request_details.request_id?.toString() ||
+      'unknown',
+    requestDate: task_details.created_at ? formatDate(task_details.created_at) : '—',
+    taskTitle: task_details.task_title || 'درخواست تغییر اطلاعات کسب و کار',
+    statusName: task_details.status_name || 'نامشخص',
+    businessInfo,
+    contactPerson,
+    documents: mapBusinessDocsToComponent(apiResponse.business_docs_data),
+    platforms: mapBusinessPlatformsToComponent(apiResponse.business_platforms_data),
+    notes: business_request_details.notes,
   };
 };
 

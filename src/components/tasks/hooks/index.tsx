@@ -14,6 +14,7 @@ import {
   TaskServiceResult,
   TASK_DEFAULT_LIMIT,
 } from '@/services/task/taskServices';
+import { convertToPersianDate } from '@/utils/dateUtils';
 
 interface UseTasksQueryOptions {
   enabled?: boolean;
@@ -151,19 +152,26 @@ export const useTaskFilters = (
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
+      // Search filter: matches task title or description
       const matchesSearch =
         !filters.search ||
         task.task_title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        String(task.ref_type).toLowerCase().includes(filters.search.toLowerCase());
+        (task.task_description && task.task_description.toLowerCase().includes(filters.search.toLowerCase()));
 
+      // Process filter: matches ref_type
       const matchesProcess =
         !filters.process || String(task.ref_type) === filters.process;
 
-      const matchesDate = !filters.date || task.created_at.includes(filters.date);
+      // Date filter: matches Persian date format (YYYY/MM/DD)
+      const matchesDate = !filters.date || (() => {
+        const taskPersianDate = convertToPersianDate(task.created_at);
+        return taskPersianDate === filters.date || taskPersianDate.includes(filters.date);
+      })();
 
       // Skip performer personnel filter for now as it's not in TaskInterface
       const matchesPerformerPersonnel = !filters.performerPersonnel;
 
+      // Status filter: matches status_id
       const matchesStatus = !filters.status || String(task.status_id) === filters.status;
 
       // Skip operations filter as it's not in TaskInterface

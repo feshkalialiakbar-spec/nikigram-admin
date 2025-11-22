@@ -56,6 +56,7 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
         />
         {/* <LegalProfileSection
           title="پروفایل حقوقی"
+       
           profile={request.legalProfile}
           className={styles.profileSection}
         /> */}
@@ -80,4 +81,4 @@ const ProfileChangeApproval: React.FC<ProfileChangeApprovalProps> = ({
     </div>
   );
 };
-export default ProfileChangeApproval;
+export default ProfileChangeApproval

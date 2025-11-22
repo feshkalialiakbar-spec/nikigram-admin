@@ -12,7 +12,8 @@ import styles from './FilterBar.module.scss';
 const FilterBar: React.FC<FilterBarProps> = ({
   filters,
   onFilterChange,
-  className
+  className,
+  dateOptions = []
 }) => {
   const handleInputChange = React.useCallback((
     field: keyof typeof filters,
@@ -72,11 +73,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             placeholder="تاریخ"
             value={filters.date}
             onChangeAction={(value) => handleInputChange('date', value)}
-            options={[
-              { label: '۱۴۰۴/۰۵/۲۴', value: '1404/05/24' },
-              { label: '۱۴۰۴/۰۵/۲۳', value: '1404/05/23' },
-              { label: '۱۴۰۴/۰۵/۲۲', value: '1404/05/22' },
-            ]}
+            options={dateOptions}
             size="sm"
             baseColor={{
               borderAndLabel: 'gray-300',

@@ -5,6 +5,7 @@ import {
   ApiCooperationRequestResponse,
   ApiTemplateRequestResponse,
   ApiTicketRequestResponse,
+  ApiBusinessProfileChangeRequestResponse,
 } from '@/components/tasks/types';
 
 export interface TaskDetailApiResponse {
@@ -13,7 +14,8 @@ export interface TaskDetailApiResponse {
   | ApiHelpRequestResponse
   | ApiCooperationRequestResponse
   | ApiTemplateRequestResponse
-  | ApiTicketRequestResponse;
+  | ApiTicketRequestResponse
+  | ApiBusinessProfileChangeRequestResponse;
   redirectData: {
     ref_type: number;
   };
@@ -64,6 +66,28 @@ export const verifyProfileChangeRequest = async (
       body: JSON.stringify({
         is_verified: isVerified,
         description: '',
+      }),
+    }
+  );
+};
+
+export const verifyBusinessProfileChangeRequest = async (
+  requestId: string,
+  isVerified: boolean,
+  description: string = ''
+): Promise<Record<string, unknown>> => {
+  const token = await getoken(`verify business profile change request ${requestId}`);
+  return fetchJson<Record<string, unknown>>(
+    `${getApiBaseUrl()}/api/admin/task/profile/business/change_request/${requestId}/verify`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        is_verified: isVerified,
+        description: description,
       }),
     }
   );

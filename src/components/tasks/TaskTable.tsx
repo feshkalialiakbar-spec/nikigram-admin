@@ -23,11 +23,11 @@ const TaskTable: React.FC<TaskTableProps> = ({
       case 'perform':
         return <ExportSquare size={24} color="#007BFF" variant="Bulk" />;
       case 'restart':
-        return <ArrowRotateRight size={12} color="#3B82F6" variant="Bulk" />;
+        return <ArrowRotateRight size={24} color="#3B82F6" variant="Bulk" />;
       case 'view':
-        return <Eye size={12} color="#3B82F6" variant="Bulk" />;
+        return <Eye size={24} color="#3B82F6" variant="Bulk" />;
       default:
-        return <ArrowRotateRight size={12} color="#3B82F6" variant="Bulk" />;
+        return <ArrowRotateRight size={24} color="#3B82F6" variant="Bulk" />;
     }
   }, []);
 
@@ -108,7 +108,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
                   ariaLabel={`انجام عملیات برای وظیفه ${task.task_title}`}
                 >
                   <span className={styles.operationIcon}>
-                    {getOperationIcon('perform')}
+                    {getOperationIcon(task.status_id === 45 ? 'restart' : task.status_id === 39 ? 'view' : 'perform')}
                   </span>
                   {pendingTaskId === task.task_id ? 'در حال اختصاص...' : 'انجام عملیات'}
                 </Button>
