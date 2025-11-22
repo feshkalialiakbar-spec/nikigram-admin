@@ -1,0 +1,523 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  direction: rtl;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.createButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 20px 8px 16px;
+  background: #085ec5;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  height: 44px;
+  color: white;
+  font-size: 14px;
+  line-height: normal;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #064a9a;
+  }
+}
+
+.buttonText {
+  padding: 0 8px;
+}
+
+.buttonIcon {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.searchSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.searchCard {
+  background: white;
+  position: relative;
+  border-radius: 24px;
+  flex-shrink: 0;
+  width: 100%;
+  border: 1px solid #d1e1f2;
+}
+
+.searchCardContent {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 24px 16px;
+  position: relative;
+}
+
+.searchFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.filterRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.filterInput {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 40px;
+  align-items: flex-start;
+  min-height: 1px;
+  min-width: 1px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.inputFrame {
+  background: white;
+  height: 40px;
+  position: relative;
+  border-radius: 20px;
+  flex-shrink: 0;
+  width: 100%;
+  border: 1px solid #b7cfe8;
+}
+
+.inputContent {
+  box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  height: 40px;
+  align-items: center;
+  padding: 8px 16px;
+  position: relative;
+  width: 100%;
+  direction: rtl;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1f2b37;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: right;
+  width: 100%;
+
+  &::placeholder {
+    color: #9eb8d4;
+  }
+}
+
+.inputIcon {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.inputIconSmall {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.checkboxRow {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.checkboxItem {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+  direction: rtl;
+}
+
+.checkboxText {
+  color: #1f2b37;
+  font-size: 14px;
+  line-height: normal;
+  text-align: right;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.searchButton {
+  position: relative;
+  border-radius: 24px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 2px solid #007bff;
+  cursor: pointer;
+  padding: 8px 24px 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: rgba(0, 123, 255, 0.05);
+  }
+}
+
+.searchButtonText {
+  color: #007bff;
+  font-size: 14px;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.searchButtonIcon {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.tableSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  border-radius: 24px;
+  flex-shrink: 0;
+  width: 100%;
+  border: 1px solid #d1e1f2;
+  background: white;
+  overflow: hidden;
+}
+
+.tableRow {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.tableHeader {
+  flex: 1;
+  background: #ebf1f8;
+  display: flex;
+  flex-direction: column;
+  height: 48px;
+  align-items: flex-start;
+  min-height: 1px;
+  min-width: 1px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.tableHeaderFirst {
+  border-top-right-radius: 24px;
+}
+
+.tableHeaderLast {
+  border-top-left-radius: 24px;
+}
+
+.headerContent {
+  box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.headerText {
+  color: #435a73;
+  font-size: 14px;
+  line-height: normal;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.separator {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+
+  &::after {
+    content: '';
+    background: #d1e1f2;
+    height: 1px;
+    flex-shrink: 0;
+    width: 100%;
+  }
+}
+
+.tableCell {
+  flex: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  height: 68px;
+  align-items: flex-start;
+  min-height: 1px;
+  min-width: 1px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.tableCellFirst {
+  border-bottom-right-radius: 24px;
+}
+
+.tableCellLast {
+  border-bottom-left-radius: 24px;
+}
+
+.cellContent {
+  box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.cellText {
+  color: #5e758e;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: right;
+  width: 100%;
+}
+
+.charityNameCell {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  direction: rtl;
+}
+
+.avatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  overflow: hidden;
+  border: 1.5px solid white;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 100px;
+}
+
+.actionIcons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.loadingRow,
+.emptyRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  width: 100%;
+  color: #5e758e;
+  font-size: 14px;
+}
+
+.pagination {
+  display: flex;
+  flex-direction: column;
+  height: 44px;
+  align-items: flex-start;
+  position: relative;
+  flex-shrink: 0;
+  width: 252px;
+}
+
+.paginationShadow {
+  position: absolute;
+  background: #d1e1f2;
+  height: 41px;
+  right: 0;
+  border-radius: 24px;
+  top: 3px;
+  width: 252px;
+}
+
+.paginationButton {
+  background: #dee9f4;
+  position: relative;
+  border-radius: 24px;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.paginationContent {
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 24px;
+  position: relative;
+  width: 100%;
+  direction: rtl;
+}
+
+.paginationArrow {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: opacity 0.2s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.7;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.pageNumber {
+  background: white;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 13px;
+  position: relative;
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 32px;
+  border: none;
+  cursor: pointer;
+  color: #334558;
+  font-size: 12px;
+  line-height: normal;
+  text-align: center;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+}
+
+.pageNumberActive {
+  background: #085ec5;
+  color: white;
+
+  &:hover {
+    background: #064a9a;
+  }
+}
+

@@ -41,3 +41,10 @@ export {
 
 export { fetchStaffList } from './staff';
 
+export {
+  fetchCharityOrganizations,
+  type CharityOrganization,
+  type CharityListResponse,
+  type CharityListParams,
+} from './charity';
+

@@ -18,19 +18,19 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     return (
         <div className={`${styles.actionButtons} ${className || ''}`}>
             <Button
-                buttonClassName={styles.approveButton}
-                onClick={onApprove}
-                type="button"
-                bgColor='primary-700'     >
-                تایید
-            </Button>
-            <Button
                 buttonClassName={styles.rejectButton}
                 onClick={onReject}
                 type="button"
                 borderColor='error-700'
             >
                 رد
+            </Button>
+            <Button
+                buttonClassName={styles.approveButton}
+                onClick={onApprove}
+                type="button"
+                bgColor='primary-700'     >
+                تایید
             </Button>
         </div>
     );

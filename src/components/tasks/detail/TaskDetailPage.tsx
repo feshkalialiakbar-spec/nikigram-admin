@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProfileChangeApproval from '@/components/tasks/types/profile/ProfileChangeApproval';
-import IndividualProfileApproval from '@/components/tasks/types/profile/Individual';
+import IndividualProfileApproval from '@/components/tasks/types/profile/Individual-UNUSED';
 import BusinessProfileApproval from '@/components/tasks/types/profile/BusinessProfileApproval';
 import HelpRequestApproval from '@/components/tasks/types/HelpRequestApproval';
 import CooperationRequestApproval from '@/components/tasks/types/CooperationRequestApproval';
